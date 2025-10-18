@@ -1,16 +1,11 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/h"
-
 echo "Running prettier..."
-echo "Running eslint..."
-
+prettier . --write
+echo "Files formatted with prettier 💫"
 echo "Running typescript type checking..."
 npx tsc --noEmit
 TSC_STATUS=$?
 
-if [ $STATUS -ne 0 ]; then
-  echo "Commit aborted due to typescript errors."
+if [ $TSC_STATUS -ne 0 ]; then
+  echo "Commit aborted due to typescript errors! ❌"
   exit 1
 fi
-
-exit 0
