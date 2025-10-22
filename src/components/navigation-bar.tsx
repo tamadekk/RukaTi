@@ -9,7 +9,7 @@ const NavigationItems = () =>
       href={item.href}
       className="block py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors duration-200"
     >
-      <item.icon className="inline mr-2 h-5 w-5 align-text-bottom" />
+      <item.icon className="inline mr-2 h-5 w-5 align-text-bottom md:hidden" />
       {item.title}
     </a>
   ));
