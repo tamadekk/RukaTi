@@ -10,6 +10,17 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { sideBarItems } from "@/const/navigation-links";
+import { signOut } from "@/lib/authentication";
+
+const handleSignOut = async () => {
+  const error = await signOut();
+  if (error) {
+    console.error("Error signing out:", error);
+  } else {
+    console.log("Signed out successfully");
+    window.location.href = "/login";
+  }
+};
 
 const SideBarElements = () => (
   <>
@@ -38,7 +49,7 @@ const SideBar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Button>Logout</Button>
+        <Button onClick={handleSignOut}>Logout</Button>
       </SidebarFooter>
     </Sidebar>
   );

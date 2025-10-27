@@ -19,6 +19,7 @@ const mockUser: UserProfile = {
 };
 
 export default function ProfileDashboard() {
+  console.log("Rendering ProfileDashboard");
   //TODO: remove mock data and fetch real user profile data
   const setUserProfile = useUserProfileStore((state) => state.setUserProfile);
   const userProfile = useUserProfileStore((state) => state.userProfile);
