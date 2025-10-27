@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { navigationItems } from "@/const/header-navigation";
+import { navigationItems } from "@/const/navigation-links";
 import { Menu as MenuIcon, X } from "lucide-react";
 
 const NavigationItems = () =>
