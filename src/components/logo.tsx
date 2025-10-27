@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 interface LogoProps {
   className?: string;
   size?: "sm" | "md" | "lg";
@@ -12,11 +14,13 @@ const Logo = ({ className = "", size = "md" }: LogoProps) => {
 
   return (
     <div className={`flex items-center ${className}`}>
-      <h1
-        className={`font-bold bg-gradient-to-r from-primary to-accent-foreground bg-clip-text text-transparent ${sizeClasses[size]}`}
-      >
-        RukaTi
-      </h1>
+      <Link to="/">
+        <h1
+          className={`font-bold bg-gradient-to-r from-primary to-accent-foreground bg-clip-text text-transparent ${sizeClasses[size]}`}
+        >
+          RukaTi
+        </h1>
+      </Link>
     </div>
   );
 };
