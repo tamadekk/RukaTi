@@ -1,42 +1,37 @@
-import Sidebar from "@/components/profile/sidebar";
-import ProfileCard from "@/components/profile/profile-card";
-import ServicesSection from "@/components/profile/services-section";
-import ServicePerformance from "@/components/profile/service-performance";
-import QuickActions from "@/components/profile/quick-actions";
+import { useEffect } from "react";
+import Sidebar from "@/components/dashboard/profile/sidebar";
+import ServicePerformance from "@/components/dashboard/profile/service-performance";
+import QuickActions from "@/components/dashboard/profile/quick-actions";
+import { useUserProfileStore } from "@/store/userProfileStore";
+import type { UserProfile } from "@/types/user";
+import MainSection from "./dashboard/main-section-dashboard";
 
-const mockUser = {
-  name: "Sophia Carter",
-  location: "San Francisco, CA",
-  description:
-    "Experienced tutor specializing in math and science. Passionate about helping students achieve their academic goals.",
-  avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+const mockUser: UserProfile = {
+  user_id: "1",
+  email: "user@gmail.com",
+  phone_number: "123-456-7890",
+  role: "tutor",
+  rating: 4.8,
+  profile_image_url: null,
+  bio: "Passionate tutor with 5 years of experience.",
+  created_at: new Date().toISOString(),
 };
 
-const mockServices = [
-  {
-    title: "Math Tutoring",
-    category: "Tutoring",
-    description: "Offering math tutoring services for high school students.",
-    image: "/src/assets/tutorTile.jpg",
-  },
-  {
-    title: "Science Tutoring",
-    category: "Tutoring",
-    description: "Providing science tutoring for middle school students.",
-    image: "/src/assets/tutorTile.jpg",
-  },
-];
-
 export default function ProfileDashboard() {
+  //TODO: remove mock data and fetch real user profile data
+  const setUserProfile = useUserProfileStore((state) => state.setUserProfile);
+  const userProfile = useUserProfileStore((state) => state.userProfile);
+
+  useEffect(() => {
+    setUserProfile(mockUser);
+  }, [setUserProfile]);
+
   return (
     <div className="flex flex-col min-h-screen bg-[#f7f8fa] md:flex-row">
-      <Sidebar user={mockUser} />
+      <Sidebar user={userProfile} />
       <main className="flex-1 p-2 sm:p-4 md:p-8 flex flex-col lg:flex-row gap-4 md:gap-6 mt-20 md:mt-0">
-        <section className="flex-1 flex flex-col gap-4 md:gap-6">
-          <ProfileCard user={mockUser} />
-          <ServicesSection services={mockServices} />
-        </section>
-        <aside className="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
+        <aside className="w-full flex flex-col gap-4 md:gap-6">
+          <MainSection userProfile={userProfile} />
           <ServicePerformance />
           <QuickActions />
         </aside>
