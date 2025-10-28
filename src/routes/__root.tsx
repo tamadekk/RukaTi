@@ -5,15 +5,17 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import NotFound from "@/components/not-found";
 
-const RootLayout = () => (
-  <main className="flex flex-col min-h-dvh">
-    <Header />
-    <Outlet />
-    <TanStackRouterDevtools />
-    <div className="mt-auto" />
-    <Footer />
-  </main>
-);
+const RootLayout = () => {
+  return (
+    <main className="flex flex-col min-h-dvh">
+      <Header />
+      <Outlet />
+      <TanStackRouterDevtools />
+      <div className="mt-auto" />
+      <Footer />
+    </main>
+  );
+};
 export const Route = createRootRoute({
   component: RootLayout,
   notFoundComponent: () => <NotFound />,
