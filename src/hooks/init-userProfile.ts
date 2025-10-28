@@ -1,18 +1,20 @@
 import { useEffect } from "react";
-import supabase from "@/supabase-client";
 import { useUserProfileStore } from "@/store/userProfileStore";
+import { getUserServices } from "@/lib/user";
+import { useUserSession } from "@/store/userSessionsStore";
 
 export function useInitializeUser() {
+  const user = useUserSession((s) => s.user);
   const fetchUserProfile = useUserProfileStore((s) => s.fetchUserProfile);
 
   useEffect(() => {
     const init = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) await fetchUserProfile(user.id);
+      if (user) {
+        getUserServices(user.id);
+        fetchUserProfile(user.id);
+      }
     };
 
     init();
-  }, [fetchUserProfile]);
+  }, [fetchUserProfile, user]);
 }
