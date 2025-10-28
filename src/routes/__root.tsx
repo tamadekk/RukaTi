@@ -3,6 +3,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import NotFound from "@/components/not-found";
 
 const RootLayout = () => (
   <main className="flex flex-col min-h-dvh">
@@ -13,4 +14,7 @@ const RootLayout = () => (
     <Footer />
   </main>
 );
-export const Route = createRootRoute({ component: RootLayout });
+export const Route = createRootRoute({
+  component: RootLayout,
+  notFoundComponent: () => <NotFound />,
+});
