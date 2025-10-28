@@ -1,8 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import AuthCard from "@/components/auth-card";
 import RegistrationForm from "@/components/registration-form";
-import supabase from "@/supabase-client";
 import { useState } from "react";
+import { useUserSession } from "@/store/userSessionsStore";
+import { signUp } from "@/lib/authentication";
 
 const registerText = {
   heading: "Create Account",
@@ -14,6 +15,7 @@ const registerText = {
 
 const RegisterRouteComponent: React.FC = () => {
   const navigate = useNavigate();
+  const { setUser, setTokens } = useUserSession();
   const [error, setError] = useState<string | null>(null);
 
   const handleRegister = async ({
@@ -31,16 +33,16 @@ const RegisterRouteComponent: React.FC = () => {
       return;
     }
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: "http://localhost:5173/" },
-      });
+      const { data, error } = await signUp(email, password);
       if (error) {
         setError(error.message);
         return;
       }
-      if (data.user) navigate({ to: "/" });
+      if (data.user && data.session) {
+        setUser(data.user);
+        setTokens(data.session.access_token, data.session.refresh_token);
+        navigate({ to: "/" });
+      }
     } catch (err) {
       console.error(err);
       setError("Something went wrong. Please try again.");

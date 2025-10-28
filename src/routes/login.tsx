@@ -3,6 +3,7 @@ import AuthCard from "@/components/auth-card";
 import LoginForm from "@/components/login-form";
 import supabase from "@/supabase-client";
 import { useState } from "react";
+import { useUserSession } from "@/store/userSessionsStore";
 
 const loginText = {
   heading: "Welcome Back",
@@ -13,6 +14,7 @@ const loginText = {
 };
 
 const LoginRouteComponent: React.FC = () => {
+  const { setUser, setTokens } = useUserSession();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +35,12 @@ const LoginRouteComponent: React.FC = () => {
         setError(error.message);
         return;
       }
-      if (data.user) navigate({ to: "/" });
+      if (data.user && data.session) {
+        setUser(data.user);
+        setTokens(data.session.access_token, data.session.refresh_token);
+
+        navigate({ to: "/dashboard" });
+      }
     } catch (err) {
       console.error(err);
       setError("Something went wrong. Please try again.");
