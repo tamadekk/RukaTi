@@ -1,11 +1,18 @@
+import { Input } from "@/components/ui/input";
+import { uploadAvatar } from "@/lib/user";
 import type { UserProfile } from "@/types/user";
 
 const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
   const name = user?.email ?? "Unknown user";
   const location = user?.role ?? "";
   const description = user?.bio ?? "";
-  const avatar = user?.profile_image_url ?? "/src/assets/tutorTile.jpg";
+  const avatar = user?.avatar ?? "/src/assets/tutorTile.jpg";
 
+  const handleClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // e.preventDefault();
+    console.log(e.currentTarget.files);
+    if (e.currentTarget.files) uploadAvatar(e.currentTarget.files[0]);
+  };
   return (
     <div className="bg-white rounded-xl shadow p-4 md:p-6 flex flex-col gap-2">
       <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -14,6 +21,10 @@ const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
           alt="avatar"
           className="w-16 h-16 rounded-full object-cover"
         />
+        <div className="grid w-full max-w-sm items-center gap-3">
+          {/* <Label htmlFor="picture">Picture</Label> */}
+          <Input id="picture" type="file" onChange={handleClick} />
+        </div>
         <div className="flex-1 text-center sm:text-left">
           <div className="text-lg md:text-xl font-semibold">{name}</div>
           <div className="text-gray-500 text-sm">{location}</div>

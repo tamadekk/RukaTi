@@ -6,7 +6,7 @@ export type UserProfile = {
   phone_number: string;
   role: string;
   rating: number | null;
-  profile_image_url: string | null;
+  avatar: string | null;
   bio: string | null;
   created_at: Date | string | null;
 };

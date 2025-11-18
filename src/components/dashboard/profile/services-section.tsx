@@ -12,10 +12,10 @@ const ServicesSection = () => {
         className="flex flex-col sm:flex-row items-center bg-gray-50 rounded-lg p-3"
       >
         {/* <img
-                src={service.image}
-                alt={service.title}
-                className="w-14 h-14 rounded-lg object-cover mr-0 sm:mr-3 mb-2 sm:mb-0"
-              /> */}
+          src={service.image}
+          alt={service.title}
+          className="w-14 h-14 rounded-lg object-cover mr-0 sm:mr-3 mb-2 sm:mb-0"
+        /> */}
         <div className="flex-1 text-center sm:text-left">
           <span className="text-xs text-gray-500 font-medium">
             {service.category}
