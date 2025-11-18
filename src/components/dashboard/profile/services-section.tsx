@@ -1,9 +1,11 @@
-import { useUserServices } from "@/store/userServicesStore";
+import { useServiceStore } from "@/store/userServicesStore";
 import type { UserServices } from "@/types/user";
+import { Link } from "@tanstack/react-router";
 
 const ServicesSection = () => {
-  const services = useUserServices((state) => state.userServices) || [];
+  const services = useServiceStore((state) => state.userServices) || [];
   const isServicesEmpty = services.length === 0;
+  const handleClick = () => {};
 
   const ServiceCard = ({ service }: { service: UserServices }) => {
     return (
@@ -43,9 +45,11 @@ const ServicesSection = () => {
           ))
         )}
       </div>
-      <button className="w-full mt-4 py-2 rounded-lg bg-green-900 text-white font-medium hover:bg-green-800 transition">
-        + Add New Service
-      </button>
+      <Link to="/create-service">
+        <button className="w-full mt-4 py-2 rounded-lg bg-green-900 text-white font-medium hover:bg-green-800 transition">
+          + Add New Service
+        </button>
+      </Link>
     </div>
   );
 };

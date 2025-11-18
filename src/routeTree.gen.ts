@@ -15,6 +15,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCreateServiceRouteImport } from './routes/_authenticated/create-service'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -45,12 +46,19 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedCreateServiceRoute =
+  AuthenticatedCreateServiceRouteImport.update({
+    id: '/create-service',
+    path: '/create-service',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/create-service': typeof AuthenticatedCreateServiceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/create-service': typeof AuthenticatedCreateServiceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesById {
@@ -67,13 +76,20 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/_authenticated/create-service': typeof AuthenticatedCreateServiceRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/login' | '/register' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/login'
+    | '/register'
+    | '/create-service'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/login' | '/register' | '/dashboard'
+  to: '/' | '/about' | '/login' | '/register' | '/create-service' | '/dashboard'
   id:
     | '__root__'
     | '/'
@@ -81,6 +97,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/register'
+    | '/_authenticated/create-service'
     | '/_authenticated/dashboard'
   fileRoutesById: FileRoutesById
 }
@@ -136,14 +153,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/create-service': {
+      id: '/_authenticated/create-service'
+      path: '/create-service'
+      fullPath: '/create-service'
+      preLoaderRoute: typeof AuthenticatedCreateServiceRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedCreateServiceRoute: typeof AuthenticatedCreateServiceRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedCreateServiceRoute: AuthenticatedCreateServiceRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 

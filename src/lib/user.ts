@@ -1,11 +1,11 @@
-import { useUserServices } from "@/store/userServicesStore";
+import { useServiceStore } from "@/store/userServicesStore";
 // import { useUserProfileStore } from "@/store/userProfileStore";
 import supabase from "@/supabase-client";
 import type { UserServices } from "@/types/user";
 import { useUserSession } from "@/store/userSessionsStore";
 
 export const getUserServices = async (userId: string) => {
-  const { setUserServices } = useUserServices.getState();
+  const { setUserServices } = useServiceStore.getState();
   const { data, error } = await supabase
     .from("user_services")
     .select("*")
