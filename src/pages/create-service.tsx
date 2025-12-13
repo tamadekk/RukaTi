@@ -44,15 +44,15 @@ export default function CreateServicePage() {
   };
 
   return (
-    <div className="min-h-screen p-4 flex justify-center">
-      <Card className="w-full max-w-md shadow-lg rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-center">
+    <div className="min-h-screen bg-background font-mono p-4 md:p-8 flex justify-center items-start pt-12 md:pt-20">
+      <Card className="w-full max-w-5xl border border-black shadow-none rounded-none bg-white p-6 md:p-10">
+        <CardHeader className="p-0 mb-8 border-b border-black pb-6">
+          <CardTitle className="text-3xl md:text-4xl font-bold text-center uppercase tracking-tight">
             Create a Service
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="p-0 space-y-8">
           <CreateServiceForm onSubmit={onSubmit} loading={false} />
         </CardContent>
       </Card>

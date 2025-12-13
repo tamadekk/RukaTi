@@ -1,10 +1,13 @@
 import { useServiceStore } from "@/store/userServicesStore";
-import { Link } from "@tanstack/react-router";
 
 import { ServiceCard } from "@/components/dashboard/service-card";
 import { Button } from "@/components/ui/button";
 
-const ServicesSection = () => {
+interface ServicesSectionProps {
+  onAddServiceClick?: () => void;
+}
+
+const ServicesSection = ({ onAddServiceClick }: ServicesSectionProps) => {
   const services = useServiceStore((state) => state.userServices) || [];
   const isServicesEmpty = services.length === 0;
 
@@ -20,11 +23,13 @@ const ServicesSection = () => {
           ))
         )}
       </div>
-      <Link to="/create-service">
-        <Button className="w-full mt-4" variant="default">
-          + Add New Service
-        </Button>
-      </Link>
+      <Button 
+        className="w-full mt-4" 
+        variant="default"
+        onClick={onAddServiceClick}
+      >
+        + Add New Service
+      </Button>
     </div>
   );
 };

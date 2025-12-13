@@ -30,9 +30,9 @@ export const EditServiceModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Service</DialogTitle>
+      <DialogContent className="sm:max-w-7xl w-[95vw] max-h-[90vh] overflow-y-auto border-2 border-black p-8 sm:rounded-none bg-white shadow-none">
+        <DialogHeader className="mb-6 border-b border-black pb-4">
+          <DialogTitle className="text-2xl font-bold uppercase tracking-tight font-mono">Edit Service</DialogTitle>
         </DialogHeader>
         <CreateServiceForm
           onSubmit={handleSubmit}

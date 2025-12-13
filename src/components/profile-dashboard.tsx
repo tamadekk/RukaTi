@@ -1,14 +1,17 @@
+import { useState } from "react";
 import ServicePerformance from "@/components/dashboard/profile/service-performance";
 import QuickActions from "@/components/dashboard/profile/quick-actions";
 import ProfileCard from "@/components/dashboard/profile/profile-card";
 import ServicesSection from "@/components/dashboard/profile/services-section";
 import RecentActivity from "@/components/dashboard/profile/recent-activity";
+import { CreateServiceModal } from "@/components/dashboard/create-service-modal";
 import { useInitializeUser } from "@/hooks/init-userProfile";
 import { useUserProfileStore } from "@/store/userProfileStore";
 
 export default function ProfileDashboard() {
   useInitializeUser();
   const userProfile = useUserProfileStore((state) => state.userProfile);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background font-mono">
@@ -22,10 +25,15 @@ export default function ProfileDashboard() {
         {/* Main Content - Spans 9 cols */}
         <div className="lg:col-span-9 bg-background p-6 flex flex-col gap-8">
           <ServicePerformance />
-          <ServicesSection />
+          <ServicesSection onAddServiceClick={() => setIsCreateModalOpen(true)} />
           <RecentActivity />
         </div>
       </div>
+      
+      <CreateServiceModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+      />
     </div>
   );
 }
