@@ -7,6 +7,7 @@ import RecentActivity from "@/components/dashboard/profile/recent-activity";
 import { CreateServiceModal } from "@/components/dashboard/create-service-modal";
 import { useInitializeUser } from "@/hooks/init-userProfile";
 import { useUserProfileStore } from "@/store/userProfileStore";
+import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 
 export default function ProfileDashboard() {
   useInitializeUser();
@@ -14,26 +15,24 @@ export default function ProfileDashboard() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background font-mono">
-      <div className="max-w-7xl mx-auto border-x border-black bg-black gap-[1px] grid grid-cols-1 lg:grid-cols-12">
-        {/* Sidebar - Spans 3 cols */}
-        <div className="lg:col-span-3 bg-background p-6 flex flex-col gap-6">
-          <ProfileCard user={userProfile} />
-          <QuickActions />
-        </div>
+    <>
+      <DashboardLayout
+        sidebar={
+          <>
+            <ProfileCard user={userProfile} />
+            <QuickActions />
+          </>
+        }
+      >
+        <ServicePerformance />
+        <ServicesSection onAddServiceClick={() => setIsCreateModalOpen(true)} />
+        <RecentActivity />
+      </DashboardLayout>
 
-        {/* Main Content - Spans 9 cols */}
-        <div className="lg:col-span-9 bg-background p-6 flex flex-col gap-8">
-          <ServicePerformance />
-          <ServicesSection onAddServiceClick={() => setIsCreateModalOpen(true)} />
-          <RecentActivity />
-        </div>
-      </div>
-      
-      <CreateServiceModal 
-        isOpen={isCreateModalOpen} 
-        onClose={() => setIsCreateModalOpen(false)} 
+      <CreateServiceModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
       />
-    </div>
+    </>
   );
 }
