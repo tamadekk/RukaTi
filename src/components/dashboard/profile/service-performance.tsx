@@ -1,3 +1,9 @@
+const getRatingColor = (rating: number) => {
+  if (rating > 3.5) return "text-green-600";
+  if (rating > 2.0) return "text-yellow-600";
+  return "text-red-600";
+};
+
 const ServicePerformance = () => {
   return (
     <div className="flex flex-col gap-4 h-full bg-white border border-black p-6">
@@ -12,7 +18,7 @@ const ServicePerformance = () => {
            <span className="text-xs text-gray-500 font-mono uppercase">Bookings</span>
         </div>
         <div>
-           <span className="block text-2xl font-bold">4.9</span>
+           <span className={`block text-2xl font-bold ${getRatingColor(4.9)}`}>4.9</span>
            <span className="text-xs text-gray-500 font-mono uppercase">Rating</span>
         </div>
         <div>
