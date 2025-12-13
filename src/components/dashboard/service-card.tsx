@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { UserServices } from "@/types/user";
 import { Button } from "@/components/ui/button";
-import { EditServiceModal } from "./edit-service-modal";
+import { EditServiceModal } from "@/components/dashboard/edit-service-modal";
 import { useServiceStore } from "@/store/userServicesStore";
 
 interface ServiceCardProps {

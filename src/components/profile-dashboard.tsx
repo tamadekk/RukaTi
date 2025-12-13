@@ -1,6 +1,6 @@
 import ServicePerformance from "@/components/dashboard/profile/service-performance";
 import QuickActions from "@/components/dashboard/profile/quick-actions";
-import MainSection from "./dashboard/main-section-dashboard";
+import MainSection from "@/components/dashboard/main-section-dashboard";
 import { useInitializeUser } from "@/hooks/init-userProfile";
 
 export default function ProfileDashboard() {

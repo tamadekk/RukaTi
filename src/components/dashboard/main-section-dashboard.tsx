@@ -1,6 +1,6 @@
 import { useUserProfileStore } from "@/store/userProfileStore";
-import ProfileCard from "./profile/profile-card";
-import ServicesSection from "./profile/services-section";
+import ProfileCard from "@/components/dashboard/profile/profile-card";
+import ServicesSection from "@/components/dashboard/profile/services-section";
 
 const MainSection = () => {
   const userProfile = useUserProfileStore((state) => state.userProfile);
