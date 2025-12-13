@@ -4,9 +4,9 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border/40 bg-secondary/40">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center md:items-center justify-between gap-4 text-muted-foreground">
+    <footer className="border-t border-black bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 border-x border-black max-w-7xl">
+        <div className="flex flex-col md:flex-row items-center md:items-center justify-between gap-4 text-gray-500">
           <p className="text-xs sm:text-sm">
             © {year} RukaTi. All rights reserved.
           </p>
@@ -14,19 +14,19 @@ const Footer = () => {
           <nav className="order-3 md:order-none flex items-center gap-6 sm:gap-8 text-xs sm:text-sm">
             <a
               href="#about"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-black transition-colors"
             >
               About
             </a>
             <a
               href="#terms"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-black transition-colors"
             >
               Terms
             </a>
             <a
               href="#privacy"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-black transition-colors"
             >
               Privacy
             </a>
@@ -36,21 +36,21 @@ const Footer = () => {
             <a
               aria-label="Twitter"
               href="#twitter"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-black transition-colors"
             >
               <Twitter className="h-5 w-5" />
             </a>
             <a
               aria-label="Facebook"
               href="#facebook"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-black transition-colors"
             >
               <Facebook className="h-5 w-5" />
             </a>
             <a
               aria-label="Instagram"
               href="#instagram"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-black transition-colors"
             >
               <Instagram className="h-5 w-5" />
             </a>

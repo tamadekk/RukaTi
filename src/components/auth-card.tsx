@@ -24,7 +24,7 @@ const AuthCard = ({
           <h1 className="text-2xl font-bold">RukaTi</h1>
         </div>
 
-        <div className="rounded-2xl bg-white shadow-xl ring-1 ring-black/5 p-6 sm:p-8">
+        <div className="border border-black bg-white p-6 sm:p-8">
           <div className="text-center">
             <h2 className="text-xl sm:text-2xl font-bold text-foreground">
               {heading}
@@ -38,7 +38,7 @@ const AuthCard = ({
             {alt}{" "}
             <Link
               to={altHref}
-              className="font-semibold text-green-600 hover:text-green-700"
+              className="font-semibold text-black hover:underline"
             >
               {altText}
             </Link>

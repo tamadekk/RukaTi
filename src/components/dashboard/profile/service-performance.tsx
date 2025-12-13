@@ -1,6 +1,6 @@
 const ServicePerformance = () => {
   return (
-    <div className="bg-white rounded-xl shadow p-4 md:p-6 flex flex-col gap-2">
+    <div className="flex flex-col gap-4 h-full">
       <div className="font-semibold mb-2">Service Performance</div>
       <div className="flex items-center justify-between text-sm">
         <span>Total Bookings</span>

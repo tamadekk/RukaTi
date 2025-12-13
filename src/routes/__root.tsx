@@ -7,7 +7,7 @@ import NotFound from "@/components/not-found";
 
 const RootLayout = () => {
   return (
-    <main className="flex flex-col min-h-dvh">
+    <main className="flex flex-col min-h-dvh font-mono">
       <Header />
       <Outlet />
       <TanStackRouterDevtools />

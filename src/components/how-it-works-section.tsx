@@ -28,8 +28,8 @@ const StepCard = ({ step }: { step: (typeof steps)[0]; index: number }) => {
 
   return (
     <div className="flex flex-col items-center text-center space-y-4">
-      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center border-2 border-green-200">
-        <IconComponent className="w-8 h-8 text-green-600" />
+      <div className="w-16 h-16 bg-white flex items-center justify-center border border-black">
+        <IconComponent className="w-8 h-8 text-black" />
       </div>
       <div>
         <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
@@ -41,9 +41,9 @@ const StepCard = ({ step }: { step: (typeof steps)[0]; index: number }) => {
 
 const HowItWorksSection = () => {
   return (
-    <section className="py-16 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+    <section className="bg-white border-t border-black">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 border-x border-black max-w-7xl py-16">
+          <div className="text-center mb-12 font-mono">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
             How It Works
           </h2>

@@ -22,7 +22,7 @@ export const ServiceCard = ({ service }: ServiceCardProps) => {
   };
 
   return (
-    <div className="border rounded-xl p-4 space-y-4 bg-white shadow-sm">
+    <div className="border border-black p-4 space-y-4 bg-white transition-opacity hover:opacity-100">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-semibold text-lg">{service.title}</h3>

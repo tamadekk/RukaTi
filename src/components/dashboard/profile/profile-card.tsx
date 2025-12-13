@@ -14,7 +14,7 @@ const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
     if (e.currentTarget.files) uploadAvatar(e.currentTarget.files[0]);
   };
   return (
-    <div className="bg-white rounded-xl shadow p-4 md:p-6 flex flex-col gap-2">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row items-center gap-4">
         <img
           src={avatar}

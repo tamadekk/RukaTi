@@ -2,13 +2,14 @@ import { useServiceStore } from "@/store/userServicesStore";
 import { Link } from "@tanstack/react-router";
 
 import { ServiceCard } from "@/components/dashboard/service-card";
+import { Button } from "@/components/ui/button";
 
 const ServicesSection = () => {
   const services = useServiceStore((state) => state.userServices) || [];
   const isServicesEmpty = services.length === 0;
 
   return (
-    <div className="bg-white rounded-xl shadow p-4 md:p-6">
+    <div className="flex flex-col h-full">
       <div className="font-semibold mb-4">Your Services</div>
       <div className="flex flex-col gap-3">
         {isServicesEmpty ? (
@@ -20,9 +21,9 @@ const ServicesSection = () => {
         )}
       </div>
       <Link to="/create-service">
-        <button className="w-full mt-4 py-2 rounded-lg bg-green-900 text-white font-medium hover:bg-green-800 transition">
+        <Button className="w-full mt-4" variant="default">
           + Add New Service
-        </button>
+        </Button>
       </Link>
     </div>
   );
