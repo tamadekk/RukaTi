@@ -10,11 +10,13 @@ import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
 type CreateServiceFormProps = {
   onSubmit: SubmitHandler<ServiceFormData>;
   loading: boolean;
+  defaultValues?: Partial<ServiceFormData>;
 };
 
 export const CreateServiceForm = ({
   onSubmit,
   loading,
+  defaultValues,
 }: CreateServiceFormProps) => {
   const {
     register,
@@ -22,6 +24,7 @@ export const CreateServiceForm = ({
     formState: { errors },
   } = useForm<ServiceFormData>({
     resolver: zodResolver(ServiceSchema),
+    defaultValues,
   });
 
   return (
