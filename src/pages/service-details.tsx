@@ -5,6 +5,7 @@ import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import CategoriesSidebar from "@/components/dashboard/categories-sidebar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "@tanstack/react-router";
 
 // Icons
 import { MapPin, Calendar, DollarSign, Star } from "lucide-react";
@@ -110,22 +111,24 @@ export function ServiceDetailsPage() {
              {/* Provider Info */}
              <div className="border border-black p-6 bg-white space-y-4">
                 <h2 className="text-sm font-bold uppercase text-gray-400 tracking-wider mb-2">Service Provider</h2>
-                <div className="flex items-center gap-4">
-                    <Avatar className="w-16 h-16 border border-black rounded-none">
+                {providerProfile?.user_id && (
+                <Link to="/provider/$userId" params={{ userId: providerProfile.user_id }} className="flex items-center gap-4 hover:opacity-75 transition-opacity group">
+                    <Avatar className="w-16 h-16 border border-black rounded-none group-hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-shadow">
                         <AvatarImage src={providerProfile?.avatar || undefined} />
                         <AvatarFallback className="rounded-none bg-gray-200">
                             {providerProfile?.email?.substring(0,2).toUpperCase() || "??"}
                         </AvatarFallback>
                     </Avatar>
                     <div>
-                        <div className="font-bold text-lg">{providerProfile?.email?.split('@')[0] || "Provider"}</div>
+                        <div className="font-bold text-lg group-hover:underline decoration-2 underline-offset-2">{providerProfile?.email?.split('@')[0] || "Provider"}</div>
                         <div className="flex items-center gap-1 text-yellow-500 text-sm">
                             <Star className="w-4 h-4 fill-current" />
                             <span className="text-black font-bold">{providerProfile?.rating || "N/A"}</span>
                             <span className="text-gray-400 text-xs ml-1">(No reviews yet)</span>
                         </div>
                     </div>
-                </div>
+                </Link>
+                )}
                 {providerProfile?.bio && (
                     <p className="text-sm text-gray-600 italic">
                         "{providerProfile.bio}"

@@ -9,8 +9,11 @@ type MarketStore = {
   currentService: UserServices | null;
   providerProfile: UserProfile | null;
 
+  providerServices: UserServices[];
+
   fetchAllServices: () => Promise<void>;
   fetchServiceDetails: (serviceId: string) => Promise<void>;
+  fetchProviderDetails: (userId: string) => Promise<void>;
 };
 
 export const useMarketStore = create<MarketStore>((set) => ({
@@ -19,6 +22,7 @@ export const useMarketStore = create<MarketStore>((set) => ({
   services: [],
   currentService: null,
   providerProfile: null,
+  providerServices: [],
 
   fetchAllServices: async () => {
     set({ loading: true, error: null });
@@ -66,11 +70,44 @@ export const useMarketStore = create<MarketStore>((set) => ({
             
           if (profileError) {
             console.error("Error fetching provider profile:", profileError);
-            // Don't throw here, just leave profile null or show partial info
           } else {
              set({ providerProfile: profileData as UserProfile });
           }
       }
+
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message });
+      } else {
+         set({ error: "An unknown error occurred" });
+      }
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  fetchProviderDetails: async (userId: string) => {
+    set({ loading: true, error: null, providerProfile: null, providerServices: [] });
+    try {
+        // 1. Fetch Profile
+        const { data: profileData, error: profileError } = await supabase
+          .from("user_profiles")
+          .select("*")
+          .eq("user_id", userId)
+          .single();
+
+        if (profileError) throw profileError;
+        set({ providerProfile: profileData as UserProfile });
+
+        // 2. Fetch Services
+        const { data: servicesData, error: servicesError } = await supabase
+          .from("user_services")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false });
+
+        if (servicesError) throw servicesError;
+        set({ providerServices: servicesData as UserServices[] });
 
     } catch (error: unknown) {
       if (error instanceof Error) {

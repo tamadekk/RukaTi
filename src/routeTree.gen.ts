@@ -17,6 +17,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesIndexRouteImport } from './routes/services/index'
 import { Route as ServicesServiceIdRouteImport } from './routes/services/$serviceId'
+import { Route as ProviderUserIdRouteImport } from './routes/provider/$userId'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
 const ServicesRoute = ServicesRouteImport.update({
@@ -58,6 +59,11 @@ const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
   path: '/$serviceId',
   getParentRoute: () => ServicesRoute,
 } as any)
+const ProviderUserIdRoute = ProviderUserIdRouteImport.update({
+  id: '/provider/$userId',
+  path: '/provider/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/services': typeof ServicesRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/provider/$userId': typeof ProviderUserIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services/': typeof ServicesIndexRoute
 }
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/provider/$userId': typeof ProviderUserIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services': typeof ServicesIndexRoute
 }
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/services': typeof ServicesRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/provider/$userId': typeof ProviderUserIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services/': typeof ServicesIndexRoute
 }
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/services'
     | '/dashboard'
+    | '/provider/$userId'
     | '/services/$serviceId'
     | '/services/'
   fileRoutesByTo: FileRoutesByTo
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/dashboard'
+    | '/provider/$userId'
     | '/services/$serviceId'
     | '/services'
   id:
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/services'
     | '/_authenticated/dashboard'
+    | '/provider/$userId'
     | '/services/$serviceId'
     | '/services/'
   fileRoutesById: FileRoutesById
@@ -135,6 +147,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ServicesRoute: typeof ServicesRouteWithChildren
+  ProviderUserIdRoute: typeof ProviderUserIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -195,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesServiceIdRouteImport
       parentRoute: typeof ServicesRoute
     }
+    '/provider/$userId': {
+      id: '/provider/$userId'
+      path: '/provider/$userId'
+      fullPath: '/provider/$userId'
+      preLoaderRoute: typeof ProviderUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -238,6 +258,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ServicesRoute: ServicesRouteWithChildren,
+  ProviderUserIdRoute: ProviderUserIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
