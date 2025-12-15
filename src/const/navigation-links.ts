@@ -12,6 +12,17 @@ import {
   Settings,
 } from "lucide-react";
 
+export const guestNavigationItems: navigationItem[] = [
+  { title: "Home", href: "/", icon: House },
+  { title: "Services", href: "/services", icon: List },
+];
+
+export const authenticatedNavigationItems: navigationItem[] = [
+  { title: "Home", href: "/", icon: House },
+  { title: "Services", href: "/services", icon: List },
+  { title: "Dashboard", href: "/dashboard", icon: Gauge },
+];
+
 export const navigationItems: navigationItem[] = [
   { title: "Home", href: "/", icon: House },
   { title: "Services", href: "/services", icon: List },
