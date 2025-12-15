@@ -1,6 +1,5 @@
-echo "Running prettier..."
-prettier . --write
-echo "Files formatted with prettier 💫"
+#!/bin/sh
+bunx lint-staged
 echo "Running typescript type checking..."
 npx tsc --noEmit
 TSC_STATUS=$?
