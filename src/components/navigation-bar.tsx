@@ -1,62 +1,43 @@
 import { useState } from "react";
-import { navigationItems } from "@/const/navigation-links";
-import { Menu as MenuIcon, X } from "lucide-react";
-
-const NavigationItems = () =>
-  navigationItems.map((item) => (
-    <a
-      key={item.title}
-      href={item.href}
-      className="block py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors duration-200"
-    >
-      <item.icon className="inline mr-2 h-5 w-5 align-text-bottom md:hidden" />
-      {item.title}
-    </a>
-  ));
+import { useNavigate } from "@tanstack/react-router";
+import { useUserSession } from "@/store/userSessionsStore";
+import {
+  guestNavigationItems,
+  authenticatedNavigationItems,
+} from "@/const/navigation-links";
+import { signOut } from "@/lib/authentication";
+import { DesktopNavigation } from "./navigation/desktop-navigation";
+import { MobileNavigation } from "./navigation/mobile-navigation";
 
 const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useUserSession();
+  const navigate = useNavigate();
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  const DesktopNavigation = () => (
-    <nav className="hidden md:flex items-center space-x-8">
-      <NavigationItems />
-    </nav>
-  );
-
-  const MobileNavigation = () => {
-    return (
-      <>
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={toggleMenu}
-            className="md:hidden p-2 rounded-md hover:bg-accent transition-colors duration-200"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <MenuIcon className="h-6 w-6" />
-            )}
-          </button>
-        </div>
-        {isMenuOpen && (
-          <div className="fixed top-0 left-0 bg-white md:hidden">
-            <div className="p-4 space-y-2">
-              <NavigationItems />
-            </div>
-          </div>
-        )}
-      </>
-    );
+  const handleLogout = async () => {
+    await signOut();
+    navigate({ to: "/" });
+    setIsMenuOpen(false);
   };
 
+  const navItems = user ? authenticatedNavigationItems : guestNavigationItems;
+
   return (
-    <div>
-      <DesktopNavigation />
-      <MobileNavigation />
-    </div>
+    <>
+      <DesktopNavigation
+        items={navItems}
+        isAuthenticated={!!user}
+        onLogout={handleLogout}
+      />
+      <MobileNavigation
+        items={navItems}
+        isAuthenticated={!!user}
+        onLogout={handleLogout}
+        isOpen={isMenuOpen}
+        onToggle={() => setIsMenuOpen(!isMenuOpen)}
+        onClose={() => setIsMenuOpen(false)}
+      />
+    </>
   );
 };
 
