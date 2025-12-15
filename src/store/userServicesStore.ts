@@ -7,6 +7,8 @@ type ServiceStore = {
   error: string | null;
   userServices: UserServices[] | null;
 
+  setUserServices: (services: UserServices[] | null) => void;
+  createService: (service: UserServices) => void;
   fetchUserServices: (userId: string) => Promise<void>;
   updateService: (
     serviceId: string,
