@@ -21,13 +21,22 @@ export function ServicesPage() {
   const MainContent = (
     <div className="flex flex-col gap-6">
       {isAuthenticated && (
-         <div className="flex justify-between items-center bg-white p-4 border border-black">
-            <div>
-              <h2 className="font-bold uppercase tracking-tight">Offer your services</h2>
-              <p className="text-xs text-gray-500 font-mono">Join the marketplace today</p>
-            </div>
-            <Button onClick={() => setIsCreateModalOpen(true)} className="uppercase font-bold">Create Service</Button>
-         </div>
+        <div className="flex justify-between items-center bg-white p-4 border border-black">
+          <div>
+            <h2 className="font-bold uppercase tracking-tight">
+              Offer your services
+            </h2>
+            <p className="text-xs text-gray-500 font-mono">
+              Join the marketplace today
+            </p>
+          </div>
+          <Button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="uppercase font-bold"
+          >
+            Create Service
+          </Button>
+        </div>
       )}
       <MarketFeed />
     </div>
@@ -35,14 +44,12 @@ export function ServicesPage() {
 
   return (
     <>
-      <DashboardLayout sidebar={Sidebar}>
-        {MainContent}
-      </DashboardLayout>
-      
+      <DashboardLayout sidebar={Sidebar}>{MainContent}</DashboardLayout>
+
       {isAuthenticated && (
         <CreateServiceModal
-            isOpen={isCreateModalOpen}
-            onClose={() => setIsCreateModalOpen(false)}
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
         />
       )}
     </>

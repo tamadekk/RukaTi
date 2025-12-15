@@ -5,7 +5,6 @@ const HeroSection = () => {
     <section className="relative isolate overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-white" />
 
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 md:py-32 border-x border-black max-w-7xl">
         <div className="mx-auto max-w-3xl text-center text-black">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight drop-shadow">

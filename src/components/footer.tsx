@@ -12,22 +12,13 @@ const Footer = () => {
           </p>
 
           <nav className="order-3 md:order-none flex items-center gap-6 sm:gap-8 text-xs sm:text-sm">
-            <a
-              href="#about"
-              className="hover:text-black transition-colors"
-            >
+            <a href="#about" className="hover:text-black transition-colors">
               About
             </a>
-            <a
-              href="#terms"
-              className="hover:text-black transition-colors"
-            >
+            <a href="#terms" className="hover:text-black transition-colors">
               Terms
             </a>
-            <a
-              href="#privacy"
-              className="hover:text-black transition-colors"
-            >
+            <a href="#privacy" className="hover:text-black transition-colors">
               Privacy
             </a>
           </nav>

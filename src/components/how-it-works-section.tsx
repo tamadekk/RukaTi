@@ -43,7 +43,7 @@ const HowItWorksSection = () => {
   return (
     <section className="bg-white border-t border-black">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 border-x border-black max-w-7xl py-16">
-          <div className="text-center mb-12 font-mono">
+        <div className="text-center mb-12 font-mono">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
             How It Works
           </h2>

@@ -16,11 +16,15 @@ const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
           className="w-32 h-32 object-cover border border-black grayscale group-hover:grayscale-0 transition-all duration-300"
         />
       </div>
-      
+
       <div className="w-full space-y-2">
         <h3 className="text-xl font-bold uppercase tracking-tight">{name}</h3>
-        <p className="text-sm text-gray-500 font-mono border-b border-black pb-4 mb-4">{location || "No Role Set"}</p>
-        <p className="text-sm text-gray-600 leading-relaxed">{description || "No bio available."}</p>
+        <p className="text-sm text-gray-500 font-mono border-b border-black pb-4 mb-4">
+          {location || "No Role Set"}
+        </p>
+        <p className="text-sm text-gray-600 leading-relaxed">
+          {description || "No bio available."}
+        </p>
       </div>
 
       <Button variant="outline" className="w-full mt-4">

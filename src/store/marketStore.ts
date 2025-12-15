@@ -40,7 +40,7 @@ export const useMarketStore = create<MarketStore>((set) => ({
       if (error instanceof Error) {
         set({ error: error.message });
       } else {
-         set({ error: "An unknown error occurred" });
+        set({ error: "An unknown error occurred" });
       }
     } finally {
       set({ loading: false });
@@ -48,7 +48,12 @@ export const useMarketStore = create<MarketStore>((set) => ({
   },
 
   fetchServiceDetails: async (serviceId: string) => {
-    set({ loading: true, error: null, currentService: null, providerProfile: null });
+    set({
+      loading: true,
+      error: null,
+      currentService: null,
+      providerProfile: null,
+    });
     try {
       // 1. Fetch Service
       const { data: serviceData, error: serviceError } = await supabase
@@ -62,24 +67,23 @@ export const useMarketStore = create<MarketStore>((set) => ({
 
       // 2. Fetch Provider Profile
       if (serviceData?.user_id) {
-          const { data: profileData, error: profileError } = await supabase
-            .from("user_profiles")
-            .select("*")
-            .eq("user_id", serviceData.user_id)
-            .single();
-            
-          if (profileError) {
-            console.error("Error fetching provider profile:", profileError);
-          } else {
-             set({ providerProfile: profileData as UserProfile });
-          }
-      }
+        const { data: profileData, error: profileError } = await supabase
+          .from("user_profiles")
+          .select("*")
+          .eq("user_id", serviceData.user_id)
+          .single();
 
+        if (profileError) {
+          console.error("Error fetching provider profile:", profileError);
+        } else {
+          set({ providerProfile: profileData as UserProfile });
+        }
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
         set({ error: error.message });
       } else {
-         set({ error: "An unknown error occurred" });
+        set({ error: "An unknown error occurred" });
       }
     } finally {
       set({ loading: false });
@@ -87,33 +91,37 @@ export const useMarketStore = create<MarketStore>((set) => ({
   },
 
   fetchProviderDetails: async (userId: string) => {
-    set({ loading: true, error: null, providerProfile: null, providerServices: [] });
+    set({
+      loading: true,
+      error: null,
+      providerProfile: null,
+      providerServices: [],
+    });
     try {
-        // 1. Fetch Profile
-        const { data: profileData, error: profileError } = await supabase
-          .from("user_profiles")
-          .select("*")
-          .eq("user_id", userId)
-          .single();
+      // 1. Fetch Profile
+      const { data: profileData, error: profileError } = await supabase
+        .from("user_profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .single();
 
-        if (profileError) throw profileError;
-        set({ providerProfile: profileData as UserProfile });
+      if (profileError) throw profileError;
+      set({ providerProfile: profileData as UserProfile });
 
-        // 2. Fetch Services
-        const { data: servicesData, error: servicesError } = await supabase
-          .from("user_services")
-          .select("*")
-          .eq("user_id", userId)
-          .order("created_at", { ascending: false });
+      // 2. Fetch Services
+      const { data: servicesData, error: servicesError } = await supabase
+        .from("user_services")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
-        if (servicesError) throw servicesError;
-        set({ providerServices: servicesData as UserServices[] });
-
+      if (servicesError) throw servicesError;
+      set({ providerServices: servicesData as UserServices[] });
     } catch (error: unknown) {
       if (error instanceof Error) {
         set({ error: error.message });
       } else {
-         set({ error: "An unknown error occurred" });
+        set({ error: "An unknown error occurred" });
       }
     } finally {
       set({ loading: false });

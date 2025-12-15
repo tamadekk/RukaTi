@@ -8,17 +8,20 @@ type ServiceStore = {
   userServices: UserServices[] | null;
 
   fetchUserServices: (userId: string) => Promise<void>;
-  updateService: (serviceId: string, updates: Partial<UserServices>) => Promise<void>;
+  updateService: (
+    serviceId: string,
+    updates: Partial<UserServices>,
+  ) => Promise<void>;
   deleteService: (serviceId: string) => Promise<void>;
 };
-
 
 export const useServiceStore = create<ServiceStore>((set) => ({
   loading: false,
   error: null,
   userServices: null,
 
-  setUserServices: (services: UserServices[] | null) => set({ userServices: services }),
+  setUserServices: (services: UserServices[] | null) =>
+    set({ userServices: services }),
 
   createService: (service: UserServices) =>
     set((state) => ({
@@ -56,9 +59,12 @@ export const useServiceStore = create<ServiceStore>((set) => ({
       if (error) throw error;
 
       set((state) => ({
-        userServices: state.userServices?.map((service) =>
-          service.service_id === serviceId ? { ...service, ...updates } : service
-        ) || null,
+        userServices:
+          state.userServices?.map((service) =>
+            service.service_id === serviceId
+              ? { ...service, ...updates }
+              : service,
+          ) || null,
       }));
     } catch (error: any) {
       set({ error: error.message });
@@ -78,9 +84,10 @@ export const useServiceStore = create<ServiceStore>((set) => ({
       if (error) throw error;
 
       set((state) => ({
-        userServices: state.userServices?.filter(
-          (service) => service.service_id !== serviceId
-        ) || null,
+        userServices:
+          state.userServices?.filter(
+            (service) => service.service_id !== serviceId,
+          ) || null,
       }));
     } catch (error: any) {
       set({ error: error.message });

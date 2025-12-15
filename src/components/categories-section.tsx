@@ -14,7 +14,9 @@ const CategoryCard = ({ category }: { category: (typeof categories)[0] }) => {
           <h3 className="text-sm font-bold text-black mb-1 uppercase tracking-tight">
             {category.title}
           </h3>
-          <p className="text-xs text-gray-500 font-mono">{category.description}</p>
+          <p className="text-xs text-gray-500 font-mono">
+            {category.description}
+          </p>
         </div>
       </div>
     </div>

@@ -23,8 +23,8 @@ const ServicesSection = ({ onAddServiceClick }: ServicesSectionProps) => {
           ))
         )}
       </div>
-      <Button 
-        className="w-full mt-4" 
+      <Button
+        className="w-full mt-4"
         variant="default"
         onClick={onAddServiceClick}
       >
