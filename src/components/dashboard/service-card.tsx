@@ -19,7 +19,8 @@ export const ServiceCard = ({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation if clicked within Link
+    e.preventDefault();
+    e.stopPropagation();
     if (confirm("Are you sure you want to delete this service?")) {
       setIsDeleting(true);
       await deleteService(service.service_id);
@@ -28,7 +29,8 @@ export const ServiceCard = ({
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
+    e.preventDefault();
+    e.stopPropagation();
     setIsEditOpen(true);
   };
 
@@ -124,11 +126,13 @@ export const ServiceCard = ({
       </div>
 
       {!readonly && (
-        <EditServiceModal
-          service={service}
-          isOpen={isEditOpen}
-          onClose={() => setIsEditOpen(false)}
-        />
+        <div onClick={(e) => e.stopPropagation()}>
+          <EditServiceModal
+            service={service}
+            isOpen={isEditOpen}
+            onClose={() => setIsEditOpen(false)}
+          />
+        </div>
       )}
     </div>
   );
