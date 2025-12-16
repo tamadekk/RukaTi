@@ -11,27 +11,43 @@ type MarketStore = {
 
   providerServices: UserServices[];
 
+  selectedCategory: string | null;
+  setSelectedCategory: (categoryId: string | null) => void;
+
   fetchAllServices: () => Promise<void>;
   fetchServiceDetails: (serviceId: string) => Promise<void>;
   fetchProviderDetails: (userId: string) => Promise<void>;
 };
 
-export const useMarketStore = create<MarketStore>((set) => ({
+export const useMarketStore = create<MarketStore>((set, get) => ({
   loading: false,
   error: null,
   services: [],
   currentService: null,
   providerProfile: null,
   providerServices: [],
+  selectedCategory: null,
+
+  setSelectedCategory: (categoryId) => {
+    set({ selectedCategory: categoryId });
+    get().fetchAllServices();
+  },
 
   fetchAllServices: async () => {
     set({ loading: true, error: null });
+    const { selectedCategory } = get();
+
     try {
-      // Fetch all services, ordered by newest first
-      const { data, error } = await supabase
+      let query = supabase
         .from("user_services")
         .select("*")
         .order("created_at", { ascending: false });
+
+      if (selectedCategory) {
+        query = query.eq("category", selectedCategory);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
 

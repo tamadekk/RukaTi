@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+import { categories } from "@/const/categories-section";
+
 import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
 
 type CreateServiceFormProps = {
@@ -116,16 +118,25 @@ export const CreateServiceForm = ({
           <label className="text-xs font-bold uppercase tracking-wider">
             Category
           </label>
-          <Input
+          <select
             {...register("category")}
-            placeholder="E.G. TUTORING"
-            className={`rounded-none border-black h-12 ${errors.category ? "border-red-500" : ""}`}
-          />
+            className={`w-full rounded-none border border-black h-12 px-3 bg-white ${
+              errors.category ? "border-red-500" : ""
+            }`}
+          >
+            <option value="" disabled>
+              SELECT A CATEGORY
+            </option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.title}>
+                {cat.title}
+              </option>
+            ))}
+          </select>
           {errors.category && (
             <p className="text-red-500 text-xs">{errors.category.message}</p>
           )}
         </div>
-
         <div className="space-y-2">
           <label className="text-xs font-bold uppercase tracking-wider">
             Price Range
@@ -136,7 +147,6 @@ export const CreateServiceForm = ({
             className="rounded-none border-black h-12"
           />
         </div>
-
         <div className="space-y-2">
           <label className="text-xs font-bold uppercase tracking-wider">
             Availability
@@ -147,7 +157,6 @@ export const CreateServiceForm = ({
             className="rounded-none border-black h-12"
           />
         </div>
-
         <div className="space-y-2">
           <label className="text-xs font-bold uppercase tracking-wider">
             Location

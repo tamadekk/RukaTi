@@ -35,4 +35,10 @@ export const categories = [
     image: "/src/assets/eventTile.jpg",
     description: "Party planning and event support",
   },
+  {
+    id: "other",
+    title: "Other",
+    image: "/src/assets/eventTile.jpg",
+    description: "Other services",
+  },
 ];
