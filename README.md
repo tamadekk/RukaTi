@@ -1,43 +1,72 @@
-```text
- ____        _         _____ _
-|  _ \ _   _| | ____ _|_   _(_)
-| |_) | | | | |/ / _` | | | | |
-|  _ <| |_| |   < (_| | | | | |
-|_| \_\\__,_|_|\_\__,_| |_| |_|
+![RukaTi Cover](public/social-preview.png)
 
-[ RIJEKA'S SERVICE HUB ]
-```
-
-### // THE PROBLEM
-
-Trying to find a car mechanic, electrician, or cleaner in Rijeka is frustrating.
-You are stuck scrolling through Google Maps, outdated Facebook pages, or overwhelmed by cluttered classifieds like Njuškalo.
-
-There is no "one place" for specialized local services.
-
-### // THE SOLUTION
-
-**RukaTi** ("Hand to You") is that place.
-
-A dedicated platform to find help or offer skills in just a few clicks.
-No clutter. No ads. Just enabling people to connect.
+# RukaTi [ Hand to You ]
 
 > **"Find help. Offer help. Simple."**
 
-### // MVP FEATURES
-
-The initial release focuses on core utility and trust:
-
-- `[ ]` **Post / Update / Delete Services**: Full control for providers.
-- `[ ]` **Availability Toggle**: "Accepting Work" switch to prevent ghosting.
-- `[ ]` **Neighborhood Tags**: Filter by area (e.g., _Zamet, Centar_) - no complex maps.
-- `[ ]` **Saved List**: "Heart" services to compare later.
-- `[ ]` **Reviews**: Trust based on community feedback.
-- `[ ]` **Chat**: Direct communication between parties.
-- `[ ]` **Promote**: Options to boost visibility for top services.
+An uncompromisingly simple service marketplace for Rijeka. Functional, fast, and free of clutter.
 
 ---
 
-```text
-RUN: bun install && bun dev
+## // THE PROBLEM
+
+**Finding help in Rijeka is broken.**
+You need a mechanic, an electrician, or a cleaner.
+
+- **Google Maps:** Too broad, hard to filter.
+- **Facebook Groups:** Outdated, chaotic, unsearchable.
+- **Njuškalo:** Overwhelmed with ads, primarily for selling goods.
+
+There is no dedicated, single place to simply _connect_ with local service providers.
+
+## // THE SOLUTION
+
+**RukaTi** solves this with a **Technical Minimalist** approach.
+It is a dedicated hub where:
+
+- **Customers** find services in seconds.
+- **Providers** get visibility without managing complex profiles.
+- **No specific app needed** - just a fast, responsive web platform.
+
+## // MVP SCOPE
+
+We are building the essentials first. No bloat.
+
+### Core Features
+
+- [ ] **Service Management**: Create, update, and delete service listings.
+- [ ] **Availability Toggle**: A simple `on/off` switch for providers ("Accepting Work").
+- [ ] **Neighborhood Filters**: Find help in _Zamet_, _Centar_, or _Trsat_ (no complex maps).
+- [ ] **Saved List**: Simple "favorites" to compare providers later.
+
+### Trust & Communication
+
+- [ ] **Reviews**: Community-driven feedback system.
+- [ ] **Direct Chat**: Built-in messaging to arrange details.
+- [ ] **Promoted Listings**: Visibility boosts for top-rated services.
+
+---
+
+## // QUICK START
+
+**Prerequisites:** [Bun](https://bun.sh/) & [Supabase](https://supabase.com/) project.
+
+```bash
+# 1. Clone
+git clone https://github.com/your-username/rukati.git
+cd rukati
+
+# 2. Install
+bun install
+
+# 3. Configure .env.local
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+
+# 4. Run
+bun dev
 ```
+
+---
+
+_Built with [React](https://react.dev/), [Vite](https://vitejs.dev/), [Tailwind](https://tailwindcss.com/), & [Supabase](https://supabase.com/)._
