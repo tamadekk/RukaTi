@@ -19,7 +19,11 @@ const ServicesSection = ({ onAddServiceClick }: ServicesSectionProps) => {
           <div>No services added yet.</div>
         ) : (
           services.map((service) => (
-            <ServiceCard service={service} key={service.service_id} />
+            <ServiceCard
+              service={service}
+              key={service.service_id}
+              variant="horizontal"
+            />
           ))
         )}
       </div>

@@ -8,11 +8,13 @@ import { Link } from "@tanstack/react-router";
 interface ServiceCardProps {
   service: UserServices;
   readonly?: boolean;
+  variant?: "vertical" | "horizontal";
 }
 
 export const ServiceCard = ({
   service,
   readonly = false,
+  variant = "vertical",
 }: ServiceCardProps) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const deleteService = useServiceStore((state) => state.deleteService);
@@ -34,10 +36,20 @@ export const ServiceCard = ({
     setIsEditOpen(true);
   };
 
+  const isHorizontal = variant === "horizontal";
+
   const CardContent = (
-    <div className="border border-black bg-white transition-opacity hover:opacity-100 group cursor-pointer hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200 flex flex-row h-36">
+    <div
+      className={`border border-black bg-white transition-opacity hover:opacity-100 group cursor-pointer hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200 
+      ${isHorizontal ? "flex flex-row h-36" : "flex flex-col h-full p-3 space-y-2"}
+      `}
+    >
       {service.service_image ? (
-        <div className="w-36 h-full shrink-0 border-r border-black overflow-hidden relative">
+        <div
+          className={`overflow-hidden border-black relative
+          ${isHorizontal ? "w-36 h-full shrink-0 border-r" : "aspect-[3/2] w-full border mb-1"}
+          `}
+        >
           <img
             src={service.service_image}
             alt={service.title}
@@ -45,16 +57,24 @@ export const ServiceCard = ({
           />
         </div>
       ) : (
-        <div className="w-36 h-full shrink-0 border-r border-black bg-gray-100 flex items-center justify-center text-xs text-gray-400 font-mono p-4 text-center">
+        <div
+          className={`border-black bg-gray-100 flex items-center justify-center text-xs text-gray-400 font-mono text-center
+          ${isHorizontal ? "w-36 h-full shrink-0 border-r p-4" : "aspect-[3/2] w-full border mb-1"}
+          `}
+        >
           No Image
         </div>
       )}
 
-      <div className="flex flex-col min-w-0 flex-1 p-3 pl-4 relative">
+      <div
+        className={`flex flex-col min-w-0 flex-1 ${isHorizontal ? "p-3 pl-4 relative" : ""}`}
+      >
         <div className="flex justify-between items-start gap-2">
           <div className="min-w-0 w-full">
             <h3
-              className="font-bold uppercase tracking-tight truncate group-hover:text-blue-600 transition-colors text-lg max-w-[85%]"
+              className={`font-bold uppercase tracking-tight truncate group-hover:text-blue-600 transition-colors
+                ${isHorizontal ? "text-lg max-w-[85%]" : "text-sm"}
+                `}
               title={service.title}
             >
               {service.title}
@@ -64,7 +84,11 @@ export const ServiceCard = ({
             </p>
           </div>
           {!readonly && (
-            <div className="absolute top-0 right-0 gap-1 flex bg-white/50 backdrop-blur-sm p-1">
+            <div
+              className={`flex gap-1 
+                ${isHorizontal ? "absolute top-0 right-0 bg-white/50 backdrop-blur-sm p-1" : "relative shrink-0 z-10"}
+                `}
+            >
               <Button
                 variant="outline"
                 size="icon"
@@ -112,11 +136,19 @@ export const ServiceCard = ({
           )}
         </div>
 
-        <p className="text-gray-600 text-xs line-clamp-2 mt-2 leading-relaxed">
+        <p
+          className={`text-gray-600 text-xs line-clamp-2 leading-relaxed
+          ${isHorizontal ? "mt-2" : ""}
+          `}
+        >
           {service.description}
         </p>
 
-        <div className="mt-auto pt-2 flex flex-col gap-0.5 text-[10px] text-gray-500 font-mono">
+        <div
+          className={`mt-auto pt-2 flex flex-col gap-0.5 text-[10px] text-gray-500 font-mono
+          ${isHorizontal ? "" : "border-t border-gray-100"}
+          `}
+        >
           {service.price_range && (
             <div className="flex justify-between">
               <span className="font-bold text-black">PRICE:</span>{" "}
