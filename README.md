@@ -1,73 +1,43 @@
-# React + TypeScript + Vite
+```text
+ ____        _         _____ _
+|  _ \ _   _| | ____ _|_   _(_)
+| |_) | | | | |/ / _` | | | | |
+|  _ <| |_| |   < (_| | | | | |
+|_| \_\\__,_|_|\_\__,_| |_| |_|
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+[ RIJEKA'S SERVICE HUB ]
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### // THE PROBLEM
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+Trying to find a car mechanic, electrician, or cleaner in Rijeka is frustrating.
+You are stuck scrolling through Google Maps, outdated Facebook pages, or overwhelmed by cluttered classifieds like Njuškalo.
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+There is no "one place" for specialized local services.
+
+### // THE SOLUTION
+
+**RukaTi** ("Hand to You") is that place.
+
+A dedicated platform to find help or offer skills in just a few clicks.
+No clutter. No ads. Just enabling people to connect.
+
+> **"Find help. Offer help. Simple."**
+
+### // MVP FEATURES
+
+The initial release focuses on core utility and trust:
+
+- `[ ]` **Post / Update / Delete Services**: Full control for providers.
+- `[ ]` **Availability Toggle**: "Accepting Work" switch to prevent ghosting.
+- `[ ]` **Neighborhood Tags**: Filter by area (e.g., _Zamet, Centar_) - no complex maps.
+- `[ ]` **Saved List**: "Heart" services to compare later.
+- `[ ]` **Reviews**: Trust based on community feedback.
+- `[ ]` **Chat**: Direct communication between parties.
+- `[ ]` **Promote**: Options to boost visibility for top services.
+
+---
+
+```text
+RUN: bun install && bun dev
 ```
