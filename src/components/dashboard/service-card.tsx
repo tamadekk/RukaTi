@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { toast } from "sonner";
+import { useAsyncAction } from "@/hooks/use-async-action";
 import type { UserServices } from "@/types/user";
 import { Button } from "@/components/ui/button";
 import { EditServiceModal } from "@/components/dashboard/edit-service-modal";
@@ -29,21 +29,17 @@ export const ServiceCard = ({
   variant = "vertical",
 }: ServiceCardProps) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteService = useServiceStore((state) => state.deleteService);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const { isLoading: isDeleting, execute: executeDelete } = useAsyncAction();
 
   const onConfirmDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsDeleting(true);
-    try {
-      await deleteService(service.service_id);
-      toast.success("Service deleted");
-    } catch (error) {
-      toast.error("Failed to delete service");
-      console.error(error);
-    } finally {
-      setIsDeleting(false);
-    }
+    e.preventDefault();
+    await executeDelete(() => deleteService(service.service_id), {
+      successMessage: "Service deleted",
+      errorMessage: "Failed to delete service",
+      onSuccess: () => setIsDeleteDialogOpen(false),
+    });
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
@@ -126,7 +122,10 @@ export const ServiceCard = ({
                 </svg>
               </Button>
 
-              <AlertDialog>
+              <AlertDialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setIsDeleteDialogOpen}
+              >
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="destructive"
@@ -167,9 +166,10 @@ export const ServiceCard = ({
                     </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={onConfirmDelete}
+                      disabled={isDeleting}
                       className="bg-red-600 hover:bg-red-700 text-white border-0 font-bold uppercase rounded-none"
                     >
-                      Delete
+                      {isDeleting ? "Deleting..." : "Delete"}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>

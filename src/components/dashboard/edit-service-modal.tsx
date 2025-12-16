@@ -4,7 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { useAsyncAction } from "@/hooks/use-async-action";
 import { CreateServiceForm } from "@/components/create-service-form";
 import type { UserServices } from "@/types/user";
 import { useServiceStore } from "@/store/userServicesStore";
@@ -23,16 +23,14 @@ export const EditServiceModal = ({
 }: EditServiceModalProps) => {
   const updateService = useServiceStore((state) => state.updateService);
   const loading = useServiceStore((state) => state.loading);
+  const { isLoading, execute } = useAsyncAction();
 
   const handleSubmit = async (data: ServiceFormData) => {
-    try {
-      await updateService(service.service_id, data);
-      toast.success("Service updated successfully");
-      onClose();
-    } catch (error) {
-      console.error("Update error:", error);
-      toast.error("Failed to update service");
-    }
+    await execute(() => updateService(service.service_id, data), {
+      successMessage: "Service updated successfully",
+      errorMessage: "Failed to update service",
+      onSuccess: onClose,
+    });
   };
 
   return (
@@ -45,7 +43,7 @@ export const EditServiceModal = ({
         </DialogHeader>
         <CreateServiceForm
           onSubmit={handleSubmit}
-          loading={loading}
+          loading={loading || isLoading}
           defaultValues={{
             title: service.title,
             description: service.description,

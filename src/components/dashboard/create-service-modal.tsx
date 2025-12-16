@@ -9,7 +9,7 @@ import { useServiceStore } from "@/store/userServicesStore";
 import type { ServiceFormData } from "@/schemas/services";
 import { useUserSession } from "@/store/userSessionsStore";
 import supabase from "@/supabase-client";
-import { toast } from "sonner";
+import { useAsyncAction } from "@/hooks/use-async-action";
 
 interface CreateServiceModalProps {
   isOpen: boolean;
@@ -22,38 +22,44 @@ export const CreateServiceModal = ({
 }: CreateServiceModalProps) => {
   const { createService } = useServiceStore();
   const user = useUserSession((state) => state.user);
+  const { isLoading, execute } = useAsyncAction();
 
   const handleSubmit = async (values: ServiceFormData) => {
     if (!user?.id) return;
 
-    const service_id = crypto.randomUUID();
-    const created_at = new Date().toISOString();
+    await execute(
+      async () => {
+        const service_id = crypto.randomUUID();
+        const created_at = new Date().toISOString();
 
-    const service = {
-      service_id,
-      user_id: user.id,
-      title: values.title,
-      description: values.description,
-      category: values.category,
-      location: values.location ?? "",
-      contact: values.contact ?? "",
-      price_range: values.price_range ?? "",
-      availability: values.availability ?? "",
-      service_image: values.service_image ?? "",
-      rating: 0,
-      created_at,
-    };
+        const service = {
+          service_id,
+          user_id: user.id,
+          title: values.title,
+          description: values.description,
+          category: values.category,
+          location: values.location ?? "",
+          contact: values.contact ?? "",
+          price_range: values.price_range ?? "",
+          availability: values.availability ?? "",
+          service_image: values.service_image ?? "",
+          rating: 0,
+          created_at,
+        };
 
-    const { error } = await supabase.from("user_services").insert(service);
+        const { error } = await supabase.from("user_services").insert(service);
 
-    if (error) {
-      console.error("Supabase error:", error);
-      toast.error("Failed to create service");
-      return;
-    }
-    createService(service);
-    toast.success("Service created successfully");
-    onClose();
+        if (error) {
+          throw error;
+        }
+        createService(service);
+      },
+      {
+        successMessage: "Service created successfully",
+        errorMessage: "Failed to create service",
+        onSuccess: onClose,
+      },
+    );
   };
 
   return (
@@ -64,7 +70,7 @@ export const CreateServiceModal = ({
             Create New Service
           </DialogTitle>
         </DialogHeader>
-        <CreateServiceForm onSubmit={handleSubmit} loading={false} />
+        <CreateServiceForm onSubmit={handleSubmit} loading={isLoading} />
       </DialogContent>
     </Dialog>
   );

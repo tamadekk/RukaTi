@@ -26,7 +26,7 @@ export const CreateServiceForm = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ServiceFormData>({
     resolver: zodResolver(ServiceSchema),
     defaultValues,
@@ -183,7 +183,7 @@ export const CreateServiceForm = ({
       {/* Submit */}
       <Button
         type="submit"
-        disabled={loading}
+        disabled={loading || isSubmitting}
         className="w-full rounded-none border border-black bg-black text-white hover:bg-gray-900 h-14 uppercase tracking-widest font-bold text-sm"
       >
         {loading ? "Submitting..." : "Submit Service"}
