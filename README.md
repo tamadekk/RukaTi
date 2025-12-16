@@ -1,4 +1,6 @@
-![RukaTi Cover](public/social-preview.png)
+<div align="center">
+  <img src="public/social-preview.png" width="300" alt="RukaTi Cover" />
+</div>
 
 # RukaTi [ Hand to You ]
 
