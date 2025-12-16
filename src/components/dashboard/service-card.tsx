@@ -5,6 +5,17 @@ import { Button } from "@/components/ui/button";
 import { EditServiceModal } from "@/components/dashboard/edit-service-modal";
 import { useServiceStore } from "@/store/userServicesStore";
 import { Link } from "@tanstack/react-router";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ServiceCardProps {
   service: UserServices;
@@ -21,20 +32,17 @@ export const ServiceCard = ({
   const deleteService = useServiceStore((state) => state.deleteService);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = async (e: React.MouseEvent) => {
-    e.preventDefault();
+  const onConfirmDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm("Are you sure you want to delete this service?")) {
-      setIsDeleting(true);
-      try {
-        await deleteService(service.service_id);
-        toast.success("Service deleted");
-      } catch (error) {
-        toast.error("Failed to delete service");
-        console.error(error);
-      } finally {
-        setIsDeleting(false);
-      }
+    setIsDeleting(true);
+    try {
+      await deleteService(service.service_id);
+      toast.success("Service deleted");
+    } catch (error) {
+      toast.error("Failed to delete service");
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -48,8 +56,8 @@ export const ServiceCard = ({
 
   const CardContent = (
     <div
-      className={`border border-black bg-white transition-opacity hover:opacity-100 group cursor-pointer hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200 
-      ${isHorizontal ? "flex flex-row h-36" : "flex flex-col h-full p-3 space-y-2"}
+      className={`border border-black bg-white transition-opacity hover:opacity-100 group hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200 
+      ${isHorizontal ? "flex flex-row h-36" : "flex flex-col h-full p-3 space-y-2 cursor-pointer"}
       `}
     >
       {service.service_image ? (
@@ -117,29 +125,55 @@ export const ServiceCard = ({
                   <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
                 </svg>
               </Button>
-              <Button
-                variant="destructive"
-                size="icon"
-                className="h-6 w-6"
-                onClick={handleDelete}
-                disabled={isDeleting}
-              >
-                <span className="sr-only">Delete</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-3 h-3"
-                >
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                </svg>
-              </Button>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="h-6 w-6"
+                    disabled={isDeleting}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="sr-only">Delete</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-3 h-3"
+                    >
+                      <path d="M3 6h18" />
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    </svg>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Service?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete{" "}
+                      <strong>{service.title}</strong>? This action cannot be
+                      undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={(e) => e.stopPropagation()}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={onConfirmDelete}
+                      className="bg-red-600 hover:bg-red-700 text-white border-0 font-bold uppercase rounded-none"
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           )}
         </div>
@@ -183,6 +217,10 @@ export const ServiceCard = ({
       )}
     </div>
   );
+
+  if (isHorizontal) {
+    return CardContent;
+  }
 
   return (
     <Link
