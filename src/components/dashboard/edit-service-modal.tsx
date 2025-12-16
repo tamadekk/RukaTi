@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 import { CreateServiceForm } from "@/components/create-service-form";
 import type { UserServices } from "@/types/user";
 import { useServiceStore } from "@/store/userServicesStore";
@@ -24,8 +25,14 @@ export const EditServiceModal = ({
   const loading = useServiceStore((state) => state.loading);
 
   const handleSubmit = async (data: ServiceFormData) => {
-    await updateService(service.service_id, data);
-    onClose();
+    try {
+      await updateService(service.service_id, data);
+      toast.success("Service updated successfully");
+      onClose();
+    } catch (error) {
+      console.error("Update error:", error);
+      toast.error("Failed to update service");
+    }
   };
 
   return (

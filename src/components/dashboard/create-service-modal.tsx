@@ -9,6 +9,7 @@ import { useServiceStore } from "@/store/userServicesStore";
 import type { ServiceFormData } from "@/schemas/services";
 import { useUserSession } from "@/store/userSessionsStore";
 import supabase from "@/supabase-client";
+import { toast } from "sonner";
 
 interface CreateServiceModalProps {
   isOpen: boolean;
@@ -47,9 +48,11 @@ export const CreateServiceModal = ({
 
     if (error) {
       console.error("Supabase error:", error);
+      toast.error("Failed to create service");
       return;
     }
     createService(service);
+    toast.success("Service created successfully");
     onClose();
   };
 

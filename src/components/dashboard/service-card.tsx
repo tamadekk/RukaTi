@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import type { UserServices } from "@/types/user";
 import { Button } from "@/components/ui/button";
 import { EditServiceModal } from "@/components/dashboard/edit-service-modal";
@@ -25,8 +26,15 @@ export const ServiceCard = ({
     e.stopPropagation();
     if (confirm("Are you sure you want to delete this service?")) {
       setIsDeleting(true);
-      await deleteService(service.service_id);
-      setIsDeleting(false);
+      try {
+        await deleteService(service.service_id);
+        toast.success("Service deleted");
+      } catch (error) {
+        toast.error("Failed to delete service");
+        console.error(error);
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 

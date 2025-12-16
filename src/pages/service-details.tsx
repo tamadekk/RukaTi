@@ -5,6 +5,7 @@ import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 import {
   MapPin,
@@ -33,8 +34,7 @@ export function ServiceDetailsPage() {
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    // You might want to add a toast notification here later
-    alert("Link copied to clipboard!");
+    toast.success("Link copied to clipboard!");
   };
 
   if (loading) {

@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { Toaster } from "@/components/ui/sonner";
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -13,6 +14,7 @@ const RootLayout = () => {
       <TanStackRouterDevtools />
       <div className="mt-auto" />
       <Footer />
+      <Toaster />
     </main>
   );
 };
