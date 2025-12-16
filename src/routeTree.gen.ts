@@ -1,4 +1,5 @@
 /* eslint-disable */
+/* prettier-ignore */
 
 // @ts-nocheck
 
@@ -8,7 +9,7 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
+import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from "./routes/services";
 import { Route as RegisterRouteImport } from "./routes/register";
 import { Route as LoginRouteImport } from "./routes/login";
