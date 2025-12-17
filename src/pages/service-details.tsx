@@ -22,6 +22,25 @@ export function ServiceDetailsPage() {
     fetchServiceDetails,
   } = useMarketStore();
 
+  // Mock reviews state
+  const { user } = useUserSession();
+  const [reviews, setReviews] = useState<Review[]>([
+    {
+      id: "1",
+      reviewer_name: "Alice Cooper",
+      rating: 5,
+      comment: "Excellent service! Very professional and timely.",
+      created_at: new Date(Date.now() - 86400000).toISOString(),
+    },
+    {
+      id: "2",
+      reviewer_name: "Bob Smith",
+      rating: 4,
+      comment: "Great work, but arrived a bit late.",
+      created_at: new Date(Date.now() - 172800000).toISOString(),
+    },
+  ]);
+
   useEffect(() => {
     if (serviceId) {
       fetchServiceDetails(serviceId);
@@ -56,26 +75,6 @@ export function ServiceDetailsPage() {
       </DashboardLayout>
     );
   }
-
-  // Mock reviews state
-  const [reviews, setReviews] = useState<Review[]>([
-    {
-      id: "1",
-      reviewer_name: "Alice Cooper",
-      rating: 5,
-      comment: "Excellent service! Very professional and timely.",
-      created_at: new Date(Date.now() - 86400000).toISOString(),
-    },
-    {
-      id: "2",
-      reviewer_name: "Bob Smith",
-      rating: 4,
-      comment: "Great work, but arrived a bit late.",
-      created_at: new Date(Date.now() - 172800000).toISOString(),
-    },
-  ]);
-
-  const { user } = useUserSession();
 
   const handleReviewSubmit = async (rating: number, comment: string) => {
     // Simulate API call
