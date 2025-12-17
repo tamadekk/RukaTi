@@ -28,6 +28,20 @@ const RegisterRouteComponent: React.FC = () => {
     confirmPassword: string;
   }) => {
     setError(null);
+    const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/;
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password can only contain letters, digits, and symbols (no spaces)",
+      );
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
