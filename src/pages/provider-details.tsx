@@ -4,7 +4,6 @@ import { useMarketStore } from "@/store/marketStore";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { ProviderHeader } from "@/components/provider-details/provider-header";
 import { ProviderServicesList } from "@/components/provider-details/provider-services-list";
-import { ProviderReviews } from "@/components/provider-details/provider-reviews";
 
 export function ProviderDetailsPage() {
   const { userId } = useParams({ from: "/provider/$userId" });
@@ -47,7 +46,6 @@ export function ProviderDetailsPage() {
       <div className="space-y-8 font-mono max-w-6xl mx-auto w-full">
         <ProviderHeader profile={providerProfile} />
         <ProviderServicesList services={providerServices} />
-        <ProviderReviews />
       </div>
     </DashboardLayout>
   );

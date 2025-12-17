@@ -26,3 +26,12 @@ export type UserServices = {
   created_at: string | Date;
   service_image?: string | null;
 };
+
+export type Review = {
+  id: string;
+  reviewer_name: string;
+  rating: number;
+  comment: string;
+  created_at: string | Date;
+  reviewer_avatar?: string;
+};
