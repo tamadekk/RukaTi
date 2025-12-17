@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import AuthCard from "@/components/auth-card";
 import LoginForm from "@/components/login-form";
 import supabase from "@/supabase-client";
@@ -56,4 +56,10 @@ const LoginRouteComponent: React.FC = () => {
 
 export const Route = createFileRoute("/login")({
   component: LoginRouteComponent,
+  beforeLoad: () => {
+    const { user } = useUserSession.getState();
+    if (user?.id) {
+      throw redirect({ to: "/dashboard" });
+    }
+  },
 });

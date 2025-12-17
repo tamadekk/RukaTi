@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import AuthCard from "@/components/auth-card";
 import RegistrationForm from "@/components/registration-form";
 import { useState } from "react";
@@ -58,4 +58,10 @@ const RegisterRouteComponent: React.FC = () => {
 
 export const Route = createFileRoute("/register")({
   component: RegisterRouteComponent,
+  beforeLoad: () => {
+    const { user } = useUserSession.getState();
+    if (user?.id) {
+      throw redirect({ to: "/dashboard" });
+    }
+  },
 });
