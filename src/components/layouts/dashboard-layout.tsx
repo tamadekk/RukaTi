@@ -14,7 +14,7 @@ export const DashboardLayout = ({
       <div className="max-w-7xl mx-auto border-x border-black bg-black gap-[1px] grid grid-cols-1 lg:grid-cols-12">
         {/* Sidebar - Spans 3 cols if present */}
         {sidebar && (
-          <div className="lg:col-span-3 bg-background p-6 flex flex-col gap-6">
+          <div className="hidden lg:flex lg:col-span-3 bg-background p-6 flex-col gap-6">
             {sidebar}
           </div>
         )}

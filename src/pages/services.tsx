@@ -5,6 +5,7 @@ import CategoriesSidebar from "@/components/dashboard/categories-sidebar";
 import MarketFeed from "@/components/dashboard/market-feed";
 import { CreateServiceModal } from "@/components/dashboard/create-service-modal";
 import { ServiceOfferHeader } from "@/components/dashboard/service-offer-header";
+import { MobileFilters } from "@/components/dashboard/mobile-filters";
 
 export function ServicesPage() {
   const user = useUserSession((state) => state.user);
@@ -17,6 +18,7 @@ export function ServicesPage() {
     <>
       <DashboardLayout sidebar={Sidebar}>
         <div className="flex flex-col gap-6">
+          <MobileFilters />
           {isAuthenticated && (
             <ServiceOfferHeader
               onOpenCreateModal={() => setIsCreateModalOpen(true)}
