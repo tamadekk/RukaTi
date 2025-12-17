@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 
 const HeroSection = () => {
   return (
@@ -17,30 +18,20 @@ const HeroSection = () => {
             tutoring, and more.
           </p>
 
-          <div className="mt-8 flex justify-center">
-            <form
-              className="w-full max-w-xl"
-              role="search"
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            >
-              <div className="flex items-stretch bg-white border border-black shadow-none">
-                <input
-                  type="search"
-                  placeholder="Search for services like 'plum'"
-                  className="flex-1 px-5 py-3 text-sm sm:text-base text-foreground placeholder:text-muted-foreground/80 bg-transparent outline-none font-mono"
-                  aria-label="Search for services"
-                />
-                <Button
-                  type="submit"
-                  className="rounded-none h-auto px-6 font-semibold"
-                  variant="default"
-                >
-                  Search
-                </Button>
-              </div>
-            </form>
+          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+            <Link to="/services">
+              <Button className="w-full sm:w-auto text-lg h-14 px-8 uppercase font-bold tracking-widest bg-black text-white hover:bg-neutral-800 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-none transition-all">
+                Find Services
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto text-lg h-14 px-8 uppercase font-bold tracking-widest border-2 border-black bg-white text-black hover:bg-gray-100 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-none transition-all"
+              >
+                Offer Services
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
