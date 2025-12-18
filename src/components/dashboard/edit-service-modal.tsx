@@ -9,6 +9,8 @@ import { CreateServiceForm } from "@/components/create-service-form";
 import type { UserServices } from "@/types/user";
 import { useServiceStore } from "@/store/userServicesStore";
 import type { ServiceFormData } from "@/schemas/services";
+import { toast } from "sonner";
+import { checkHasChanges } from "@/lib/utils";
 
 interface EditServiceModalProps {
   service: UserServices;
@@ -26,6 +28,23 @@ export const EditServiceModal = ({
   const { isLoading, execute } = useAsyncAction();
 
   const handleSubmit = async (data: ServiceFormData) => {
+    const hasChanges = checkHasChanges(data, service, [
+      "title",
+      "description",
+      "category",
+      "location",
+      "contact",
+      "price_range",
+      "availability",
+    ]);
+
+    const hasImageChange = data.service_image && data.service_image.length > 0;
+
+    if (!hasChanges && !hasImageChange) {
+      toast.info("No changes detected.");
+      return;
+    }
+
     await execute(() => updateService(service.service_id, data), {
       successMessage: "Service updated successfully",
       errorMessage: "Failed to update service",
