@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 import type { UserProfile } from "@/types/user";
 
 const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
@@ -27,9 +27,12 @@ const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
         </p>
       </div>
 
-      <Button variant="outline" className="w-full mt-4">
+      <Link
+        to="/edit-profile"
+        className="w-full mt-4 border border-black bg-background hover:bg-black hover:text-white"
+      >
         Edit Profile
-      </Button>
+      </Link>
     </div>
   );
 };
