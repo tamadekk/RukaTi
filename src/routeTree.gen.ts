@@ -8,288 +8,310 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as ServicesRouteImport } from './routes/services'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ServicesIndexRouteImport } from './routes/services/index'
-import { Route as ServicesServiceIdRouteImport } from './routes/services/$serviceId'
-import { Route as ProviderUserIdRouteImport } from './routes/provider/$userId'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as TermsRouteImport } from "./routes/terms";
+import { Route as ServicesRouteImport } from "./routes/services";
+import { Route as RegisterRouteImport } from "./routes/register";
+import { Route as PrivacyRouteImport } from "./routes/privacy";
+import { Route as LoginRouteImport } from "./routes/login";
+import { Route as AboutRouteImport } from "./routes/about";
+import { Route as AuthenticatedRouteImport } from "./routes/_authenticated";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as ServicesIndexRouteImport } from "./routes/services/index";
+import { Route as ServicesServiceIdRouteImport } from "./routes/services/$serviceId";
+import { Route as ProviderUserIdRouteImport } from "./routes/provider/$userId";
+import { Route as AuthenticatedEditProfileRouteImport } from "./routes/_authenticated/edit-profile";
+import { Route as AuthenticatedDashboardRouteImport } from "./routes/_authenticated/dashboard";
 
 const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
+  id: "/terms",
+  path: "/terms",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ServicesRoute = ServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
+  id: "/services",
+  path: "/services",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
+  id: "/register",
+  path: "/register",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
+  id: "/privacy",
+  path: "/privacy",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+  id: "/login",
+  path: "/login",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+  id: "/about",
+  path: "/about",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+  id: "/_authenticated",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ServicesIndexRoute = ServicesIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => ServicesRoute,
-} as any)
+} as any);
 const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
-  id: '/$serviceId',
-  path: '/$serviceId',
+  id: "/$serviceId",
+  path: "/$serviceId",
   getParentRoute: () => ServicesRoute,
-} as any)
+} as any);
 const ProviderUserIdRoute = ProviderUserIdRouteImport.update({
-  id: '/provider/$userId',
-  path: '/provider/$userId',
+  id: "/provider/$userId",
+  path: "/provider/$userId",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
+const AuthenticatedEditProfileRoute =
+  AuthenticatedEditProfileRouteImport.update({
+    id: "/edit-profile",
+    path: "/edit-profile",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+  id: "/dashboard",
+  path: "/dashboard",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/privacy': typeof PrivacyRoute
-  '/register': typeof RegisterRoute
-  '/services': typeof ServicesRouteWithChildren
-  '/terms': typeof TermsRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/provider/$userId': typeof ProviderUserIdRoute
-  '/services/$serviceId': typeof ServicesServiceIdRoute
-  '/services/': typeof ServicesIndexRoute
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/login": typeof LoginRoute;
+  "/privacy": typeof PrivacyRoute;
+  "/register": typeof RegisterRoute;
+  "/services": typeof ServicesRouteWithChildren;
+  "/terms": typeof TermsRoute;
+  "/dashboard": typeof AuthenticatedDashboardRoute;
+  "/edit-profile": typeof AuthenticatedEditProfileRoute;
+  "/provider/$userId": typeof ProviderUserIdRoute;
+  "/services/$serviceId": typeof ServicesServiceIdRoute;
+  "/services/": typeof ServicesIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/privacy': typeof PrivacyRoute
-  '/register': typeof RegisterRoute
-  '/terms': typeof TermsRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/provider/$userId': typeof ProviderUserIdRoute
-  '/services/$serviceId': typeof ServicesServiceIdRoute
-  '/services': typeof ServicesIndexRoute
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/login": typeof LoginRoute;
+  "/privacy": typeof PrivacyRoute;
+  "/register": typeof RegisterRoute;
+  "/terms": typeof TermsRoute;
+  "/dashboard": typeof AuthenticatedDashboardRoute;
+  "/edit-profile": typeof AuthenticatedEditProfileRoute;
+  "/provider/$userId": typeof ProviderUserIdRoute;
+  "/services/$serviceId": typeof ServicesServiceIdRoute;
+  "/services": typeof ServicesIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteWithChildren
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/privacy': typeof PrivacyRoute
-  '/register': typeof RegisterRoute
-  '/services': typeof ServicesRouteWithChildren
-  '/terms': typeof TermsRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/provider/$userId': typeof ProviderUserIdRoute
-  '/services/$serviceId': typeof ServicesServiceIdRoute
-  '/services/': typeof ServicesIndexRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/_authenticated": typeof AuthenticatedRouteWithChildren;
+  "/about": typeof AboutRoute;
+  "/login": typeof LoginRoute;
+  "/privacy": typeof PrivacyRoute;
+  "/register": typeof RegisterRoute;
+  "/services": typeof ServicesRouteWithChildren;
+  "/terms": typeof TermsRoute;
+  "/_authenticated/dashboard": typeof AuthenticatedDashboardRoute;
+  "/_authenticated/edit-profile": typeof AuthenticatedEditProfileRoute;
+  "/provider/$userId": typeof ProviderUserIdRoute;
+  "/services/$serviceId": typeof ServicesServiceIdRoute;
+  "/services/": typeof ServicesIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/about'
-    | '/login'
-    | '/privacy'
-    | '/register'
-    | '/services'
-    | '/terms'
-    | '/dashboard'
-    | '/provider/$userId'
-    | '/services/$serviceId'
-    | '/services/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/about"
+    | "/login"
+    | "/privacy"
+    | "/register"
+    | "/services"
+    | "/terms"
+    | "/dashboard"
+    | "/edit-profile"
+    | "/provider/$userId"
+    | "/services/$serviceId"
+    | "/services/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/about'
-    | '/login'
-    | '/privacy'
-    | '/register'
-    | '/terms'
-    | '/dashboard'
-    | '/provider/$userId'
-    | '/services/$serviceId'
-    | '/services'
+    | "/"
+    | "/about"
+    | "/login"
+    | "/privacy"
+    | "/register"
+    | "/terms"
+    | "/dashboard"
+    | "/edit-profile"
+    | "/provider/$userId"
+    | "/services/$serviceId"
+    | "/services";
   id:
-    | '__root__'
-    | '/'
-    | '/_authenticated'
-    | '/about'
-    | '/login'
-    | '/privacy'
-    | '/register'
-    | '/services'
-    | '/terms'
-    | '/_authenticated/dashboard'
-    | '/provider/$userId'
-    | '/services/$serviceId'
-    | '/services/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/_authenticated"
+    | "/about"
+    | "/login"
+    | "/privacy"
+    | "/register"
+    | "/services"
+    | "/terms"
+    | "/_authenticated/dashboard"
+    | "/_authenticated/edit-profile"
+    | "/provider/$userId"
+    | "/services/$serviceId"
+    | "/services/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
-  AboutRoute: typeof AboutRoute
-  LoginRoute: typeof LoginRoute
-  PrivacyRoute: typeof PrivacyRoute
-  RegisterRoute: typeof RegisterRoute
-  ServicesRoute: typeof ServicesRouteWithChildren
-  TermsRoute: typeof TermsRoute
-  ProviderUserIdRoute: typeof ProviderUserIdRoute
+  IndexRoute: typeof IndexRoute;
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren;
+  AboutRoute: typeof AboutRoute;
+  LoginRoute: typeof LoginRoute;
+  PrivacyRoute: typeof PrivacyRoute;
+  RegisterRoute: typeof RegisterRoute;
+  ServicesRoute: typeof ServicesRouteWithChildren;
+  TermsRoute: typeof TermsRoute;
+  ProviderUserIdRoute: typeof ProviderUserIdRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services/': {
-      id: '/services/'
-      path: '/'
-      fullPath: '/services/'
-      preLoaderRoute: typeof ServicesIndexRouteImport
-      parentRoute: typeof ServicesRoute
-    }
-    '/services/$serviceId': {
-      id: '/services/$serviceId'
-      path: '/$serviceId'
-      fullPath: '/services/$serviceId'
-      preLoaderRoute: typeof ServicesServiceIdRouteImport
-      parentRoute: typeof ServicesRoute
-    }
-    '/provider/$userId': {
-      id: '/provider/$userId'
-      path: '/provider/$userId'
-      fullPath: '/provider/$userId'
-      preLoaderRoute: typeof ProviderUserIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
+    "/terms": {
+      id: "/terms";
+      path: "/terms";
+      fullPath: "/terms";
+      preLoaderRoute: typeof TermsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/services": {
+      id: "/services";
+      path: "/services";
+      fullPath: "/services";
+      preLoaderRoute: typeof ServicesRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/register": {
+      id: "/register";
+      path: "/register";
+      fullPath: "/register";
+      preLoaderRoute: typeof RegisterRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/privacy": {
+      id: "/privacy";
+      path: "/privacy";
+      fullPath: "/privacy";
+      preLoaderRoute: typeof PrivacyRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/login": {
+      id: "/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof LoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/about": {
+      id: "/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof AboutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_authenticated": {
+      id: "/_authenticated";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof AuthenticatedRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/services/": {
+      id: "/services/";
+      path: "/";
+      fullPath: "/services/";
+      preLoaderRoute: typeof ServicesIndexRouteImport;
+      parentRoute: typeof ServicesRoute;
+    };
+    "/services/$serviceId": {
+      id: "/services/$serviceId";
+      path: "/$serviceId";
+      fullPath: "/services/$serviceId";
+      preLoaderRoute: typeof ServicesServiceIdRouteImport;
+      parentRoute: typeof ServicesRoute;
+    };
+    "/provider/$userId": {
+      id: "/provider/$userId";
+      path: "/provider/$userId";
+      fullPath: "/provider/$userId";
+      preLoaderRoute: typeof ProviderUserIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_authenticated/edit-profile": {
+      id: "/_authenticated/edit-profile";
+      path: "/edit-profile";
+      fullPath: "/edit-profile";
+      preLoaderRoute: typeof AuthenticatedEditProfileRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/dashboard": {
+      id: "/_authenticated/dashboard";
+      path: "/dashboard";
+      fullPath: "/dashboard";
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
   }
 }
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute;
+  AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute;
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-}
+  AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
+};
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
-)
+);
 
 interface ServicesRouteChildren {
-  ServicesServiceIdRoute: typeof ServicesServiceIdRoute
-  ServicesIndexRoute: typeof ServicesIndexRoute
+  ServicesServiceIdRoute: typeof ServicesServiceIdRoute;
+  ServicesIndexRoute: typeof ServicesIndexRoute;
 }
 
 const ServicesRouteChildren: ServicesRouteChildren = {
   ServicesServiceIdRoute: ServicesServiceIdRoute,
   ServicesIndexRoute: ServicesIndexRoute,
-}
+};
 
 const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
   ServicesRouteChildren,
-)
+);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -301,7 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRouteWithChildren,
   TermsRoute: TermsRoute,
   ProviderUserIdRoute: ProviderUserIdRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
