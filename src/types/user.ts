@@ -3,6 +3,7 @@ import type { User } from "@supabase/supabase-js";
 export type UserProfile = {
   user_id: string;
   email: string;
+  full_name: string | null;
   phone_number: string;
   role: string;
   rating: number | null;
