@@ -15,6 +15,7 @@ import {
 export const guestNavigationItems: navigationItem[] = [
   { title: "Home", href: "/", icon: House },
   { title: "Services", href: "/services", icon: List },
+  { title: "About", href: "/about", icon: Info },
 ];
 
 export const authenticatedNavigationItems: navigationItem[] = [
