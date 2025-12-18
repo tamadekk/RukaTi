@@ -1,26 +1,30 @@
 import { Twitter, Facebook, Instagram } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { footerLinks } from "@/const/navigation-links";
 
 const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-black bg-background">
+    <footer className="border-t border-black bg-background font-mono">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 border-x border-black max-w-7xl">
         <div className="flex flex-col md:flex-row items-center md:items-center justify-between gap-4 text-gray-500">
-          <p className="text-xs sm:text-sm">
+          <p className="text-xs sm:text-sm uppercase tracking-tight">
             © {year} RukaTi. All rights reserved.
           </p>
 
           <nav className="order-3 md:order-none flex items-center gap-6 sm:gap-8 text-xs sm:text-sm">
-            <a href="#about" className="hover:text-black transition-colors">
-              About
-            </a>
-            <a href="#terms" className="hover:text-black transition-colors">
-              Terms
-            </a>
-            <a href="#privacy" className="hover:text-black transition-colors">
-              Privacy
-            </a>
+            {footerLinks.map((link) => {
+              return (
+                <Link
+                  key={link.title}
+                  to={link.href}
+                  className="hover:text-black transition-colors"
+                >
+                  {link.title}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-5 sm:gap-6">

@@ -6,3 +6,8 @@ export type navigationItem = {
   icon: LucideIcon;
   submenu?: navigationItem[];
 };
+
+export type FooterLink = {
+  title: string;
+  href: string;
+};

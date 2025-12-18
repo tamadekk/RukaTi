@@ -1,4 +1,4 @@
-import type { navigationItem } from "@/types";
+import type { FooterLink, navigationItem } from "@/types";
 import {
   House,
   List,
@@ -58,4 +58,10 @@ export const sideBarItems = [
     url: "/settings",
     icon: Settings,
   },
+];
+
+export const footerLinks: FooterLink[] = [
+  { title: "About", href: "/about" },
+  { title: "Terms", href: "/terms" },
+  { title: "Privacy", href: "/privacy" },
 ];
