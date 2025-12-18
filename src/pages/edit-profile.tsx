@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { useUserProfileStore } from "@/store/userProfileStore";
 import { useUserSession } from "@/store/userSessionsStore";
 import { toast } from "sonner";
 import { EditProfileForm } from "@/components/profile/edit-profile-form";
 import { uploadAvatar } from "@/lib/user";
 
+import { checkHasChanges } from "@/lib/utils";
+
 export function EditProfilePage() {
+  const navigate = useNavigate();
   const { user } = useUserSession();
   const { userProfile, loading, fetchUserProfile, updateUserProfile } =
     useUserProfileStore();
@@ -59,8 +63,31 @@ export function EditProfilePage() {
     setFormData((prev) => ({ ...prev, avatar: "" }));
   };
 
+  const hasChanges = () => {
+    if (!userProfile) return false;
+    if (selectedFile) return true;
+
+    return checkHasChanges(formData, userProfile, [
+      "full_name",
+      "bio",
+      "phone_number",
+      "avatar",
+    ]);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.full_name.trim()) {
+      toast.error("Full Name is required.");
+      return;
+    }
+
+    if (!hasChanges()) {
+      toast.info("No changes detected.");
+      return;
+    }
+
     try {
       let currentAvatarUrl = formData.avatar;
 
@@ -77,6 +104,10 @@ export function EditProfilePage() {
 
       setSelectedFile(null);
       toast.success("Profile updated successfully");
+
+      setTimeout(() => {
+        navigate({ to: "/dashboard" });
+      }, 1000);
     } catch (error) {
       toast.dismiss("upload");
       toast.error("Failed to update profile");
@@ -85,7 +116,7 @@ export function EditProfilePage() {
   };
 
   const handleCancel = () => {
-    window.history.back();
+    navigate({ to: "/dashboard" });
   };
 
   const memberSince = userProfile?.created_at
