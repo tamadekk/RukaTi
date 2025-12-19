@@ -13,6 +13,7 @@ export type UserProfile = {
 };
 export type { User };
 
+// TODO: create ENUM for categories
 export type UserServices = {
   service_id: string;
   user_id: string;

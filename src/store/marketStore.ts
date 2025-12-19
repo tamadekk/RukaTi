@@ -14,6 +14,11 @@ type MarketStore = {
   selectedCategory: string | null;
   setSelectedCategory: (categoryId: string | null) => void;
 
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  setPage: (page: number) => void;
+
   fetchAllServices: () => Promise<void>;
   fetchServiceDetails: (serviceId: string) => Promise<void>;
   fetchProviderDetails: (userId: string) => Promise<void>;
@@ -27,31 +32,43 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
   providerProfile: null,
   providerServices: [],
   selectedCategory: null,
+  page: 1,
+  pageSize: 9,
+  totalCount: 0,
 
   setSelectedCategory: (categoryId) => {
-    set({ selectedCategory: categoryId });
+    set({ selectedCategory: categoryId, page: 1 });
+    get().fetchAllServices();
+  },
+
+  setPage: (page: number) => {
+    set({ page });
     get().fetchAllServices();
   },
 
   fetchAllServices: async () => {
     set({ loading: true, error: null });
-    const { selectedCategory } = get();
+    const { selectedCategory, page, pageSize } = get();
 
     try {
+      const from = (page - 1) * pageSize;
+      const to = from + pageSize - 1;
+
       let query = supabase
         .from("user_services")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*", { count: "exact" })
+        .order("created_at", { ascending: false })
+        .range(from, to);
 
       if (selectedCategory) {
         query = query.eq("category", selectedCategory);
       }
 
-      const { data, error } = await query;
+      const { data, error, count } = await query;
 
       if (error) throw error;
 
-      set({ services: data as UserServices[] });
+      set({ services: data as UserServices[], totalCount: count || 0 });
     } catch (error: unknown) {
       if (error instanceof Error) {
         set({ error: error.message });
