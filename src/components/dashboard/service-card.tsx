@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import ServicePlaceholder from "@/assets/service-placeholder.svg";
 
 interface ServiceCardProps {
   service: UserServices;
@@ -32,6 +33,13 @@ export const ServiceCard = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteService = useServiceStore((state) => state.deleteService);
   const { isLoading: isDeleting, execute: executeDelete } = useAsyncAction();
+
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
+    e.currentTarget.src = ServicePlaceholder;
+    console.error("Service image not found");
+  };
 
   const onConfirmDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -56,27 +64,18 @@ export const ServiceCard = ({
       ${isHorizontal ? "flex flex-row h-36" : "flex flex-col h-full p-3 space-y-2 cursor-pointer"}
       `}
     >
-      {service.service_image ? (
-        <div
-          className={`overflow-hidden border-black relative
-          ${isHorizontal ? "w-36 h-full shrink-0 border-r" : "aspect-[3/2] w-full border mb-1"}
-          `}
-        >
-          <img
-            src={service.service_image}
-            alt={service.title}
-            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-          />
-        </div>
-      ) : (
-        <div
-          className={`border-black bg-gray-100 flex items-center justify-center text-xs text-gray-400 font-mono text-center
-          ${isHorizontal ? "w-36 h-full shrink-0 border-r p-4" : "aspect-[3/2] w-full border mb-1"}
-          `}
-        >
-          No Image
-        </div>
-      )}
+      <div
+        className={`overflow-hidden border-black relative
+        ${isHorizontal ? "w-36 h-full shrink-0 border-r" : "aspect-[3/2] w-full border mb-1"}
+        `}
+      >
+        <img
+          src={service.service_image || ServicePlaceholder}
+          alt={service.title}
+          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+          onError={handleImageError}
+        />
+      </div>
 
       <div
         className={`flex flex-col min-w-0 flex-1 ${isHorizontal ? "p-3 pl-4 relative" : ""}`}
