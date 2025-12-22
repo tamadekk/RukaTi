@@ -1,3 +1,5 @@
+import ServicePlaceholder from "@/assets/service-placeholder.svg";
+
 type ServiceGalleryProps = {
   image?: string;
   title: string;
@@ -9,10 +11,21 @@ export const ServiceGallery = ({
   title,
   category,
 }: ServiceGalleryProps) => {
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
+    e.currentTarget.src = ServicePlaceholder;
+    console.error("Service image not found");
+  };
   return (
     <div className="w-full md:w-3/5 aspect-video border border-black overflow-hidden relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       {image ? (
-        <img src={image} alt={title} className="w-full h-full object-cover" />
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover"
+          onError={handleImageError}
+        />
       ) : (
         <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
           No Image
