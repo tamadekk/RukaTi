@@ -20,6 +20,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesIndexRouteImport } from './routes/services/index'
 import { Route as ServicesServiceIdRouteImport } from './routes/services/$serviceId'
 import { Route as ProviderUserIdRouteImport } from './routes/provider/$userId'
+import { Route as AuthenticatedMyServicesRouteImport } from './routes/_authenticated/my-services'
 import { Route as AuthenticatedEditProfileRouteImport } from './routes/_authenticated/edit-profile'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
@@ -77,6 +78,11 @@ const ProviderUserIdRoute = ProviderUserIdRouteImport.update({
   path: '/provider/$userId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMyServicesRoute = AuthenticatedMyServicesRouteImport.update({
+  id: '/my-services',
+  path: '/my-services',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedEditProfileRoute =
   AuthenticatedEditProfileRouteImport.update({
     id: '/edit-profile',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/edit-profile': typeof AuthenticatedEditProfileRoute
+  '/my-services': typeof AuthenticatedMyServicesRoute
   '/provider/$userId': typeof ProviderUserIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services/': typeof ServicesIndexRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/edit-profile': typeof AuthenticatedEditProfileRoute
+  '/my-services': typeof AuthenticatedMyServicesRoute
   '/provider/$userId': typeof ProviderUserIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services': typeof ServicesIndexRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/edit-profile': typeof AuthenticatedEditProfileRoute
+  '/_authenticated/my-services': typeof AuthenticatedMyServicesRoute
   '/provider/$userId': typeof ProviderUserIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
   '/services/': typeof ServicesIndexRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/dashboard'
     | '/edit-profile'
+    | '/my-services'
     | '/provider/$userId'
     | '/services/$serviceId'
     | '/services/'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/dashboard'
     | '/edit-profile'
+    | '/my-services'
     | '/provider/$userId'
     | '/services/$serviceId'
     | '/services'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/dashboard'
     | '/_authenticated/edit-profile'
+    | '/_authenticated/my-services'
     | '/provider/$userId'
     | '/services/$serviceId'
     | '/services/'
@@ -268,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProviderUserIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/my-services': {
+      id: '/_authenticated/my-services'
+      path: '/my-services'
+      fullPath: '/my-services'
+      preLoaderRoute: typeof AuthenticatedMyServicesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/edit-profile': {
       id: '/_authenticated/edit-profile'
       path: '/edit-profile'
@@ -288,11 +307,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute
+  AuthenticatedMyServicesRoute: typeof AuthenticatedMyServicesRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
+  AuthenticatedMyServicesRoute: AuthenticatedMyServicesRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
