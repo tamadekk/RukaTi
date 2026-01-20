@@ -12,6 +12,7 @@ import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 export default function ProfileDashboard() {
   useInitializeUser();
   const userProfile = useUserProfileStore((state) => state.userProfile);
+  const userRating = userProfile?.rating || 0;
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   return (
@@ -24,7 +25,7 @@ export default function ProfileDashboard() {
           </>
         }
       >
-        <ServicePerformance />
+        <ServicePerformance rating={userRating} />
         <ServicesSection onAddServiceClick={() => setIsCreateModalOpen(true)} />
         <RecentActivity />
       </DashboardLayout>

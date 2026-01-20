@@ -4,7 +4,7 @@ const getRatingColor = (rating: number) => {
   return "text-red-600";
 };
 
-const ServicePerformance = () => {
+const ServicePerformance = ({ rating }: { rating: number }) => {
   return (
     <div className="flex flex-col gap-4 h-full bg-white border border-black p-6">
       <div className="flex items-center justify-between border-b border-black pb-4 mb-2">
@@ -22,8 +22,10 @@ const ServicePerformance = () => {
           </span>
         </div>
         <div>
-          <span className={`block text-2xl font-bold ${getRatingColor(4.9)}`}>
-            4.9
+          <span
+            className={`block text-2xl font-bold ${getRatingColor(rating)}`}
+          >
+            {rating}
           </span>
           <span className="text-xs text-gray-500 font-mono uppercase">
             Rating
