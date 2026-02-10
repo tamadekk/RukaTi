@@ -63,7 +63,6 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
       if (selectedCategory) {
         query = query.eq("category", selectedCategory);
       }
-
       const { data, error, count } = await query;
 
       if (error) throw error;

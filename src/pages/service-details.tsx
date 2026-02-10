@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "@tanstack/react-router";
 import { useMarketStore } from "@/store/marketStore";
 import { useUserSession } from "@/store/userSessionsStore";
@@ -10,6 +10,8 @@ import { ServiceGallery } from "@/components/service-details/service-gallery";
 import { ServiceInfo } from "@/components/service-details/service-info";
 import { ServiceDescription } from "@/components/service-details/service-description";
 import { ServiceProviderCard } from "@/components/service-details/service-provider-card";
+import { ServiceReviewForm } from "@/components/service-details/service-review-form";
+import { useServicesReviewsStore } from "@/store/servicesReviewsStore";
 import { ServiceReviews } from "@/components/service-details/service-reviews";
 
 export function ServiceDetailsPage() {
@@ -22,30 +24,15 @@ export function ServiceDetailsPage() {
     fetchServiceDetails,
   } = useMarketStore();
 
-  // Mock reviews state
   const { user } = useUserSession();
-  const [reviews, setReviews] = useState<Review[]>([
-    {
-      id: "1",
-      reviewer_name: "Alice Cooper",
-      rating: 5,
-      comment: "Excellent service! Very professional and timely.",
-      created_at: new Date(Date.now() - 86400000).toISOString(),
-    },
-    {
-      id: "2",
-      reviewer_name: "Bob Smith",
-      rating: 4,
-      comment: "Great work, but arrived a bit late.",
-      created_at: new Date(Date.now() - 172800000).toISOString(),
-    },
-  ]);
+  const { reviews, uploadReview, loadReviews } = useServicesReviewsStore();
 
   useEffect(() => {
     if (serviceId) {
       fetchServiceDetails(serviceId);
+      loadReviews(serviceId);
     }
-  }, [serviceId, fetchServiceDetails]);
+  }, [serviceId, fetchServiceDetails, loadReviews]);
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -77,19 +64,19 @@ export function ServiceDetailsPage() {
   }
 
   const handleReviewSubmit = async (rating: number, comment: string) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
+    if (!user) {
+      toast.error("You must be logged in to leave a review");
+      return;
+    }
     const newReview: Review = {
-      id: Math.random().toString(36).substring(7),
-      reviewer_name: user?.email ?? "Anonymous",
-      reviewer_avatar: user?.user_metadata?.avatar_url,
-      rating,
-      comment,
+      review_id: crypto.randomUUID(),
+      user_id: user.id,
+      service_id: currentService.service_id,
+      review_rating: rating,
+      review_text: comment,
       created_at: new Date().toISOString(),
     };
-
-    setReviews([newReview, ...reviews]);
+    uploadReview(newReview);
   };
 
   return (
@@ -117,11 +104,12 @@ export function ServiceDetailsPage() {
             <ServiceProviderCard provider={providerProfile} />
           )}
         </div>
-        <ServiceReviews
+        <ServiceReviewForm
           reviews={reviews}
           currentUser={user}
           onSubmit={handleReviewSubmit}
         />
+        <ServiceReviews reviews={reviews} />
       </div>
     </DashboardLayout>
   );

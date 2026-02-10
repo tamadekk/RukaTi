@@ -30,10 +30,10 @@ export type UserServices = {
 };
 
 export type Review = {
-  id: string;
-  reviewer_name: string;
-  rating: number;
-  comment: string;
+  review_id: string;
+  user_id: string;
+  service_id: string;
+  review_rating: number;
+  review_text: string;
   created_at: string | Date;
-  reviewer_avatar?: string;
 };
