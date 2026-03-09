@@ -14,7 +14,7 @@ const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
         <img
           src={avatar}
           alt="avatar"
-          className="w-32 h-32 object-cover border border-black grayscale group-hover:grayscale-0 transition-all duration-300"
+          className="w-32 h-32 object-cover border border-black"
         />
       </div>
 
