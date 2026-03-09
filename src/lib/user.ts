@@ -7,7 +7,7 @@ import { useUserSession } from "@/store/userSessionsStore";
 export const getUserServices = async (userId: string) => {
   const { setUserServices } = useServiceStore.getState();
   const { data, error } = await supabase
-    .from("user_services")
+    .from("user_service")
     .select("*")
     .eq("user_id", userId);
 
@@ -43,7 +43,7 @@ export async function uploadAvatar(file: File) {
 
   // Update user profile
   const { error: updateError } = await supabase
-    .from("user_profiles")
+    .from("user_profile")
     .update({ avatar: avatarUrl })
     .eq("user_id", user.id);
 

@@ -47,7 +47,7 @@ export const CreateServiceModal = ({
           created_at,
         };
 
-        const { error } = await supabase.from("user_services").insert(service);
+        const { error } = await supabase.from("user_service").insert(service);
 
         if (error) {
           throw error;

@@ -55,7 +55,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
       const to = from + pageSize - 1;
 
       let query = supabase
-        .from("user_services")
+        .from("user_service")
         .select("*", { count: "exact" })
         .order("created_at", { ascending: false })
         .range(from, to);
@@ -89,7 +89,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
     try {
       // 1. Fetch Service
       const { data: serviceData, error: serviceError } = await supabase
-        .from("user_services")
+        .from("user_service")
         .select("*")
         .eq("service_id", serviceId)
         .single();
@@ -100,7 +100,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
       // 2. Fetch Provider Profile
       if (serviceData?.user_id) {
         const { data: profileData, error: profileError } = await supabase
-          .from("user_profiles")
+          .from("user_profile")
           .select("*")
           .eq("user_id", serviceData.user_id)
           .single();
@@ -132,7 +132,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
     try {
       // 1. Fetch Profile
       const { data: profileData, error: profileError } = await supabase
-        .from("user_profiles")
+        .from("user_profile")
         .select("*")
         .eq("user_id", userId)
         .single();
@@ -142,7 +142,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
 
       // 2. Fetch Services
       const { data: servicesData, error: servicesError } = await supabase
-        .from("user_services")
+        .from("user_service")
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });

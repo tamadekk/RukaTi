@@ -118,7 +118,7 @@ RukaTi provides a **Technical Minimalist** web platform where:
 
 ### Tables
 
-#### `user_profiles`
+#### `user_profile`
 
 - `user_id` (UUID, Primary Key)
 - `email` (String)
@@ -130,10 +130,10 @@ RukaTi provides a **Technical Minimalist** web platform where:
 - `bio` (Text, nullable)
 - `created_at` (Timestamp)
 
-#### `user_services`
+#### `user_service`
 
 - `service_id` (UUID, Primary Key)
-- `user_id` (UUID, Foreign Key → user_profiles)
+- `user_id` (UUID, Foreign Key → user_profile)
 - `title` (String)
 - `description` (Text)
 - `category` (String)

@@ -36,7 +36,7 @@ export const useServiceStore = create<ServiceStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const { data, error } = await supabase
-        .from("user_services")
+        .from("user_service")
         .select("*")
         .eq("user_id", userId);
 
@@ -58,7 +58,7 @@ export const useServiceStore = create<ServiceStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const { error } = await supabase
-        .from("user_services")
+        .from("user_service")
         .update(updates)
         .eq("service_id", serviceId);
 
@@ -87,7 +87,7 @@ export const useServiceStore = create<ServiceStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const { error } = await supabase
-        .from("user_services")
+        .from("user_service")
         .delete()
         .eq("service_id", serviceId);
 

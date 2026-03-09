@@ -36,10 +36,10 @@ export type Review = {
   review_rating: number;
   review_text: string;
   created_at: string | Date;
-  user_profiles: {
+  user_profile: {
     full_name: string;
     avatar: string;
   };
 };
 
-export type UploadReview = Omit<Review, "user_profiles">;
+export type UploadReview = Omit<Review, "user_profile">;

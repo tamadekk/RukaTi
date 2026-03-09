@@ -18,7 +18,7 @@ export const useUserProfileStore = create<UserState>((set) => ({
     set({ loading: true });
     try {
       const { data, error } = await supabase
-        .from("user_profiles")
+        .from("user_profile")
         .select("*")
         .eq("user_id", id)
         .single();
@@ -38,7 +38,7 @@ export const useUserProfileStore = create<UserState>((set) => ({
       if (!userProfile?.user_id) throw new Error("User ID not found");
 
       const { error } = await supabase
-        .from("user_profiles")
+        .from("user_profile")
         .update(profile)
         .eq("user_id", userProfile.user_id);
 

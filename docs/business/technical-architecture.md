@@ -269,11 +269,11 @@ graph LR
 
 ```mermaid
 erDiagram
-    USER_PROFILES ||--o{ USER_SERVICES : creates
-    USER_PROFILES ||--o{ REVIEWS : writes
-    USER_SERVICES ||--o{ REVIEWS : receives
+    user_profile ||--o{ user_service : creates
+    user_profile ||--o{ REVIEWS : writes
+    user_service ||--o{ REVIEWS : receives
 
-    USER_PROFILES {
+    user_profile {
         uuid user_id PK
         string email
         string full_name
@@ -285,7 +285,7 @@ erDiagram
         timestamp created_at
     }
 
-    USER_SERVICES {
+    user_service {
         uuid service_id PK
         uuid user_id FK
         string title
@@ -314,10 +314,10 @@ erDiagram
 
 ### Database Tables
 
-#### `user_profiles`
+#### `user_profile`
 
 ```sql
-CREATE TABLE user_profiles (
+CREATE TABLE user_profile (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id),
   email TEXT NOT NULL,
   full_name TEXT,
@@ -330,12 +330,12 @@ CREATE TABLE user_profiles (
 );
 ```
 
-#### `user_services`
+#### `user_service`
 
 ```sql
-CREATE TABLE user_services (
+CREATE TABLE user_service (
   service_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES user_profiles(user_id) ON DELETE CASCADE,
+  user_id UUID REFERENCES user_profile(user_id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   category TEXT NOT NULL,
@@ -354,8 +354,8 @@ CREATE TABLE user_services (
 ```sql
 CREATE TABLE reviews (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  service_id UUID REFERENCES user_services(service_id) ON DELETE CASCADE,
-  reviewer_id UUID REFERENCES user_profiles(user_id) ON DELETE CASCADE,
+  service_id UUID REFERENCES user_service(service_id) ON DELETE CASCADE,
+  reviewer_id UUID REFERENCES user_profile(user_id) ON DELETE CASCADE,
   reviewer_name TEXT NOT NULL,
   rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
   comment TEXT,
@@ -367,34 +367,34 @@ CREATE TABLE reviews (
 ### Row Level Security (RLS) Policies
 
 ```sql
--- user_profiles: Users can read all profiles, but only update their own
-ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+-- user_profile: Users can read all profiles, but only update their own
+ALTER TABLE user_profile ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Public profiles are viewable by everyone"
-  ON user_profiles FOR SELECT
+  ON user_profile FOR SELECT
   USING (true);
 
 CREATE POLICY "Users can update own profile"
-  ON user_profiles FOR UPDATE
+  ON user_profile FOR UPDATE
   USING (auth.uid() = user_id);
 
--- user_services: All can read, only owner can modify
-ALTER TABLE user_services ENABLE ROW LEVEL SECURITY;
+-- user_service: All can read, only owner can modify
+ALTER TABLE user_service ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Services are viewable by everyone"
-  ON user_services FOR SELECT
+  ON user_service FOR SELECT
   USING (true);
 
 CREATE POLICY "Users can insert own services"
-  ON user_services FOR INSERT
+  ON user_service FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can update own services"
-  ON user_services FOR UPDATE
+  ON user_service FOR UPDATE
   USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete own services"
-  ON user_services FOR DELETE
+  ON user_service FOR DELETE
   USING (auth.uid() = user_id);
 ```
 
@@ -445,7 +445,7 @@ sequenceDiagram
         Store->>Storage: Upload image
         Storage-->>Store: Return image URL
         Store->>Supabase: Create service record
-        Supabase->>DB: INSERT INTO user_services
+        Supabase->>DB: INSERT INTO user_service
         DB-->>Supabase: Return service record
         Supabase-->>Store: Return success
         Store->>Store: Update local state
@@ -467,7 +467,7 @@ sequenceDiagram
     User->>UI: Navigate to Services
     UI->>Store: fetchAllServices()
     Store->>Supabase: Query services
-    Supabase->>DB: SELECT * FROM user_services
+    Supabase->>DB: SELECT * FROM user_service
     DB-->>Supabase: Return services
     Supabase-->>Store: Return data
     Store->>Store: Update services state
@@ -508,7 +508,7 @@ sequenceDiagram
         Supabase-->>Store: Return session + user
         Store->>Store: Set user state
         Store->>Supabase: Fetch user profile
-        Supabase->>DB: SELECT FROM user_profiles
+        Supabase->>DB: SELECT FROM user_profile
         DB-->>Supabase: Return profile
         Supabase-->>Store: Return profile data
         Store->>UI: Redirect to dashboard
@@ -699,9 +699,9 @@ graph TD
 1. **Database Indexing**
 
    ```sql
-   CREATE INDEX idx_services_category ON user_services(category);
-   CREATE INDEX idx_services_user_id ON user_services(user_id);
-   CREATE INDEX idx_services_created_at ON user_services(created_at DESC);
+   CREATE INDEX idx_services_category ON user_service(category);
+   CREATE INDEX idx_services_user_id ON user_service(user_id);
+   CREATE INDEX idx_services_created_at ON user_service(created_at DESC);
    ```
 
 2. **Query Optimization**

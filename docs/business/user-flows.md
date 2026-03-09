@@ -179,7 +179,7 @@ flowchart TD
 
 - Submit form to Supabase
 - Image uploaded to storage (if provided)
-- Service record created in `user_services` table
+- Service record created in `user_service` table
 - Success notification displayed
 - Modal closes
 - Service appears in marketplace and provider's dashboard

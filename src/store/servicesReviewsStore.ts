@@ -13,8 +13,8 @@ export const useServicesReviewsStore = create<ServicesReviewsStore>((set) => ({
   loadReviews: async (serviceId: string) => {
     try {
       const { data, error } = await supabase
-        .from("user_services_reviews")
-        .select("*, user_profiles(full_name, avatar)")
+        .from("user_service_review")
+        .select("*, user_profile(full_name, avatar)")
         .eq("service_id", serviceId);
       if (error) throw error;
       set({ reviews: data });
@@ -25,7 +25,7 @@ export const useServicesReviewsStore = create<ServicesReviewsStore>((set) => ({
   uploadReview: async (review: UploadReview) => {
     try {
       const { error } = await supabase
-        .from("user_services_reviews")
+        .from("user_service_review")
         .insert(review);
       if (error) throw error;
       set((state) => ({ reviews: [review as Review, ...state.reviews] }));

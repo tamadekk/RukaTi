@@ -33,7 +33,7 @@ export default function CreateServicePage() {
       created_at,
     };
 
-    const { error } = await supabase.from("user_services").insert(service);
+    const { error } = await supabase.from("user_service").insert(service);
 
     if (error) {
       console.error("Supabase error:", error);

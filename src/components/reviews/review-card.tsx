@@ -12,14 +12,14 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Avatar className="w-10 h-10 border border-black rounded-none">
-            <AvatarImage src={review.user_profiles?.avatar} />
+            <AvatarImage src={review.user_profile?.avatar} />
             <AvatarFallback className="rounded-none bg-gray-200 font-bold">
-              {review.user_profiles?.full_name?.substring(0, 2).toUpperCase()}
+              {review.user_profile?.full_name?.substring(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div>
             <div className="font-bold uppercase text-sm tracking-tight">
-              {review.user_profiles?.full_name}
+              {review.user_profile?.full_name}
             </div>
             <div className="text-xs text-gray-400 font-mono">
               {new Date(review.created_at).toLocaleDateString()}
