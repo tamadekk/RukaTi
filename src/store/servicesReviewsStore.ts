@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import type { Review } from "@/types/user";
+import type { Review, UploadReview } from "@/types/user";
 import supabase from "@/supabase-client";
 
 type ServicesReviewsStore = {
   reviews: Review[];
   loadReviews: (serviceId: string) => Promise<void>;
-  uploadReview: (review: Review) => void;
+  uploadReview: (review: UploadReview) => void;
 };
 
 export const useServicesReviewsStore = create<ServicesReviewsStore>((set) => ({
@@ -14,7 +14,7 @@ export const useServicesReviewsStore = create<ServicesReviewsStore>((set) => ({
     try {
       const { data, error } = await supabase
         .from("user_services_reviews")
-        .select("*")
+        .select("*, user_profiles(full_name, avatar)")
         .eq("service_id", serviceId);
       if (error) throw error;
       set({ reviews: data });
@@ -22,13 +22,13 @@ export const useServicesReviewsStore = create<ServicesReviewsStore>((set) => ({
       console.error("Error fetching reviews:", error);
     }
   },
-  uploadReview: async (review: Review) => {
+  uploadReview: async (review: UploadReview) => {
     try {
       const { error } = await supabase
         .from("user_services_reviews")
         .insert(review);
       if (error) throw error;
-      set((state) => ({ reviews: [review, ...state.reviews] }));
+      set((state) => ({ reviews: [review as Review, ...state.reviews] }));
     } catch (error) {
       console.error("Error uploading review:", error);
     }

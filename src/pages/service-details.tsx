@@ -3,7 +3,7 @@ import { useParams } from "@tanstack/react-router";
 import { useMarketStore } from "@/store/marketStore";
 import { useUserSession } from "@/store/userSessionsStore";
 import { toast } from "sonner";
-import type { Review } from "@/types/user";
+import type { UploadReview } from "@/types/user";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { ServiceHeader } from "@/components/service-details/service-header";
 import { ServiceGallery } from "@/components/service-details/service-gallery";
@@ -68,7 +68,7 @@ export function ServiceDetailsPage() {
       toast.error("You must be logged in to leave a review");
       return;
     }
-    const newReview: Review = {
+    const newReview: UploadReview = {
       review_id: crypto.randomUUID(),
       user_id: user.id,
       service_id: currentService.service_id,
