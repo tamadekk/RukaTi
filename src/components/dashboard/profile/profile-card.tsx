@@ -2,7 +2,8 @@ import { Link } from "@tanstack/react-router";
 import type { UserProfile } from "@/types/user";
 
 const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
-  const name = user?.email ?? "Unknown user";
+  // TODO: add text fallback for all fields, consider using default values from DB level
+  const name = user?.full_name ?? "Unknown user";
   const location = user?.role ?? "";
   const description = user?.bio ?? "";
   const avatar = user?.avatar ?? "/src/assets/tutorTile.jpg";
