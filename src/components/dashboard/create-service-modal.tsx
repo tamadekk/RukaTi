@@ -10,6 +10,7 @@ import type { ServiceFormData } from "@/schemas/services";
 import { useUserSession } from "@/store/userSessionsStore";
 import supabase from "@/supabase-client";
 import { useAsyncAction } from "@/hooks/use-async-action";
+import { uploadImage } from "@/lib/storage";
 
 interface CreateServiceModalProps {
   isOpen: boolean;
@@ -26,12 +27,16 @@ export const CreateServiceModal = ({
 
   const handleSubmit = async (values: ServiceFormData) => {
     if (!user?.id) return;
-
     await execute(
       async () => {
         const service_id = crypto.randomUUID();
         const created_at = new Date().toISOString();
-
+        const service_image = await uploadImage({
+          file: values.service_image[0],
+          bucket: "user_services",
+          folderPath: "service_image",
+          fileNamePrefix: user.id,
+        });
         const service = {
           service_id,
           user_id: user.id,
@@ -42,7 +47,7 @@ export const CreateServiceModal = ({
           contact: values.contact ?? "",
           price_range: values.price_range ?? "",
           availability: values.availability ?? "",
-          service_image: values.service_image ?? "",
+          service_image: service_image ?? "",
           rating: 0,
           created_at,
         };

@@ -22,7 +22,6 @@ export const CreateServiceForm = ({
   loading,
   defaultValues,
 }: CreateServiceFormProps) => {
-  const [fileName, setFileName] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -31,16 +30,6 @@ export const CreateServiceForm = ({
     resolver: zodResolver(ServiceSchema),
     defaultValues,
   });
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFileName(e.target.files[0].name);
-    }
-  };
-
-  // Merge the ref from register with our local ref if needed,
-  // but simpler to just use the register props spreading
-  const { ref: fileRef, ...fileRest } = register("service_image");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 font-mono">
@@ -86,14 +75,8 @@ export const CreateServiceForm = ({
             type="file"
             id="service-image-upload"
             className="hidden"
-            {...fileRest}
-            ref={(e) => {
-              fileRef(e);
-            }}
-            onChange={(e) => {
-              fileRest.onChange(e); // call react-hook-form's onChange
-              handleFileChange(e); // call our local one
-            }}
+            accept="image/*"
+            {...register("service_image")}
           />
           <label
             htmlFor="service-image-upload"
@@ -101,8 +84,9 @@ export const CreateServiceForm = ({
           >
             <div className="flex flex-col items-center gap-2">
               <UploadCloud className="w-8 h-8 text-gray-400" />
+              {/* TODO : change text if file is uploaded */}
               <span className="text-xs font-bold uppercase text-gray-500">
-                {fileName ? fileName : "Click to Upload Image"}
+                Click to Upload Image
               </span>
               <span className="text-[10px] text-gray-400">
                 JPG, PNG, WEBP UP TO 5MB
