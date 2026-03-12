@@ -3,16 +3,24 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 import { toast } from "sonner";
-import { useAsyncAction } from "@/hooks/use-async-action";
 
 interface ReviewFormProps {
-  onSubmit: (rating: number, comment: string) => Promise<void>;
+  initialRating?: number;
+  initialComment?: string;
+  isLoading?: boolean;
+  onCancel?: () => void;
+  onSubmit: (rating: number, comment: string) => Promise<void> | void;
 }
 
-export const ReviewForm = ({ onSubmit }: ReviewFormProps) => {
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const { isLoading, execute } = useAsyncAction();
+export const ReviewForm = ({
+  initialRating = 0,
+  initialComment = "",
+  isLoading = false,
+  onCancel,
+  onSubmit,
+}: ReviewFormProps) => {
+  const [rating, setRating] = useState(initialRating);
+  const [comment, setComment] = useState(initialComment);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,17 +33,11 @@ export const ReviewForm = ({ onSubmit }: ReviewFormProps) => {
       return;
     }
 
-    await execute(
-      async () => {
-        await onSubmit(rating, comment);
-        setRating(0);
-        setComment("");
-      },
-      {
-        successMessage: "Review submitted successfully!",
-        errorMessage: "Failed to submit review",
-      },
-    );
+    await onSubmit(rating, comment);
+    if (!initialRating) {
+      setRating(0);
+      setComment("");
+    }
   };
 
   return (
@@ -43,7 +45,22 @@ export const ReviewForm = ({ onSubmit }: ReviewFormProps) => {
       onSubmit={handleSubmit}
       className="border border-black p-6 bg-gray-50 space-y-4"
     >
-      <h3 className="font-bold uppercase tracking-tight">Write a Review</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="font-bold uppercase tracking-tight">
+          {initialRating ? "Edit your Review" : "Write a Review"}
+        </h3>
+        {onCancel && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onCancel}
+            className="text-gray-500 hover:text-black uppercase text-xs"
+          >
+            Cancel
+          </Button>
+        )}
+      </div>
 
       <div className="flex items-center gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -77,13 +94,19 @@ export const ReviewForm = ({ onSubmit }: ReviewFormProps) => {
         disabled={isLoading}
       />
 
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="w-full sm:w-auto uppercase font-bold tracking-widest rounded-none"
-      >
-        {isLoading ? "Submitting..." : "Post Review"}
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="w-full sm:w-auto uppercase font-bold tracking-widest rounded-none"
+        >
+          {isLoading
+            ? "Submitting..."
+            : initialRating
+              ? "Update Review"
+              : "Post Review"}
+        </Button>
+      </div>
     </form>
   );
 };

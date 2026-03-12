@@ -3,27 +3,42 @@ import { ReviewForm } from "@/components/reviews/review-form";
 import type { Review, User } from "@/types/user";
 import { Button } from "@/components/ui/button";
 
-interface ServiceReviewsProps {
-  reviews: Review[];
+interface ServiceReviewFormProps {
+  currentUserReview: Review | undefined;
   currentUser: User | null;
-  onSubmit: (rating: number, comment: string) => Promise<void>;
+  isLoading?: boolean;
+  onSubmit: (rating: number, comment: string) => Promise<void> | void;
+  totalReviews: number;
 }
 
 export const ServiceReviewForm = ({
-  reviews,
+  currentUserReview,
   currentUser,
+  isLoading,
   onSubmit,
-}: ServiceReviewsProps) => {
+  totalReviews,
+}: ServiceReviewFormProps) => {
   return (
     <div className="space-y-8 pt-8 border-t border-black">
       <div className="flex items-center justify-between border-b border-black pb-2">
         <h2 className="text-xl font-bold uppercase">
-          Service Reviews ({reviews.length})
+          Service Reviews ({totalReviews})
         </h2>
       </div>
 
       {currentUser ? (
-        <ReviewForm onSubmit={onSubmit} />
+        currentUserReview ? (
+          <div className="bg-gray-50 border border-black p-6 text-center space-y-2">
+            <h3 className="font-bold uppercase tracking-tight">
+              You've reviewed this service
+            </h3>
+            <p className="font-mono text-gray-600">
+              You can edit or delete your review below.
+            </p>
+          </div>
+        ) : (
+          <ReviewForm onSubmit={onSubmit} isLoading={isLoading} />
+        )
       ) : (
         <div className="bg-gray-50 border border-black p-6 text-center space-y-4">
           <p className="font-mono text-gray-600">

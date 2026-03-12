@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "@tanstack/react-router";
 import { useMarketStore } from "@/store/marketStore";
 import { useUserSession } from "@/store/userSessionsStore";
@@ -13,6 +13,7 @@ import { ServiceProviderCard } from "@/components/service-details/service-provid
 import { ServiceReviewForm } from "@/components/service-details/service-review-form";
 import { useServicesReviewsStore } from "@/store/servicesReviewsStore";
 import { ServiceReviews } from "@/components/service-details/service-reviews";
+import { useAsyncAction } from "@/hooks/use-async-action";
 
 export function ServiceDetailsPage() {
   const { serviceId } = useParams({ from: "/services/$serviceId" });
@@ -25,7 +26,16 @@ export function ServiceDetailsPage() {
   } = useMarketStore();
 
   const { user } = useUserSession();
-  const { reviews, uploadReview, loadReviews } = useServicesReviewsStore();
+  const { reviews, uploadReview, updateReview, deleteReview, loadReviews } =
+    useServicesReviewsStore();
+
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const { isLoading: isSubmitting, execute: executeSubmit } = useAsyncAction();
+  const { isLoading: isDeleting, execute: executeDelete } = useAsyncAction();
+
+  const currentUserReview = user
+    ? reviews.find((r) => r.user_id === user.id)
+    : undefined;
 
   useEffect(() => {
     if (serviceId) {
@@ -64,19 +74,62 @@ export function ServiceDetailsPage() {
   }
 
   const handleReviewSubmit = async (rating: number, comment: string) => {
-    if (!user) {
+    if (!user || !currentService) {
       toast.error("You must be logged in to leave a review");
       return;
     }
-    const newReview: UploadReview = {
-      review_id: crypto.randomUUID(),
-      user_id: user.id,
-      service_id: currentService.service_id,
-      review_rating: rating,
-      review_text: comment,
-      created_at: new Date().toISOString(),
-    };
-    uploadReview(newReview);
+    await executeSubmit(
+      async () => {
+        const newReview: UploadReview = {
+          review_id: crypto.randomUUID(),
+          user_id: user.id,
+          service_id: currentService.service_id,
+          review_rating: rating,
+          review_text: comment,
+          created_at: new Date().toISOString(),
+        };
+        await uploadReview(newReview);
+      },
+      {
+        successMessage: "Review submitted successfully!",
+        errorMessage: "Failed to submit review",
+      },
+    );
+  };
+
+  const handleReviewUpdate = async (
+    reviewId: string,
+    rating: number,
+    comment: string,
+  ) => {
+    await executeSubmit(
+      async () => {
+        await updateReview(reviewId, {
+          review_rating: rating,
+          review_text: comment,
+        });
+        setEditingReviewId(null);
+      },
+      {
+        successMessage: "Review updated successfully!",
+        errorMessage: "Failed to update review",
+      },
+    );
+  };
+
+  const handleReviewDelete = async (reviewId: string) => {
+    if (window.confirm("Are you sure you want to delete this review?")) {
+      await executeDelete(
+        async () => {
+          await deleteReview(reviewId);
+          setEditingReviewId(null);
+        },
+        {
+          successMessage: "Review deleted successfully",
+          errorMessage: "Failed to delete review",
+        },
+      );
+    }
   };
 
   return (
@@ -105,11 +158,23 @@ export function ServiceDetailsPage() {
           )}
         </div>
         <ServiceReviewForm
+          currentUserReview={currentUserReview}
+          currentUser={user}
+          isLoading={isSubmitting}
+          onSubmit={handleReviewSubmit}
+          totalReviews={reviews.length}
+        />
+        <ServiceReviews
           reviews={reviews}
           currentUser={user}
-          onSubmit={handleReviewSubmit}
+          editingReviewId={editingReviewId}
+          isDeleting={isDeleting}
+          isSubmitting={isSubmitting}
+          onEditStart={setEditingReviewId}
+          onEditCancel={() => setEditingReviewId(null)}
+          onUpdate={handleReviewUpdate}
+          onDelete={handleReviewDelete}
         />
-        <ServiceReviews reviews={reviews} />
       </div>
     </DashboardLayout>
   );
