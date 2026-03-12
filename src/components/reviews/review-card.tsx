@@ -1,7 +1,7 @@
 import { Star, Edit2, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Review } from "@/types/user";
-import { ReviewForm } from "./review-form";
+import { ReviewForm } from "../forms/review-form";
 
 interface ReviewCardProps {
   review: Review;

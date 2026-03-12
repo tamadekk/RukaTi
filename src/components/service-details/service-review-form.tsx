@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ReviewForm } from "@/components/reviews/review-form";
+import { ReviewForm } from "@/components/forms/review-form";
 import type { Review, User } from "@/types/user";
 import { Button } from "@/components/ui/button";
 

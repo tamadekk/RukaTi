@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useUserProfileStore } from "@/store/userProfileStore";
 import { useUserSession } from "@/store/userSessionsStore";
 import { toast } from "sonner";
-import { EditProfileForm } from "@/components/profile/edit-profile-form";
+import { EditProfileForm } from "@/components/forms/edit-profile-form";
 import { uploadAvatar } from "@/lib/user";
 
 import { checkHasChanges } from "@/lib/utils";
