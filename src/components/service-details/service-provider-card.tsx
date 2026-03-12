@@ -63,13 +63,6 @@ export const ServiceProviderCard = ({ provider }: ServiceProviderCardProps) => {
           </Button>
         )}
       </div>
-
-      {/* Reviews Placeholder - Smaller */}
-      <div className="border border-dashed border-gray-300 p-4 text-center">
-        <p className="text-xs text-gray-400 uppercase font-bold">
-          Reviews coming soon
-        </p>
-      </div>
     </div>
   );
 };
