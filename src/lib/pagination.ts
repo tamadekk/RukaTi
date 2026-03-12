@@ -11,25 +11,29 @@ export const calculatePaginationLogic = (
   currentPage: number,
   totalPages: number,
 ): PaginationLogic => {
-  const showAllPages = totalPages <= MARKET_PAGINATION_CONFIG.MAX_VISIBLE_PAGES;
+  const {
+    MAX_VISIBLE_PAGES,
+    PAGES_BEFORE_CURRENT,
+    PAGES_AFTER_CURRENT,
+    MIN_GAP_FOR_ELLIPSIS,
+    FIRST_PAGE,
+  } = MARKET_PAGINATION_CONFIG;
+
+  const showAllPages = totalPages <= MAX_VISIBLE_PAGES;
 
   const start = showAllPages
-    ? MARKET_PAGINATION_CONFIG.FIRST_PAGE
-    : Math.max(
-        MARKET_PAGINATION_CONFIG.FIRST_PAGE,
-        currentPage - MARKET_PAGINATION_CONFIG.PAGES_BEFORE_CURRENT,
-      );
+    ? FIRST_PAGE
+    : Math.max(FIRST_PAGE, currentPage - PAGES_BEFORE_CURRENT);
 
   const end = showAllPages
     ? totalPages
     : Math.min(
-        totalPages - MARKET_PAGINATION_CONFIG.MIN_GAP_FOR_ELLIPSIS,
-        currentPage + MARKET_PAGINATION_CONFIG.PAGES_AFTER_CURRENT,
+        totalPages - MIN_GAP_FOR_ELLIPSIS,
+        currentPage + PAGES_AFTER_CURRENT,
       );
 
   const shouldShowEllipsis =
-    !showAllPages &&
-    end < totalPages - MARKET_PAGINATION_CONFIG.MIN_GAP_FOR_ELLIPSIS;
+    !showAllPages && end < totalPages - MIN_GAP_FOR_ELLIPSIS;
 
   const shouldShowLastPage = !showAllPages && end < totalPages;
 
