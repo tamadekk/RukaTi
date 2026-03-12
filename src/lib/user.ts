@@ -3,6 +3,7 @@ import { useServiceStore } from "@/store/userServicesStore";
 import supabase from "@/supabase-client";
 import type { UserServices } from "@/types/user";
 import { useUserSession } from "@/store/userSessionsStore";
+import { uploadImage } from "@/lib/storage";
 
 export const getUserServices = async (userId: string) => {
   const { setUserServices } = useServiceStore.getState();
@@ -27,30 +28,19 @@ export async function uploadAvatar(file: File) {
   const user = useUserSession.getState().user;
   if (!user) throw new Error("Not authenticated");
 
-  const fileExt = file.name.split(".").pop();
-  const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-  const filePath = `avatars/${fileName}`;
+  const avatarUrl = await uploadImage({
+    file,
+    bucket: "user_avatars",
+    folderPath: "avatars",
+    fileNamePrefix: user.id,
+  });
 
-  const { error: uploadError } = await supabase.storage
-    .from("user_avatars")
-    .upload(filePath, file, { upsert: true });
-
-  if (uploadError) throw uploadError;
-
-  // Get public URL
-  const { data } = supabase.storage.from("user_avatars").getPublicUrl(filePath);
-  const avatarUrl = data.publicUrl;
-
-  // Update user profile
   const { error: updateError } = await supabase
     .from("user_profile")
     .update({ avatar: avatarUrl })
     .eq("user_id", user.id);
 
   if (updateError) throw updateError;
-
-  // Update local store
-  // useUserProfileStore.getState().setUserProfile({ avatar_url: avatarUrl });
-
+  // TODO: update user profile in store ??
   return avatarUrl;
 }
