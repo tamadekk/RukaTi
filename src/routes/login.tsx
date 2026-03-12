@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import AuthCard from "@/components/auth-card";
-import LoginForm from "@/components/login-form";
+import LoginForm from "@/components/forms/login-form";
 import supabase from "@/supabase-client";
 import { useState } from "react";
 import { useUserSession } from "@/store/userSessionsStore";

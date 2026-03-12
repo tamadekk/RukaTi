@@ -4,7 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CreateServiceForm } from "@/components/create-service-form";
+import { CreateServiceForm } from "@/components/forms/create-service-form";
 import { useServiceStore } from "@/store/userServicesStore";
 import type { ServiceFormData } from "@/schemas/services";
 import { useUserSession } from "@/store/userSessionsStore";

@@ -1,5 +1,5 @@
 import { useServiceStore } from "@/store/userServicesStore";
-import { CreateServiceForm } from "@/components/create-service-form";
+import { CreateServiceForm } from "@/components/forms/create-service-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ServiceFormData } from "@/schemas/services";
 import type { SubmitHandler } from "react-hook-form";

@@ -5,7 +5,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAsyncAction } from "@/hooks/use-async-action";
-import { CreateServiceForm } from "@/components/create-service-form";
+import { CreateServiceForm } from "@/components/forms/create-service-form";
 import type { UserServices } from "@/types/user";
 import { useServiceStore } from "@/store/userServicesStore";
 import type { ServiceFormData } from "@/schemas/services";

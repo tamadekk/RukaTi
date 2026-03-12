@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import AuthCard from "@/components/auth-card";
-import RegistrationForm from "@/components/registration-form";
+import RegistrationForm from "@/components/forms/registration-form";
 import { useState } from "react";
 import { useUserSession } from "@/store/userSessionsStore";
 import { signUp } from "@/lib/authentication";
