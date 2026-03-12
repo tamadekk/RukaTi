@@ -26,7 +26,7 @@ export type UserServices = {
   availability: string;
   rating: number;
   created_at: string | Date;
-  service_image?: string | null;
+  service_image?: string | null | File;
 };
 
 export type Review = {

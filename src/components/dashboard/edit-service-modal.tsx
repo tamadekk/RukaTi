@@ -11,6 +11,7 @@ import { useServiceStore } from "@/store/userServicesStore";
 import type { ServiceFormData } from "@/schemas/services";
 import { toast } from "sonner";
 import { checkHasChanges } from "@/lib/utils";
+import { uploadImage } from "@/lib/storage";
 
 interface EditServiceModalProps {
   service: UserServices;
@@ -28,6 +29,7 @@ export const EditServiceModal = ({
   const { isLoading, execute } = useAsyncAction();
 
   const handleSubmit = async (data: ServiceFormData) => {
+    // TODO: consolidate with create service
     const hasChanges = checkHasChanges(data, service, [
       "title",
       "description",
@@ -43,6 +45,18 @@ export const EditServiceModal = ({
     if (!hasChanges && !hasImageChange) {
       toast.info("No changes detected.");
       return;
+    }
+    // TODO: terible logic going on here - stopgap, refactor ASAP
+    if (hasImageChange) {
+      const image = data.service_image[0];
+      console.log(image);
+      const imageUrl = await uploadImage({
+        file: image,
+        bucket: "user_services",
+        folderPath: "service_image",
+        fileNamePrefix: service.service_id,
+      });
+      data.service_image = imageUrl;
     }
 
     await execute(() => updateService(service.service_id, data), {
@@ -71,7 +85,7 @@ export const EditServiceModal = ({
             contact: service.contact,
             price_range: service.price_range,
             availability: service.availability,
-            // image handling might be complex, skipping for now or treating as optional
+            service_image: service.service_image,
           }}
         />
       </DialogContent>
