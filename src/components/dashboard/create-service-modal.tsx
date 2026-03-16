@@ -8,9 +8,12 @@ import { CreateServiceForm } from "@/components/forms/create-service-form";
 import { useServiceStore } from "@/store/userServicesStore";
 import type { ServiceFormData } from "@/schemas/services";
 import { useUserSession } from "@/store/userSessionsStore";
+import { useUserProfileStore } from "@/store/userProfileStore";
 import supabase from "@/supabase-client";
 import { useAsyncAction } from "@/hooks/use-async-action";
 import { uploadImage } from "@/lib/storage";
+import { Link } from "@tanstack/react-router";
+import { ShieldAlert } from "lucide-react";
 
 interface CreateServiceModalProps {
   isOpen: boolean;
@@ -23,7 +26,10 @@ export const CreateServiceModal = ({
 }: CreateServiceModalProps) => {
   const { createService } = useServiceStore();
   const user = useUserSession((state) => state.user);
+  const { userProfile } = useUserProfileStore();
   const { isLoading, execute } = useAsyncAction();
+
+  const isOnboarded = !!(userProfile?.full_name && userProfile?.phone_number);
 
   const handleSubmit = async (values: ServiceFormData) => {
     if (!user?.id) return;
@@ -75,7 +81,32 @@ export const CreateServiceModal = ({
             Create New Service
           </DialogTitle>
         </DialogHeader>
-        <CreateServiceForm onSubmit={handleSubmit} loading={isLoading} />
+
+        {isOnboarded ? (
+          <CreateServiceForm onSubmit={handleSubmit} loading={isLoading} />
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-6 py-16 text-center">
+            <div className="border-2 border-black p-4 bg-neutral-50">
+              <ShieldAlert className="h-10 w-10 mx-auto" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-black uppercase tracking-tight">
+                Complete Your Profile First
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-xs">
+                You need to finish setting up your profile before you can list a
+                service.
+              </p>
+            </div>
+            <Link
+              to="/onboarding"
+              onClick={onClose}
+              className="inline-flex items-center gap-2 bg-black text-white font-bold uppercase tracking-widest text-sm px-8 h-12 hover:bg-neutral-800 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none translate-y-[-2px] active:translate-y-0"
+            >
+              Go to Onboarding
+            </Link>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -55,7 +55,7 @@ const RegisterRouteComponent: React.FC = () => {
       if (data.user && data.session) {
         setUser(data.user);
         setTokens(data.session.access_token, data.session.refresh_token);
-        navigate({ to: "/" });
+        navigate({ to: "/onboarding" });
       }
     } catch (err) {
       console.error(err);
