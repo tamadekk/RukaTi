@@ -1,18 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { OnboardingForm } from "@/components/forms/onboarding-form";
 import { useUserProfileStore } from "@/store/userProfileStore";
+import { isUserOnboarded } from "@/lib/user";
 
 const OnboardingRouteComponent: React.FC = () => {
   const navigate = useNavigate();
   const { userProfile } = useUserProfileStore();
-  const checkIfUserCompletedOnboarding = () => {
-    if (!userProfile?.full_name || !userProfile?.phone_number) {
-      return false;
-    }
-    return true;
-  };
 
-  if (checkIfUserCompletedOnboarding()) {
+  if (isUserOnboarded(userProfile)) {
     navigate({ to: "/" });
     return null;
   }
