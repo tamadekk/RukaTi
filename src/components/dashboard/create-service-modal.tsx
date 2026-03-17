@@ -14,6 +14,7 @@ import { useAsyncAction } from "@/hooks/use-async-action";
 import { uploadImage } from "@/lib/storage";
 import { Link } from "@tanstack/react-router";
 import { ShieldAlert } from "lucide-react";
+import { isUserOnboarded } from "@/lib/user";
 
 interface CreateServiceModalProps {
   isOpen: boolean;
@@ -29,7 +30,7 @@ export const CreateServiceModal = ({
   const { userProfile } = useUserProfileStore();
   const { isLoading, execute } = useAsyncAction();
 
-  const isOnboarded = !!(userProfile?.full_name && userProfile?.phone_number);
+  const isOnboarded = isUserOnboarded(userProfile);
 
   const handleSubmit = async (values: ServiceFormData) => {
     if (!user?.id) return;

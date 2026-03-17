@@ -1,6 +1,7 @@
 import { useUserSession } from "@/store/userSessionsStore";
 import { useUserProfileStore } from "@/store/userProfileStore";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { isUserOnboarded } from "@/lib/user";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ location }) => {
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/_authenticated")({
 
     // 3. If onboarding is not complete, send to /onboarding (but don't loop)
     const profile = useUserProfileStore.getState().userProfile;
-    const isOnboarded = profile?.full_name && profile?.phone_number;
+    const isOnboarded = isUserOnboarded(profile);
     const isOnboardingRoute = location.pathname === "/onboarding";
 
     if (!isOnboarded && !isOnboardingRoute) {

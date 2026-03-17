@@ -1,9 +1,14 @@
 import { useServiceStore } from "@/store/userServicesStore";
-// import { useUserProfileStore } from "@/store/userProfileStore";
 import supabase from "@/supabase-client";
-import type { UserServices } from "@/types/user";
+import type { UserServices, UserProfile } from "@/types/user";
 import { useUserSession } from "@/store/userSessionsStore";
 import { uploadImage } from "@/lib/storage";
+
+export const isUserOnboarded = (
+  profile: UserProfile | null | undefined,
+): boolean => {
+  return !!(profile?.full_name && profile?.phone_number);
+};
 
 export const getUserServices = async (userId: string) => {
   const { setUserServices } = useServiceStore.getState();
