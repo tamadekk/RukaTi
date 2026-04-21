@@ -104,6 +104,7 @@ export function OnboardingForm() {
         phone_number: data.phone_number,
         bio: data.bio ?? null,
         avatar: avatarUrl,
+        profile_completed: true,
       });
 
       toast.success("Profile set up! Welcome aboard 🎉");
