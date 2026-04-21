@@ -6,8 +6,8 @@ export const ServiceSchema = z.object({
   category: z.string().min(2),
   location: z.string().optional(),
   contact: z.string().optional(),
-  price_range: z.string().optional(),
-  availability: z.string().optional(),
+  price_range: z.string().min(1, "Price range is required"),
+  availability: z.string().min(1, "Availability is required"),
   service_image: z.any().optional(),
 });
 
