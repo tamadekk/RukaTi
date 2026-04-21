@@ -10,6 +10,7 @@ export type UserProfile = {
   avatar: string | null;
   bio: string | null;
   created_at: Date | string | null;
+  profile_completed: boolean;
 };
 export type { User };
 
