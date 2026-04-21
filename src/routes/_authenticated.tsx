@@ -7,7 +7,6 @@ export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ location }) => {
     const user = useUserSession.getState().user;
 
-    // 1. Must be logged in
     if (!user?.id) {
       throw redirect({
         to: "/login",
