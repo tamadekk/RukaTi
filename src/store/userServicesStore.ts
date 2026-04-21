@@ -99,8 +99,12 @@ export const useServiceStore = create<ServiceStore>((set) => ({
             (service) => service.service_id !== serviceId,
           ) || null,
       }));
-    } catch (error: any) {
-      set({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        set({ error: error.message });
+      } else {
+        set({ error: "An unknown error occurred" });
+      }
     } finally {
       set({ loading: false });
     }

@@ -5,9 +5,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function checkHasChanges<T extends Record<string, any>>(
+export function checkHasChanges<T extends Record<string, unknown>>(
   formData: T,
-  originalData: Record<string, any> | null | undefined,
+  originalData: Record<string, unknown> | null | undefined,
   keys: (keyof T)[],
 ): boolean {
   if (!originalData) return false;

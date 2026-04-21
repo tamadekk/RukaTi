@@ -70,7 +70,7 @@ export const ServiceCard = ({
         `}
       >
         <img
-          src={service.service_image || ServicePlaceholder}
+          src={typeof service.service_image === "string" ? service.service_image : ServicePlaceholder}
           alt={service.title}
           className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
           onError={handleImageError}

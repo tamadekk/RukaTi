@@ -139,7 +139,7 @@ export function ServiceDetailsPage() {
 
         <div className="flex flex-col md:flex-row gap-8">
           <ServiceGallery
-            image={currentService.service_image ?? undefined}
+            image={typeof currentService.service_image === "string" ? currentService.service_image : undefined}
             title={currentService.title}
             category={currentService.category}
           />

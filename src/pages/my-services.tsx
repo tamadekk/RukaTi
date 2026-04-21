@@ -8,7 +8,8 @@ import { CreateServiceModal } from "@/components/dashboard/create-service-modal"
 import { categories } from "@/const/categories-section";
 
 const MyServicesPage = () => {
-  const services = useServiceStore((state) => state.userServices) || [];
+  const rawServices = useServiceStore((state) => state.userServices);
+  const services = useMemo(() => rawServices ?? [], [rawServices]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");

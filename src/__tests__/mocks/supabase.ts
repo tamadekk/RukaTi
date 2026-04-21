@@ -1,15 +1,15 @@
 const mockSupabase = {
-  from: (table: string) => ({
+  from: (_table: string) => ({
     select: () => ({
-      eq: (column: string, value: any) =>
+      eq: (_column: string, _value: unknown) =>
         Promise.resolve({ data: [], error: null }),
     }),
-    insert: (data: any) => Promise.resolve({ data, error: null }),
-    update: (data: any) => ({
-      eq: (column: string, value: any) => Promise.resolve({ error: null }),
+    insert: (_data: unknown) => Promise.resolve({ data: _data, error: null }),
+    update: (_data: unknown) => ({
+      eq: (_column: string, _value: unknown) => Promise.resolve({ error: null }),
     }),
     delete: () => ({
-      eq: (column: string, value: any) => Promise.resolve({ error: null }),
+      eq: (_column: string, _value: unknown) => Promise.resolve({ error: null }),
     }),
   }),
   auth: {
