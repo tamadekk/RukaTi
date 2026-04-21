@@ -7,7 +7,10 @@ import { uploadImage } from "@/lib/storage";
 export const isUserOnboarded = (
   profile: UserProfile | null | undefined,
 ): boolean => {
-  return !!(profile?.full_name && profile?.phone_number);
+  if (profile) {
+    return profile.profile_completed;
+  }
+  return false;
 };
 
 export const getUserServices = async (userId: string) => {
