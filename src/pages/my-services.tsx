@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { useServiceStore } from "@/store/userServicesStore";
-import { useInitializeUser } from "@/hooks/init-userProfile";
 import { ServicesHeader } from "@/components/dashboard/profile/my-services/header";
 import { ServicesStats } from "@/components/dashboard/profile/my-services/stats";
 import { ServicesToolbar } from "@/components/dashboard/profile/my-services/toolbar";
@@ -9,7 +8,6 @@ import { CreateServiceModal } from "@/components/dashboard/create-service-modal"
 import { categories } from "@/const/categories-section";
 
 const MyServicesPage = () => {
-  useInitializeUser();
   const services = useServiceStore((state) => state.userServices) || [];
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

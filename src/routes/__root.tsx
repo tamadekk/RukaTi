@@ -5,8 +5,11 @@ import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import NotFound from "@/components/not-found";
+import { useInitializeUser } from "@/hooks/init-userProfile";
 
 const RootLayout = () => {
+  useInitializeUser();
+
   return (
     <main className="flex flex-col min-h-dvh font-mono">
       <Header />
