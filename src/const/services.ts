@@ -9,7 +9,15 @@ export const PRICE_RANGES = [
   "Fixed Price",
 ];
 
-export const AVAILABILITY_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const AVAILABILITY_DAYS = [
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun",
+];
 
 export const AVAILABILITY_OPTIONS = [
   { value: "on-call", label: "On Call" },
@@ -17,4 +25,6 @@ export const AVAILABILITY_OPTIONS = [
   { value: "custom", label: "Custom Days" },
 ] as const;
 
-export type AvailabilityType = (typeof AVAILABILITY_OPTIONS)[number]["value"] | "";
+export type AvailabilityType =
+  | (typeof AVAILABILITY_OPTIONS)[number]["value"]
+  | "";

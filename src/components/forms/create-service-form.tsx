@@ -26,7 +26,8 @@ export const CreateServiceForm = ({
   loading,
   defaultValues,
 }: CreateServiceFormProps) => {
-  const [availabilityType, setAvailabilityType] = useState<AvailabilityType>("");
+  const [availabilityType, setAvailabilityType] =
+    useState<AvailabilityType>("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [isFixedPrice, setIsFixedPrice] = useState(false);
   const [fixedPriceAmount, setFixedPriceAmount] = useState("");
