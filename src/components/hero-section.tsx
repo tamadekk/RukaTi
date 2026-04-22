@@ -27,7 +27,7 @@ const HeroSection = () => {
             <Link to="/register">
               <Button
                 variant="outline"
-                className="w-full sm:w-auto text-lg h-14 px-8 uppercase font-bold tracking-widest border-2 border-black bg-white text-black hover:bg-gray-100 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-none transition-all"
+                className="w-full sm:w-auto text-lg h-14 px-8 uppercase font-bold tracking-widest border-2 border-black bg-white text-black hover:bg-gray-100 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-none transition-all hover:text-black"
               >
                 Offer Services
               </Button>
