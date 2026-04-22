@@ -6,7 +6,7 @@ const ProfileCard = ({ user }: { user?: UserProfile | null }) => {
   const name = user?.full_name ?? "Unknown user";
   const location = user?.role ?? "";
   const description = user?.bio ?? "";
-  const avatar = user?.avatar ?? "/src/assets/tutorTile.jpg";
+  const avatar = user?.avatar ?? "/src/assets/blank-avatar.webp";
 
   return (
     <div className="flex flex-col items-center text-center gap-4">
