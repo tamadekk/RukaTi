@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "@tanstack/react-router";
+import { useParams, Link } from "@tanstack/react-router";
 import { useMarketStore } from "@/store/marketStore";
 import { useUserSession } from "@/store/userSessionsStore";
 import { toast } from "sonner";
 import type { UploadReview } from "@/types/user";
+import { Button } from "@/components/ui/button";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { ServiceHeader } from "@/components/service-details/service-header";
 import { ServiceGallery } from "@/components/service-details/service-gallery";
@@ -66,8 +67,39 @@ export function ServiceDetailsPage() {
   if (error || !currentService) {
     return (
       <DashboardLayout>
-        <div className="flex h-full items-center justify-center font-mono text-red-500">
-          {error || "Service not found"}
+        <div className="flex flex-col h-full items-center justify-center p-6 mt-12 mb-20">
+          <div className="max-w-md w-full bg-white border border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center space-y-6">
+            <div className="w-16 h-16 bg-red-100 border border-black rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-8 h-8 text-red-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold uppercase tracking-tight">
+              Oops! Something went wrong
+            </h2>
+            <p className="text-gray-600 font-mono text-sm">
+              We couldn't find the service you were looking for. It may have
+              been removed or the link is broken.
+            </p>
+            <div className="pt-6 border-t border-black">
+              <Link to="/services" className="inline-block w-full">
+                <Button className="w-full uppercase font-bold tracking-widest border border-black bg-black text-white hover:bg-white hover:text-black rounded-none transition-colors h-12">
+                  Back to Services
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </DashboardLayout>
     );
@@ -139,7 +171,11 @@ export function ServiceDetailsPage() {
 
         <div className="flex flex-col md:flex-row gap-8">
           <ServiceGallery
-            image={typeof currentService.service_image === "string" ? currentService.service_image : undefined}
+            image={
+              typeof currentService.service_image === "string"
+                ? currentService.service_image
+                : undefined
+            }
             title={currentService.title}
             category={currentService.category}
           />
