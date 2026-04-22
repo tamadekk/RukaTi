@@ -7,7 +7,7 @@ const CategoryCard = ({ category }: { category: (typeof categories)[0] }) => {
           <img
             src={category.image}
             alt={category.title}
-            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+            className="w-full h-full object-cover transition-all duration-300"
           />
         </div>
         <div className="p-4 text-center">
