@@ -1,0 +1,10 @@
+#!/bin/sh
+bunx lint-staged
+echo "Running typescript type checking..."
+npx tsc --noEmit
+TSC_STATUS=$?
+
+if [ $TSC_STATUS -ne 0 ]; then
+  echo "Commit aborted due to typescript errors! ❌"
+  exit 1
+fi
