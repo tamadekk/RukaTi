@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UploadCloud } from "lucide-react";
+import { UploadCloud, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,11 +37,34 @@ export const CreateServiceForm = ({
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<ServiceFormData>({
     resolver: zodResolver(ServiceSchema),
     defaultValues,
   });
+
+  const serviceImage = watch("service_image");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (serviceImage && serviceImage.length > 0) {
+      const file = serviceImage[0];
+      const url = URL.createObjectURL(file);
+      setImagePreview(url);
+      return () => URL.revokeObjectURL(url);
+    }
+    setImagePreview(null);
+  }, [serviceImage]);
+
+  const handleRemoveImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValue("service_image", [] as unknown as FileList);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const availabilityValue = (type: AvailabilityType, days: string[]) => {
     if (type === "on-call") return "On call";
@@ -136,20 +159,52 @@ export const CreateServiceForm = ({
             className="hidden"
             accept="image/*"
             {...register("service_image")}
+            ref={(e) => {
+              register("service_image").ref(e);
+              fileInputRef.current = e;
+            }}
           />
           <label
             htmlFor="service-image-upload"
-            className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-black bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+            className="flex items-center gap-4 justify-center w-full h-40 border-2 border-dashed border-black bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer px-6"
           >
-            <div className="flex flex-col items-center gap-2">
-              <UploadCloud className="w-8 h-8 text-gray-400" />
-              <span className="text-xs font-bold uppercase text-gray-500">
-                Click to Upload Image
-              </span>
-              <span className="text-[10px] text-gray-400">
-                JPG, PNG, WEBP UP TO 5MB
-              </span>
-            </div>
+            {imagePreview ? (
+              <>
+                <div className="shrink-0 w-[106px] aspect-video border-2 border-black overflow-hidden shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                  <img
+                    src={imagePreview}
+                    alt="Service preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col gap-1 min-w-0">
+                  <span className="text-xs font-bold uppercase text-black truncate max-w-[200px]">
+                    {serviceImage?.[0]?.name || "Image selected"}
+                  </span>
+                  <span className="text-[10px] text-gray-500 uppercase tracking-wide">
+                    Click to replace
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="ml-auto shrink-0 p-1.5 border-2 border-black bg-white hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-px"
+                  aria-label="Remove image"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col items-center gap-2">
+                <UploadCloud className="w-8 h-8 text-gray-400" />
+                <span className="text-xs font-bold uppercase text-gray-500">
+                  Click to Upload Image
+                </span>
+                <span className="text-[10px] text-gray-400">
+                  JPG, PNG, WEBP UP TO 5MB
+                </span>
+              </div>
+            )}
           </label>
         </div>
       </div>
