@@ -49,12 +49,24 @@ export const CreateServiceForm = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (serviceImage && serviceImage.length > 0) {
-      const file = serviceImage[0];
+    // TODO: update this logic when we will support multiple images
+    if (!serviceImage || serviceImage.length === 0) {
+      setImagePreview(null);
+      return;
+    }
+
+    if (typeof serviceImage === "string") {
+      setImagePreview(serviceImage);
+      return;
+    }
+
+    if (serviceImage[0] instanceof File || serviceImage[0] instanceof Blob) {
+      const file = serviceImage[0] as File;
       const url = URL.createObjectURL(file);
       setImagePreview(url);
       return () => URL.revokeObjectURL(url);
     }
+
     setImagePreview(null);
   }, [serviceImage]);
 
