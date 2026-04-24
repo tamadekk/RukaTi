@@ -57,7 +57,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
       let query = supabase
         .from("user_service")
         .select("*", { count: "exact" })
-        .order("created_at", { ascending: false })
+        .order("rating", { ascending: false, nullsFirst: false })
         .range(from, to);
 
       if (selectedCategory) {
