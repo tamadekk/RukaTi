@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Star } from "lucide-react";
 import { useAsyncAction } from "@/hooks/use-async-action";
 import type { UserServices } from "@/types/user";
 import { Button } from "@/components/ui/button";
@@ -94,9 +95,11 @@ export const ServiceCard = ({
             >
               {service.title}
             </h3>
-            <p className="text-[10px] text-gray-500 font-mono uppercase tracking-wide">
-              {service.category}
-            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <p className="text-[10px] text-gray-500 font-mono uppercase tracking-wide">
+                {service.category}
+              </p>
+            </div>
           </div>
           {!readonly && (
             <div
@@ -206,6 +209,15 @@ export const ServiceCard = ({
               <span>{service.availability}</span>
             </div>
           )}
+          {service.rating ? (
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-black">RATING:</span>
+              <div className="flex items-center gap-0.5 text-[10px] font-bold text-black">
+                <Star className="w-3 h-3 fill-yellow-400 text-yellow-500" />
+                <span>{Number(service.rating).toFixed(1)}</span>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
 
