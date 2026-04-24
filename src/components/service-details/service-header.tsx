@@ -20,7 +20,7 @@ export const ServiceHeader = ({ onBack, onShare }: ServiceHeaderProps) => {
       <Button
         variant="outline"
         onClick={onShare}
-        className="rounded-none border-black hover:bg-gray-100 uppercase gap-2"
+        className="rounded-none border-black hover:bg-gray-100 hover:cursor-pointer hover:text-black uppercase gap-2"
       >
         <Share2 className="w-4 h-4" />
         Share
