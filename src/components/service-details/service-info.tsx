@@ -1,4 +1,4 @@
-import { MapPin, DollarSign, Calendar } from "lucide-react";
+import { MapPin, DollarSign, Calendar, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type ServiceInfoProps = {
@@ -6,6 +6,7 @@ type ServiceInfoProps = {
   location: string;
   price_range: string;
   availability: string;
+  rating?: number | null;
 };
 
 export const ServiceInfo = ({
@@ -13,6 +14,7 @@ export const ServiceInfo = ({
   location,
   price_range,
   availability,
+  rating,
 }: ServiceInfoProps) => {
   return (
     <div className="w-full md:w-2/5 flex flex-col gap-6">
@@ -20,11 +22,23 @@ export const ServiceInfo = ({
         <h1 className="text-3xl md:text-4xl font-bold uppercase tracking-tight leading-none mb-4">
           {title}
         </h1>
-        <div className="flex items-center gap-2 text-gray-500 border-l-2 border-black pl-3">
-          <MapPin className="w-4 h-4" />
-          <span className="uppercase tracking-wide text-sm">
-            {location || "Remote / Online"}
-          </span>
+        <div className="flex flex-col gap-2 border-l-2 border-black pl-3">
+          <div className="flex items-center gap-2 text-gray-500">
+            <MapPin className="w-4 h-4" />
+            <span className="uppercase tracking-wide text-sm">
+              {location || "Remote / Online"}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Star
+              className={`w-4 h-4 ${rating ? "fill-yellow-400 text-yellow-500" : "text-gray-400"}`}
+            />
+            <span
+              className={`uppercase tracking-wide text-sm font-bold ${rating ? "text-black" : "text-gray-500"}`}
+            >
+              {rating ? `${Number(rating).toFixed(1)} / 5.0` : "No reviews yet"}
+            </span>
+          </div>
         </div>
       </div>
 

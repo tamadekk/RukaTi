@@ -184,6 +184,7 @@ export function ServiceDetailsPage() {
             location={currentService.location ?? ""}
             price_range={currentService.price_range ?? ""}
             availability={currentService.availability ?? ""}
+            rating={currentService.rating}
           />
         </div>
 
