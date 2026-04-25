@@ -56,16 +56,25 @@ export const EditServiceModal = ({
       "availability",
     ]);
 
-    const hasImageChange = data.service_image && data.service_image.length > 0;
+    // TODO: terible logic going on here - stopgap, refactor ASAP
+    const isNewImage =
+      data.service_image &&
+      typeof data.service_image !== "string" &&
+      data.service_image.length > 0;
 
-    if (!hasChanges && !hasImageChange) {
+    const isImageCleared =
+      (!data.service_image ||
+        (typeof data.service_image !== "string" &&
+          data.service_image.length === 0)) &&
+      service.service_image !== "";
+
+    if (!hasChanges && !isNewImage && !isImageCleared) {
       toast.info("No changes detected.");
       return;
     }
-    // TODO: terible logic going on here - stopgap, refactor ASAP
-    if (hasImageChange) {
-      const image = data.service_image[0];
-      console.log(image);
+
+    if (isNewImage) {
+      const image = (data.service_image as unknown as FileList)[0];
       const imageUrl = await uploadImage({
         file: image,
         bucket: "user_services",
@@ -73,6 +82,10 @@ export const EditServiceModal = ({
         fileNamePrefix: service.service_id,
       });
       data.service_image = imageUrl;
+    } else if (isImageCleared) {
+      data.service_image = "";
+    } else {
+      data.service_image = service.service_image;
     }
 
     await execute(() => updateService(service.service_id, data), {
