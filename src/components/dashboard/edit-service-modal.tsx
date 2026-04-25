@@ -8,7 +8,9 @@ import { useAsyncAction } from "@/hooks/use-async-action";
 import { CreateServiceForm } from "@/components/forms/create-service-form";
 import type { UserServices } from "@/types/user";
 import { useServiceStore } from "@/store/userServicesStore";
-import type { ServiceFormData } from "@/schemas/services";
+import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { checkHasChanges } from "@/lib/utils";
 import { uploadImage } from "@/lib/storage";
@@ -27,6 +29,20 @@ export const EditServiceModal = ({
   const updateService = useServiceStore((state) => state.updateService);
   const loading = useServiceStore((state) => state.loading);
   const { isLoading, execute } = useAsyncAction();
+
+  const form = useForm<ServiceFormData>({
+    resolver: zodResolver(ServiceSchema),
+    defaultValues: {
+      title: service.title,
+      description: service.description,
+      category: service.category,
+      location: service.location,
+      contact: service.contact,
+      price_range: service.price_range,
+      availability: service.availability,
+      service_image: service.service_image,
+    },
+  });
 
   const handleSubmit = async (data: ServiceFormData) => {
     // TODO: consolidate with create service
@@ -75,18 +91,9 @@ export const EditServiceModal = ({
           </DialogTitle>
         </DialogHeader>
         <CreateServiceForm
+          form={form}
           onSubmit={handleSubmit}
           loading={loading || isLoading}
-          defaultValues={{
-            title: service.title,
-            description: service.description,
-            category: service.category,
-            location: service.location,
-            contact: service.contact,
-            price_range: service.price_range,
-            availability: service.availability,
-            service_image: service.service_image,
-          }}
         />
       </DialogContent>
     </Dialog>

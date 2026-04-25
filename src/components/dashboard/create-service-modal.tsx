@@ -6,7 +6,9 @@ import {
 } from "@/components/ui/dialog";
 import { CreateServiceForm } from "@/components/forms/create-service-form";
 import { useServiceStore } from "@/store/userServicesStore";
-import type { ServiceFormData } from "@/schemas/services";
+import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserSession } from "@/store/userSessionsStore";
 import { useUserProfileStore } from "@/store/userProfileStore";
 import supabase from "@/supabase-client";
@@ -32,7 +34,11 @@ export const CreateServiceModal = ({
 
   const isOnboarded = isUserOnboarded(userProfile);
 
-  const handleSubmit = async (values: ServiceFormData) => {
+  const form = useForm<ServiceFormData>({
+    resolver: zodResolver(ServiceSchema),
+  });
+
+  const onSubmitHandler = async (values: ServiceFormData) => {
     if (!user?.id) return;
     await execute(
       async () => {
@@ -84,7 +90,11 @@ export const CreateServiceModal = ({
         </DialogHeader>
 
         {isOnboarded ? (
-          <CreateServiceForm onSubmit={handleSubmit} loading={isLoading} />
+          <CreateServiceForm
+            form={form}
+            onSubmit={onSubmitHandler}
+            loading={isLoading}
+          />
         ) : (
           <div className="flex flex-col items-center justify-center gap-6 py-16 text-center">
             <div className="border-2 border-black p-4 bg-neutral-50">

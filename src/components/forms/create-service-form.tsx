@@ -1,7 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UploadCloud, X } from "lucide-react";
+import { useState } from "react";
+import { type UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,70 +11,60 @@ import {
   AVAILABILITY_OPTIONS,
   type AvailabilityType,
 } from "@/const/services";
-import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
+import type { ServiceFormData } from "@/schemas/services";
+import { LocationAutocomplete } from "@/components/forms/location-autocomplete";
+import { ImageUpload } from "@/components/forms/image-upload";
 
 type CreateServiceFormProps = {
-  onSubmit: SubmitHandler<ServiceFormData>;
+  form: UseFormReturn<ServiceFormData>;
+  onSubmit: (data: ServiceFormData) => Promise<void>;
   loading: boolean;
-  defaultValues?: Partial<ServiceFormData>;
 };
 
 export const CreateServiceForm = ({
+  form,
   onSubmit,
   loading,
-  defaultValues,
 }: CreateServiceFormProps) => {
-  const [availabilityType, setAvailabilityType] =
-    useState<AvailabilityType>("");
-  const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [isFixedPrice, setIsFixedPrice] = useState(false);
-  const [fixedPriceAmount, setFixedPriceAmount] = useState("");
-  const [fixedPriceError, setFixedPriceError] = useState(false);
-
   const {
     register,
-    handleSubmit,
     setValue,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<ServiceFormData>({
-    resolver: zodResolver(ServiceSchema),
-    defaultValues,
+  } = form;
+
+  const [availabilityType, setAvailabilityType] = useState<AvailabilityType>(
+    () => {
+      const val = form.getValues("availability");
+      if (val === "On call") return "on-call";
+      if (val === "Mon–Fri") return "business";
+      if (val && (val.includes(",") || AVAILABILITY_DAYS.includes(val)))
+        return "custom";
+      return "";
+    },
+  );
+  const [selectedDays, setSelectedDays] = useState<string[]>(() => {
+    const val = form.getValues("availability");
+    if (val && (val.includes(",") || AVAILABILITY_DAYS.includes(val))) {
+      return val.split(", ").filter((d) => AVAILABILITY_DAYS.includes(d));
+    }
+    return [];
   });
+  const [isFixedPrice, setIsFixedPrice] = useState(() => {
+    const val = form.getValues("price_range");
+    return typeof val === "string" && val.startsWith("Fixed: €");
+  });
+  const [fixedPriceAmount, setFixedPriceAmount] = useState(() => {
+    const val = form.getValues("price_range");
+    if (typeof val === "string" && val.startsWith("Fixed: €")) {
+      return val.replace("Fixed: €", "");
+    }
+    return "";
+  });
+  const [fixedPriceError, setFixedPriceError] = useState(false);
 
   const serviceImage = watch("service_image");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    // TODO: update this logic when we will support multiple images
-    if (!serviceImage || serviceImage.length === 0) {
-      setImagePreview(null);
-      return;
-    }
-
-    if (typeof serviceImage === "string") {
-      setImagePreview(serviceImage);
-      return;
-    }
-
-    if (serviceImage[0] instanceof File || serviceImage[0] instanceof Blob) {
-      const file = serviceImage[0] as File;
-      const url = URL.createObjectURL(file);
-      setImagePreview(url);
-      return () => URL.revokeObjectURL(url);
-    }
-
-    setImagePreview(null);
-  }, [serviceImage]);
-
-  const handleRemoveImage = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setValue("service_image", [] as unknown as FileList);
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
+  const locationValue = watch("location");
 
   const availabilityValue = (type: AvailabilityType, days: string[]) => {
     if (type === "on-call") return "On call";
@@ -111,7 +99,7 @@ export const CreateServiceForm = ({
     }
   };
 
-  const handleFormSubmit = handleSubmit((data) => {
+  const handleFormSubmit = form.handleSubmit((data) => {
     if (isFixedPrice) {
       if (!fixedPriceAmount.trim()) {
         setFixedPriceError(true);
@@ -164,61 +152,13 @@ export const CreateServiceForm = ({
             (optional)
           </span>
         </label>
-        <div className="relative group cursor-pointer">
-          <Input
-            type="file"
-            id="service-image-upload"
-            className="hidden"
-            accept="image/*"
-            {...register("service_image")}
-            ref={(e) => {
-              register("service_image").ref(e);
-              fileInputRef.current = e;
-            }}
-          />
-          <label
-            htmlFor="service-image-upload"
-            className="flex items-center gap-4 justify-center w-full h-40 border-2 border-dashed border-black bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer px-6"
-          >
-            {imagePreview ? (
-              <>
-                <div className="shrink-0 w-[106px] aspect-video border-2 border-black overflow-hidden shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                  <img
-                    src={imagePreview}
-                    alt="Service preview"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex flex-col gap-1 min-w-0">
-                  <span className="text-xs font-bold uppercase text-black truncate max-w-[200px]">
-                    {serviceImage?.[0]?.name || "Image selected"}
-                  </span>
-                  <span className="text-[10px] text-gray-500 uppercase tracking-wide">
-                    Click to replace
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  className="ml-auto shrink-0 p-1.5 border-2 border-black bg-white hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-px"
-                  aria-label="Remove image"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </>
-            ) : (
-              <div className="flex flex-col items-center gap-2">
-                <UploadCloud className="w-8 h-8 text-gray-400" />
-                <span className="text-xs font-bold uppercase text-gray-500">
-                  Click to Upload Image
-                </span>
-                <span className="text-[10px] text-gray-400">
-                  JPG, PNG, WEBP UP TO 5MB
-                </span>
-              </div>
-            )}
-          </label>
-        </div>
+        <ImageUpload
+          {...register("service_image")}
+          imageFiles={serviceImage}
+          onImageRemove={() =>
+            setValue("service_image", [] as unknown as FileList)
+          }
+        />
       </div>
 
       {/* Grid Layout */}
@@ -299,10 +239,11 @@ export const CreateServiceForm = ({
               (optional)
             </span>
           </label>
-          <Input
+          <LocationAutocomplete
             {...register("location")}
-            placeholder="E.G. HELSINKI"
-            className="rounded-none border-black h-12"
+            value={locationValue || ""}
+            onChange={(e) => setValue("location", e.target.value)}
+            onSelectSuggestion={(address) => setValue("location", address)}
           />
         </div>
 
