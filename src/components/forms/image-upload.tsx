@@ -16,7 +16,7 @@ export const ImageUpload = forwardRef<HTMLInputElement, ImageUploadProps>(
 
     useEffect(() => {
       // TODO: update this logic when we will support multiple images
-      if (!imageFiles || imageFiles.length === 0) {
+      if (!imageFiles) {
         setImagePreview(null);
         return;
       }
@@ -26,8 +26,13 @@ export const ImageUpload = forwardRef<HTMLInputElement, ImageUploadProps>(
         return;
       }
 
-      if (imageFiles[0] instanceof File || imageFiles[0] instanceof Blob) {
-        const file = imageFiles[0] as File;
+      if (imageFiles.length === 0) {
+        setImagePreview(null);
+        return;
+      }
+
+      const file = imageFiles[0];
+      if (file instanceof Blob) {
         const url = URL.createObjectURL(file);
         setImagePreview(url);
         return () => URL.revokeObjectURL(url);
@@ -61,7 +66,10 @@ export const ImageUpload = forwardRef<HTMLInputElement, ImageUploadProps>(
               </div>
               <div className="flex flex-col gap-1 min-w-0">
                 <span className="text-xs font-bold uppercase text-black truncate max-w-[200px]">
-                  {imageFiles?.[0]?.name || "Image selected"}
+                  {typeof imageFiles !== "string" &&
+                  imageFiles?.[0] instanceof File
+                    ? (imageFiles[0] as File).name
+                    : "Image selected"}
                 </span>
                 <span className="text-[10px] text-gray-500 uppercase tracking-wide">
                   Click to replace
