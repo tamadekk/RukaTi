@@ -111,7 +111,10 @@ export const CreateServiceForm = ({
   });
 
   return (
-    <form onSubmit={handleFormSubmit} className="space-y-6 font-mono">
+    <form
+      onSubmit={handleFormSubmit}
+      className="space-y-4 sm:space-y-6 font-mono"
+    >
       {/* Title */}
       <div className="space-y-2">
         <label className="text-xs font-bold uppercase tracking-wider">
@@ -162,7 +165,7 @@ export const CreateServiceForm = ({
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Category */}
         <div className="space-y-2">
           <label className="text-xs font-bold uppercase tracking-wider">
@@ -317,7 +320,7 @@ export const CreateServiceForm = ({
       <Button
         type="submit"
         disabled={loading || isSubmitting}
-        className="w-full rounded-none border border-black bg-black text-white hover:bg-gray-900 h-14 uppercase tracking-widest font-bold text-sm"
+        className="w-full rounded-none border border-black bg-black text-white hover:bg-gray-900 h-14 sm:h-16 uppercase tracking-widest font-bold text-sm"
       >
         {loading ? "Submitting..." : "Submit Service"}
       </Button>

@@ -82,7 +82,7 @@ export const CreateServiceModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-7xl w-[95vw] max-h-[90vh] overflow-y-auto border-2 border-black p-8 sm:rounded-none bg-white shadow-none">
+      <DialogContent className="w-full h-full sm:w-[95vw] sm:max-w-7xl sm:h-auto sm:max-h-[90vh] overflow-y-auto border-0 sm:border-2 border-black p-6 sm:p-8 sm:rounded-none bg-white shadow-none left-0 top-0 translate-x-0 translate-y-0 sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] max-w-none sm:max-w-7xl">
         <DialogHeader className="mb-6 border-b border-black pb-4">
           <DialogTitle className="text-2xl font-bold uppercase tracking-tight font-mono">
             Create New Service
