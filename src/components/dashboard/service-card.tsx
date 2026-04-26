@@ -62,12 +62,12 @@ export const ServiceCard = ({
   const CardContent = (
     <div
       className={`border border-black bg-white transition-opacity hover:opacity-100 group hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200 
-      ${isHorizontal ? "flex flex-row h-36" : "flex flex-col h-full p-3 space-y-2 cursor-pointer"}
+      ${isHorizontal ? "flex flex-row h-44" : "flex flex-col h-full p-3 space-y-2 cursor-pointer"}
       `}
     >
       <div
         className={`overflow-hidden border-black relative
-        ${isHorizontal ? "w-36 h-full shrink-0 border-r" : "aspect-[3/2] w-full border mb-1"}
+        ${isHorizontal ? "w-40 h-full shrink-0 border-r" : "aspect-[3/2] w-full border mb-1"}
         `}
       >
         <img
@@ -185,7 +185,7 @@ export const ServiceCard = ({
         </div>
 
         <p
-          className={`text-gray-600 text-xs line-clamp-2 leading-relaxed
+          className={`text-gray-600 text-xs line-clamp-3 leading-relaxed
           ${isHorizontal ? "mt-2" : ""}
           `}
         >
