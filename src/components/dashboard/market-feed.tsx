@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { ServiceCard } from "@/components/dashboard/service-card";
+import { ServiceCardSkeleton } from "@/components/skeletons/service-skeleton";
 import { useMarketStore } from "@/store/marketStore";
 import {
   Pagination,
@@ -41,8 +42,17 @@ const MarketFeed = () => {
 
   if (loading && services.length === 0) {
     return (
-      <div className="p-4 text-center font-mono text-sm">
-        Loading services...
+      <div className="flex flex-col h-full gap-8">
+        <div className="flex flex-col flex-1">
+          <div className="font-semibold mb-4 uppercase tracking-wider">
+            Explore Services
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ServiceCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

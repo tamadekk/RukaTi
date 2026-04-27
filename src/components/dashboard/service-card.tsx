@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import ServicePlaceholder from "@/assets/service-placeholder.svg";
 
 interface ServiceCardProps {
@@ -32,13 +33,19 @@ export const ServiceCard = ({
 }: ServiceCardProps) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const deleteService = useServiceStore((state) => state.deleteService);
   const { isLoading: isDeleting, execute: executeDelete } = useAsyncAction();
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
 
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
     e.currentTarget.src = ServicePlaceholder;
+    setImageLoaded(true);
     console.error("Service image not found");
   };
 
@@ -66,10 +73,13 @@ export const ServiceCard = ({
       `}
     >
       <div
-        className={`overflow-hidden border-black relative
+        className={`overflow-hidden border-black relative bg-gray-50
         ${isHorizontal ? "w-40 h-full shrink-0 border-r" : "aspect-[3/2] w-full border mb-1"}
         `}
       >
+        {!imageLoaded && (
+          <Skeleton className="absolute inset-0 w-full h-full bg-gray-100 rounded-none animate-pulse" />
+        )}
         <img
           src={
             typeof service.service_image === "string"
@@ -77,7 +87,10 @@ export const ServiceCard = ({
               : ServicePlaceholder
           }
           alt={service.title}
-          className="w-full h-full object-cover transition-all duration-300"
+          className={`w-full h-full object-cover transition-all duration-700
+            ${imageLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"}
+          `}
+          onLoad={handleImageLoad}
           onError={handleImageError}
         />
       </div>
