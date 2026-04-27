@@ -10,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { MarketPaginationItems } from "./market-pagination-items";
+import { scrollToTop } from "@/lib/utils";
 
 const MarketFeed = () => {
   const {
@@ -28,17 +29,13 @@ const MarketFeed = () => {
 
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  const handlePreviousPage = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    scrollToTop();
   };
 
-  const handleNextPage = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
-  };
+  const handlePreviousPage = () => page > 1 && handlePageChange(page - 1);
+  const handleNextPage = () => page < totalPages && handlePageChange(page + 1);
 
   if (loading && services.length === 0) {
     return (
@@ -97,7 +94,7 @@ const MarketFeed = () => {
             <MarketPaginationItems
               currentPage={page}
               totalPages={totalPages}
-              onPageChange={setPage}
+              onPageChange={handlePageChange}
             />
 
             <PaginationItem>
