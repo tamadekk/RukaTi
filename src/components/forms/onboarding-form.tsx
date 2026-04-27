@@ -1,16 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import {
-  User as UserIcon,
-  Phone,
-  FileText,
-  ArrowRight,
-  Camera,
-  X,
-} from "lucide-react";
+import { User as UserIcon, Phone, FileText, ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +14,7 @@ import {
   OnboardingSchema,
   type OnboardingFormData,
 } from "@/schemas/user-profile";
+import { AvatarUpload } from "@/components/forms/avatar-upload";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -33,8 +27,6 @@ export function OnboardingForm() {
   } = useUserProfileStore();
   const [isUploading, setIsUploading] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -48,37 +40,6 @@ export function OnboardingForm() {
       bio: "",
     },
   });
-
-  useEffect(() => {
-    return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
-  }, [previewUrl]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > MAX_FILE_SIZE) {
-      toast.error("File is too large. Maximum size is 5MB.");
-      return;
-    }
-
-    setAvatarFile(file);
-    const url = URL.createObjectURL(file);
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(url);
-  };
-
-  const removeAvatar = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setAvatarFile(null);
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
 
   const onSubmit = async (data: OnboardingFormData) => {
     if (!userProfile?.user_id) {
@@ -119,6 +80,17 @@ export function OnboardingForm() {
 
   const loading = storeLoading || isUploading;
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error("File is too large. Maximum size is 5MB.");
+        return;
+      }
+      setAvatarFile(file);
+    }
+  };
+
   return (
     <div className="w-full max-w-xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
@@ -141,48 +113,13 @@ export function OnboardingForm() {
           <label className="text-sm font-bold uppercase tracking-widest self-start">
             Profile Picture
           </label>
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            className="group relative w-32 h-32 cursor-pointer transition-transform hover:scale-105"
-          >
-            <div className="w-full h-full rounded-full border-4 border-black bg-neutral-100 flex items-center justify-center overflow-hidden relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-active:shadow-none group-active:translate-x-1 group-active:translate-y-1 transition-all">
-              {previewUrl ? (
-                <img
-                  src={previewUrl}
-                  alt="Avatar preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Camera className="w-10 h-10 text-neutral-400 group-hover:text-black transition-colors" />
-              )}
-
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                <p className="text-white text-[10px] font-bold uppercase tracking-wider">
-                  Change
-                </p>
-              </div>
-            </div>
-
-            {avatarFile && (
-              <button
-                type="button"
-                onClick={removeAvatar}
-                className="absolute -top-1 -right-1 bg-white border-2 border-black rounded-full p-1 hover:bg-neutral-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5 transition-all z-10"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="image/*"
-            className="hidden"
+          <AvatarUpload
+            variant="circular"
+            imageFiles={avatarFile ? [avatarFile] : null}
+            onImageRemove={() => setAvatarFile(null)}
+            onChange={handleImageChange}
+            label="JPG, PNG (Max 5MB)"
           />
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-            JPG, PNG (Max 5MB)
-          </p>
         </div>
 
         {/* Full Name */}

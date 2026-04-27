@@ -110,6 +110,23 @@ export const CreateServiceForm = ({
     onSubmit(data);
   });
 
+  const handleRemoveImage = () => {
+    setValue("service_image", [] as unknown as FileList);
+  };
+
+  const handleFixedPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFixedPriceAmount(e.target.value);
+    setFixedPriceError(false);
+  };
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue("location", e.target.value);
+  };
+
+  const handleLocationSelect = (address: string) => {
+    setValue("location", address);
+  };
+
   return (
     <form
       onSubmit={handleFormSubmit}
@@ -158,9 +175,7 @@ export const CreateServiceForm = ({
         <ImageUpload
           {...register("service_image")}
           imageFiles={serviceImage}
-          onImageRemove={() =>
-            setValue("service_image", [] as unknown as FileList)
-          }
+          onImageRemove={handleRemoveImage}
         />
       </div>
 
@@ -221,10 +236,7 @@ export const CreateServiceForm = ({
                 min={0}
                 placeholder="ENTER AMOUNT (€)"
                 value={fixedPriceAmount}
-                onChange={(e) => {
-                  setFixedPriceAmount(e.target.value);
-                  setFixedPriceError(false);
-                }}
+                onChange={handleFixedPriceChange}
                 className={`rounded-none border-black h-12 ${fixedPriceError ? "border-red-500" : ""}`}
               />
               {fixedPriceError && (
@@ -245,8 +257,8 @@ export const CreateServiceForm = ({
           <LocationAutocomplete
             {...register("location")}
             value={locationValue || ""}
-            onChange={(e) => setValue("location", e.target.value)}
-            onSelectSuggestion={(address) => setValue("location", address)}
+            onChange={handleLocationChange}
+            onSelectSuggestion={handleLocationSelect}
           />
         </div>
 

@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,11 +7,10 @@ import {
   Phone,
   FileText,
   Save,
-  Camera,
   Briefcase,
   Lock,
 } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { AvatarUpload } from "@/components/forms/avatar-upload";
 
 type EditProfileFormProps = {
   formData: {
@@ -47,13 +45,9 @@ export function EditProfileForm({
   onSave,
   onCancel,
 }: EditProfileFormProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      onAvatarChange(file);
-    }
+    if (file) onAvatarChange(file);
   };
 
   return (
@@ -79,42 +73,13 @@ export function EditProfileForm({
               Profile Photo
             </h3>
 
-            <div className="relative inline-block">
-              <Avatar className="h-48 w-48 rounded-none border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mx-auto overflow-hidden">
-                <AvatarImage src={formData.avatar} className="object-cover" />
-                <AvatarFallback className="rounded-none bg-neutral-200 text-5xl font-black">
-                  {formData.full_name?.charAt(0) || "U"}
-                </AvatarFallback>
-              </Avatar>
-
-              <button
-                type="button"
-                className="absolute -bottom-2 -right-2 bg-black text-white p-3 hover:bg-neutral-800 transition-all shadow-[4px_4px_0px_0px_rgba(255,255,255,1),4px_4px_0px_1px_rgba(0,0,0,1)]"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Camera className="h-6 w-6" />
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-            </div>
-
-            <div className="pt-2 text-[11px] text-muted-foreground uppercase font-bold tracking-tight">
-              Click the camera icon to upload a photo.
-              {formData.avatar && (
-                <button
-                  type="button"
-                  onClick={onRemoveAvatar}
-                  className="block mx-auto mt-4 text-red-600 hover:underline"
-                >
-                  Remove current photo
-                </button>
-              )}
-            </div>
+            <AvatarUpload
+              variant="square"
+              imageFiles={formData.avatar}
+              onImageRemove={onRemoveAvatar}
+              onChange={handleImageChange}
+              label="Click to upload a photo."
+            />
           </div>
 
           <div className="bg-white border-2 border-black p-6 space-y-4">
