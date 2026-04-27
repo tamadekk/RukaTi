@@ -1,4 +1,5 @@
 import { Star, Edit2, Trash2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Review } from "@/types/user";
 import { ReviewForm } from "../forms/review-form";
@@ -45,8 +46,12 @@ export const ReviewCard = ({
       className={`border p-4 bg-white space-y-3 ${isOwner ? "border-2 border-black" : "border-black"}`}
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Avatar className="w-10 h-10 border border-black rounded-none">
+        <Link
+          to="/provider/$userId"
+          params={{ userId: review.user_id }}
+          className="flex items-center gap-3 group"
+        >
+          <Avatar className="w-10 h-10 border border-black rounded-none group-hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
             <AvatarImage src={review.user_profile?.avatar} />
             <AvatarFallback className="rounded-none bg-gray-200 font-bold">
               {review.user_profile?.full_name?.substring(0, 2).toUpperCase()}
@@ -54,7 +59,7 @@ export const ReviewCard = ({
           </Avatar>
           <div>
             <div className="flex items-center gap-2">
-              <div className="font-bold uppercase text-sm tracking-tight">
+              <div className="font-bold uppercase text-sm tracking-tight group-hover:text-blue-600 transition-colors">
                 {review.user_profile?.full_name}
               </div>
               {isOwner && (
@@ -67,7 +72,7 @@ export const ReviewCard = ({
               {new Date(review.created_at).toLocaleDateString()}
             </div>
           </div>
-        </div>
+        </Link>
         <div className="flex flex-col items-end gap-2">
           <div className="flex items-center gap-1 text-yellow-500">
             {Array.from({ length: 5 }).map((_, i) => (
