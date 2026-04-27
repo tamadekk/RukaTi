@@ -1,7 +1,7 @@
 export const categories = [
   {
-    id: "home-repairs",
-    title: "Home Repairs",
+    id: "home",
+    title: "Home",
     image: "/src/assets/homeRepairTile.jpg",
     description: "Fix, maintain, and improve your home",
   },
@@ -9,19 +9,13 @@ export const categories = [
     id: "cleaning",
     title: "Cleaning",
     image: "/src/assets/cleaningTile.jpg",
-    description: "Professional cleaning services",
+    description: "Home and office cleaning services",
   },
   {
-    id: "tutoring",
-    title: "Tutoring",
-    image: "/src/assets/tutorTile.jpg",
-    description: "Educational support and learning",
-  },
-  {
-    id: "pet-care",
-    title: "Pet Care",
-    image: "/src/assets/petCareTile.jpg",
-    description: "Care for your furry friends",
+    id: "vehicles",
+    title: "Vehicles",
+    image: "/src/assets/vehicleTile.jpg",
+    description: "Car repair, cleaning, and transport help",
   },
   {
     id: "landscaping",
@@ -30,10 +24,28 @@ export const categories = [
     description: "Garden and outdoor maintenance",
   },
   {
-    id: "event-help",
-    title: "Event Help",
+    id: "pet-care",
+    title: "Pet Care",
+    image: "/src/assets/petCareTile.jpg",
+    description: "Care for your pets",
+  },
+  {
+    id: "beauty",
+    title: "Beauty",
+    image: "/src/assets/beautyTile.jpg",
+    description: "Hair, nails, and personal grooming",
+  },
+  {
+    id: "tutoring",
+    title: "Tutoring",
+    image: "/src/assets/tutorTile.jpg",
+    description: "Educational support and lessons",
+  },
+  {
+    id: "events",
+    title: "Events",
     image: "/src/assets/eventTile.jpg",
-    description: "Party planning and event support",
+    description: "Event planning and assistance",
   },
   {
     id: "other",
