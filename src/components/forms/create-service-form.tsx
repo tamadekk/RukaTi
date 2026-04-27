@@ -196,7 +196,7 @@ export const CreateServiceForm = ({
               SELECT A CATEGORY
             </option>
             {categories.map((cat) => (
-              <option key={cat.id} value={cat.title}>
+              <option key={cat.id} value={cat.id}>
                 {cat.title}
               </option>
             ))}
