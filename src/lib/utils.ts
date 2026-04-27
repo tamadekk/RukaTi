@@ -18,3 +18,6 @@ export function checkHasChanges<T extends Record<string, unknown>>(
     return current !== original;
   });
 }
+export function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
