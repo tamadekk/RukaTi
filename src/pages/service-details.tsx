@@ -171,10 +171,17 @@ export function ServiceDetailsPage() {
 
         <div className="flex flex-col md:flex-row gap-8">
           <ServiceGallery
-            image={
-              typeof currentService.service_image === "string"
-                ? currentService.service_image
-                : undefined
+            images={
+              currentService.service_image
+                ? [
+                    typeof currentService.service_image === "string"
+                      ? currentService.service_image
+                      : "",
+                    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Fe9%2F2a%2F32%2Fe92a32d1b96ad84cefaf1377cbd05963.png&f=1&nofb=1&ipt=c3cc1b8afffb11c04b89a57e2f3ffc4531aa73f2ba3e5f1ec7baf5e349623881",
+                    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fbarb.pro%2Fuploads%2Fimages%2Fblog%2F1805%2F5-summer-nails.jpg&f=1&nofb=1&ipt=1e69503228d3e190d7238e9cceea4604c43dcf2935f67881aa036bcfd9283928",
+                    "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?q=80&w=800&auto=format&fit=crop",
+                  ].filter(Boolean)
+                : []
             }
             title={currentService.title}
             category={currentService.category}
