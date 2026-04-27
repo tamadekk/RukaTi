@@ -15,6 +15,7 @@ import { ServiceReviewForm } from "@/components/service-details/service-review-f
 import { useServicesReviewsStore } from "@/store/servicesReviewsStore";
 import { ServiceReviews } from "@/components/service-details/service-reviews";
 import { useAsyncAction } from "@/hooks/use-async-action";
+import { ServiceDetailsSkeleton } from "@/components/service-details/service-details-skeleton";
 
 export function ServiceDetailsPage() {
   const { serviceId } = useParams({ from: "/services/$serviceId" });
@@ -57,9 +58,7 @@ export function ServiceDetailsPage() {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="flex h-full items-center justify-center font-mono">
-          Loading details...
-        </div>
+        <ServiceDetailsSkeleton />
       </DashboardLayout>
     );
   }
