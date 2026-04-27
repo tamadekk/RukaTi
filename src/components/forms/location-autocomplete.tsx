@@ -19,6 +19,7 @@ export const LocationAutocomplete = forwardRef<
   const debounceTimerRef = useRef<number | null>(null);
 
   const stringValue = typeof value === "string" ? value : "";
+  const lastSelectedRef = useRef(stringValue);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -34,49 +35,52 @@ export const LocationAutocomplete = forwardRef<
     return () => document.removeEventListener("mousedown", closeOnClickOutside);
   }, []);
 
-  // Debounced fetch for location autocomplete
+  const fetchSuggestions = async (query: string) => {
+    const apiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
+    if (!apiKey) {
+      console.warn("Geoapify API key is missing");
+      return;
+    }
+
+    setIsFetchingLocation(true);
+    try {
+      const response = await fetch(
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(query)}&apiKey=${apiKey}`,
+      );
+      const data = await response.json();
+      if (data && data.features) {
+        setSuggestions(
+          data.features.map(
+            (f: { properties: GeoapifySuggestion }) => f.properties,
+          ),
+        );
+        setShowSuggestions(true);
+      }
+    } catch (error) {
+      console.error("Failed to fetch location suggestions", error);
+    } finally {
+      setIsFetchingLocation(false);
+    }
+  };
+
   useEffect(() => {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
 
-    if (!stringValue || stringValue.length < 3) {
-      setSuggestions([]);
-      setShowSuggestions(false);
+    const isInitialOrSelected = stringValue === lastSelectedRef.current;
+    const isTooShort = !stringValue || stringValue.length < 3;
+
+    if (isInitialOrSelected || isTooShort) {
+      if (isTooShort) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
       return;
     }
 
-    debounceTimerRef.current = setTimeout(async () => {
-      // Don't fetch if it exactly matches one of the current suggestions (user just selected it)
-      if (suggestions.some((s) => s.formatted === stringValue)) {
-        return;
-      }
-
-      const apiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
-      if (!apiKey) {
-        console.warn("Geoapify API key is missing");
-        return;
-      }
-
-      setIsFetchingLocation(true);
-      try {
-        const response = await fetch(
-          `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(stringValue)}&apiKey=${apiKey}`,
-        );
-        const data = await response.json();
-        if (data && data.features) {
-          setSuggestions(
-            data.features.map(
-              (f: { properties: GeoapifySuggestion }) => f.properties,
-            ),
-          );
-          setShowSuggestions(true);
-        }
-      } catch (error) {
-        console.error("Failed to fetch location suggestions", error);
-      } finally {
-        setIsFetchingLocation(false);
-      }
+    debounceTimerRef.current = setTimeout(() => {
+      fetchSuggestions(stringValue);
     }, 1000) as unknown as number;
 
     return () => {
@@ -114,6 +118,7 @@ export const LocationAutocomplete = forwardRef<
               key={index}
               type="button"
               onClick={() => {
+                lastSelectedRef.current = s.formatted;
                 onSelectSuggestion(s.formatted);
                 setShowSuggestions(false);
               }}
