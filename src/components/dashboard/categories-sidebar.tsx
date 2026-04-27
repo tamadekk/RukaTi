@@ -23,8 +23,8 @@ const CategoriesSidebar = () => {
           <Button
             key={cat.id}
             variant="ghost"
-            data-active={selectedCategory === cat.title}
-            onClick={() => setSelectedCategory(cat.title)}
+            data-active={selectedCategory === cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
             className="w-full justify-start font-mono text-xs uppercase tracking-wide h-auto py-3 px-4 whitespace-normal text-left border-b border-black rounded-none hover:bg-neutral-50 data-[active=true]:bg-black data-[active=true]:text-white data-[active=true]:hover:bg-black/90 last:border-b-0"
           >
             {cat.title}
