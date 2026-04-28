@@ -1,5 +1,4 @@
 import { createRootRoute, Outlet, useNavigate } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@/components/ui/sonner";
 
 import Header from "@/components/header";
