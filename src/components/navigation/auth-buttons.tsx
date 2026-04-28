@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { LogIn, LogOut, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { UserMenu } from "./user-menu";
+import { useUserProfileStore } from "@/store/userProfileStore";
 
 export type AuthButtonsProps = {
   isAuthenticated: boolean;
@@ -17,28 +19,37 @@ export const AuthButtons = ({
   mobile = false,
   onLoginClick,
 }: AuthButtonsProps) => {
-  const mobileBase = "w-full font-bold uppercase gap-2";
-  const desktopBase = "font-bold uppercase gap-2";
+  const profile = useUserProfileStore((s) => s.userProfile);
 
   if (isAuthenticated) {
+    if (mobile) {
+      return (
+        <div className="flex flex-col gap-2">
+          <Button
+            onClick={onCreateService}
+            className="w-full font-bold uppercase gap-2 bg-black text-white hover:bg-neutral-800 rounded-none"
+          >
+            <Plus className="h-4 w-4" />
+            Post a Service
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full font-bold uppercase gap-2 rounded-none border-black"
+            onClick={onLogout}
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </Button>
+        </div>
+      );
+    }
+
     return (
-      <div className={`flex ${mobile ? "flex-col" : "items-center"} gap-2`}>
-        <Button
-          onClick={onCreateService}
-          className={`${mobile ? mobileBase : desktopBase} bg-black text-white hover:bg-neutral-800 rounded-none`}
-        >
-          <Plus className="h-4 w-4" />
-          Post a Service
-        </Button>
-        <Button
-          variant="outline"
-          className={`${mobile ? mobileBase : desktopBase} rounded-none border-black`}
-          onClick={onLogout}
-        >
-          <LogOut className="h-4 w-4" />
-          Logout
-        </Button>
-      </div>
+      <UserMenu
+        profile={profile}
+        onLogout={onLogout}
+        onCreateService={onCreateService}
+      />
     );
   }
 
@@ -48,7 +59,10 @@ export const AuthButtons = ({
       onClick={onLoginClick}
       className={mobile ? "w-full" : undefined}
     >
-      <Button variant="default" className={mobile ? mobileBase : desktopBase}>
+      <Button
+        variant="default"
+        className={`font-bold uppercase gap-2 ${mobile ? "w-full" : ""}`}
+      >
         <LogIn className="h-4 w-4" />
         Login
       </Button>
