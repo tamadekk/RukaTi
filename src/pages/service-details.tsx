@@ -16,6 +16,7 @@ import { useServicesReviewsStore } from "@/store/servicesReviewsStore";
 import { ServiceReviews } from "@/components/service-details/service-reviews";
 import { useAsyncAction } from "@/hooks/use-async-action";
 import { ServiceDetailsSkeleton } from "@/components/service-details/service-details-skeleton";
+import { SimilarServices } from "@/components/service-details/similar-services";
 
 export function ServiceDetailsPage() {
   const { serviceId } = useParams({ from: "/services/$serviceId" });
@@ -217,6 +218,10 @@ export function ServiceDetailsPage() {
           onEditCancel={() => setEditingReviewId(null)}
           onUpdate={handleReviewUpdate}
           onDelete={handleReviewDelete}
+        />
+        <SimilarServices
+          category={currentService.category}
+          excludeId={currentService.service_id}
         />
       </div>
     </DashboardLayout>

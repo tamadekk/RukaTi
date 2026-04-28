@@ -11,6 +11,9 @@ type MarketStore = {
 
   providerServices: UserServices[];
 
+  similarServices: UserServices[];
+  fetchSimilarServices: (category: string, excludeId: string) => Promise<void>;
+
   selectedCategory: string | null;
   setSelectedCategory: (categoryId: string | null) => void;
 
@@ -34,6 +37,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
   currentService: null,
   providerProfile: null,
   providerServices: [],
+  similarServices: [],
   selectedCategory: null,
   searchQuery: "",
   page: 1,
@@ -53,6 +57,21 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
   setPage: (page: number) => {
     set({ page });
     get().fetchAllServices();
+  },
+
+  fetchSimilarServices: async (category, excludeId) => {
+    try {
+      const { data } = await supabase
+        .from("user_service")
+        .select("*")
+        .eq("category", category)
+        .neq("service_id", excludeId)
+        .order("rating", { ascending: false, nullsFirst: false })
+        .limit(4);
+      set({ similarServices: (data as UserServices[]) ?? [] });
+    } catch {
+      set({ similarServices: [] });
+    }
   },
 
   fetchAllServices: async () => {

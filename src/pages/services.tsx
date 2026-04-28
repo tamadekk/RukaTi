@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearch } from "@tanstack/react-router";
 import { useUserSession } from "@/store/userSessionsStore";
+import { useMarketStore } from "@/store/marketStore";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import CategoriesSidebar from "@/components/dashboard/categories-sidebar";
 import MarketFeed from "@/components/dashboard/market-feed";
@@ -23,6 +25,12 @@ function ServiceOfferSection() {
 export function ServicesPage() {
   const user = useUserSession((state) => state.user);
   const isAuthenticated = !!user?.id;
+  const { category } = useSearch({ from: "/services/" });
+  const setSelectedCategory = useMarketStore((s) => s.setSelectedCategory);
+
+  useEffect(() => {
+    if (category) setSelectedCategory(category);
+  }, [category, setSelectedCategory]);
 
   return (
     <>
