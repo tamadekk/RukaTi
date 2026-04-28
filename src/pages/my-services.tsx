@@ -52,10 +52,12 @@ const MyServicesPage = () => {
         />
         <ServicesList
           services={filteredServices}
+          hasAnyServices={services.length > 0}
           onClearFilters={() => {
             setSearchQuery("");
             setSelectedCategory("all");
           }}
+          onCreateClick={() => setIsCreateModalOpen(true)}
         />
       </div>
 
