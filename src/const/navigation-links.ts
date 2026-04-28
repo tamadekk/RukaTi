@@ -10,11 +10,13 @@ import {
   HandPlatter,
   MessageCircle,
   Settings,
+  HelpCircle,
 } from "lucide-react";
 
 export const guestNavigationItems: navigationItem[] = [
   { title: "Home", href: "/", icon: House },
   { title: "Services", href: "/services", icon: List },
+  { title: "How it works", href: "/how-it-works", icon: HelpCircle },
   { title: "About", href: "/about", icon: Info },
 ];
 
@@ -61,6 +63,7 @@ export const sideBarItems = [
 ];
 
 export const footerLinks: FooterLink[] = [
+  { title: "How it works", href: "/how-it-works" },
   { title: "About", href: "/about" },
   { title: "Terms", href: "/terms" },
   { title: "Privacy", href: "/privacy" },

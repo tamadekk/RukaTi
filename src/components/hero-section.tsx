@@ -33,6 +33,15 @@ const HeroSection = () => {
               </Button>
             </Link>
           </div>
+
+          <div className="mt-4">
+            <Link
+              to="/how-it-works"
+              className="text-sm font-mono text-neutral-500 hover:text-black underline underline-offset-4 transition-colors uppercase tracking-widest"
+            >
+              How it works →
+            </Link>
+          </div>
         </div>
       </div>
     </section>
