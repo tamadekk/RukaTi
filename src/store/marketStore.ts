@@ -14,6 +14,9 @@ type MarketStore = {
   selectedCategory: string | null;
   setSelectedCategory: (categoryId: string | null) => void;
 
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+
   page: number;
   pageSize: number;
   totalCount: number;
@@ -32,12 +35,18 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
   providerProfile: null,
   providerServices: [],
   selectedCategory: null,
+  searchQuery: "",
   page: 1,
   pageSize: 9,
   totalCount: 0,
 
   setSelectedCategory: (categoryId) => {
     set({ selectedCategory: categoryId, page: 1 });
+    get().fetchAllServices();
+  },
+
+  setSearchQuery: (query) => {
+    set({ searchQuery: query, page: 1 });
     get().fetchAllServices();
   },
 
@@ -48,7 +57,7 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
 
   fetchAllServices: async () => {
     set({ loading: true, error: null });
-    const { selectedCategory, page, pageSize } = get();
+    const { selectedCategory, searchQuery, page, pageSize } = get();
 
     try {
       const from = (page - 1) * pageSize;
@@ -62,6 +71,10 @@ export const useMarketStore = create<MarketStore>((set, get) => ({
 
       if (selectedCategory) {
         query = query.eq("category", selectedCategory);
+      }
+
+      if (searchQuery.trim()) {
+        query = query.ilike("title", `%${searchQuery.trim()}%`);
       }
       const { data, error, count } = await query;
 

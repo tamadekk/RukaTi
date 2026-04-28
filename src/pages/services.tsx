@@ -5,14 +5,16 @@ import CategoriesSidebar from "@/components/dashboard/categories-sidebar";
 import MarketFeed from "@/components/dashboard/market-feed";
 import { CreateServiceModal } from "@/components/dashboard/create-service-modal";
 import { ServiceOfferHeader } from "@/components/dashboard/service-offer-header";
-import { MobileFilters } from "@/components/dashboard/mobile-filters";
+import { MobileServiceBar } from "@/components/dashboard/mobile-service-bar";
 
 function ServiceOfferSection() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <ServiceOfferHeader onOpenCreateModal={() => setIsOpen(true)} />
+      <div className="hidden md:block">
+        <ServiceOfferHeader onOpenCreateModal={() => setIsOpen(true)} />
+      </div>
       <CreateServiceModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
@@ -23,12 +25,14 @@ export function ServicesPage() {
   const isAuthenticated = !!user?.id;
 
   return (
-    <DashboardLayout sidebar={<CategoriesSidebar />}>
-      <div className="flex flex-col gap-6">
-        <MobileFilters />
-        {isAuthenticated && <ServiceOfferSection />}
-        <MarketFeed />
-      </div>
-    </DashboardLayout>
+    <>
+      <MobileServiceBar />
+      <DashboardLayout sidebar={<CategoriesSidebar />}>
+        <div className="flex flex-col gap-6">
+          {isAuthenticated && <ServiceOfferSection />}
+          <MarketFeed />
+        </div>
+      </DashboardLayout>
+    </>
   );
 }
