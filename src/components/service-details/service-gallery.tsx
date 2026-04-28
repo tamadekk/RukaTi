@@ -12,7 +12,7 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
+  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 
@@ -130,12 +130,19 @@ export const ServiceGallery = ({
       )}
 
       <Dialog open={isFullscreenOpen} onOpenChange={setIsFullscreenOpen}>
-        <DialogContent className="max-w-none w-screen h-screen p-0 bg-black/95 border-none flex flex-col items-center justify-center rounded-none gap-0">
-          <div className="sr-only">
-            <DialogHeader>
-              <DialogTitle>{title} - Fullscreen View</DialogTitle>
-            </DialogHeader>
-          </div>
+        <DialogContent
+          fullscreen
+          showCloseButton={false}
+          className="items-center justify-center bg-black/70 backdrop-blur-sm cursor-pointer"
+          onClick={() => setIsFullscreenOpen(false)}
+        >
+          <DialogTitle className="sr-only">
+            {title} - Fullscreen View
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Use arrow keys or buttons to navigate between images. Press Escape
+            or click outside to close.
+          </DialogDescription>
 
           <button
             onClick={() => setIsFullscreenOpen(false)}
@@ -144,16 +151,16 @@ export const ServiceGallery = ({
             <X className="w-8 h-8" />
           </button>
 
-          <div className="w-full h-full max-w-6xl max-h-[85vh] px-4 md:px-12 flex items-center justify-center">
+          <div
+            className="w-full max-w-6xl px-4 md:px-20 cursor-default"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Carousel
               setApi={setFullscreenApi}
-              opts={{
-                startIndex: current,
-                loop: true,
-              }}
-              className="w-full h-full"
+              opts={{ startIndex: current, loop: true }}
+              className="w-full"
             >
-              <CarouselContent className="h-full">
+              <CarouselContent>
                 {displayImages.map((img, index) => (
                   <CarouselItem
                     key={index}
@@ -162,7 +169,7 @@ export const ServiceGallery = ({
                     <img
                       src={img}
                       alt={`${title} - full image ${index + 1}`}
-                      className="max-w-full max-h-full object-contain shadow-2xl"
+                      className="max-h-[85vh] w-full object-contain"
                       onError={handleImageError}
                     />
                   </CarouselItem>
@@ -173,10 +180,11 @@ export const ServiceGallery = ({
             </Carousel>
           </div>
 
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 text-white/60 font-mono text-sm tracking-widest uppercase">
-            <span>
-              {current + 1} / {displayImages.length}
-            </span>
+          <div
+            className="mt-6 text-white/60 font-mono text-sm tracking-widest uppercase cursor-default"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {current + 1} / {displayImages.length}
           </div>
         </DialogContent>
       </Dialog>
