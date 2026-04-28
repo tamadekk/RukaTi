@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearch } from "@tanstack/react-router";
 import { useServiceStore } from "@/store/userServicesStore";
 import { ServicesHeader } from "@/components/dashboard/profile/my-services/header";
 import { ServicesStats } from "@/components/dashboard/profile/my-services/stats";
@@ -8,9 +9,14 @@ import { CreateServiceModal } from "@/components/dashboard/create-service-modal"
 import { categories } from "@/const/categories-section";
 
 const MyServicesPage = () => {
+  const { create } = useSearch({ from: "/_authenticated/my-services" });
   const rawServices = useServiceStore((state) => state.userServices);
   const services = useMemo(() => rawServices ?? [], [rawServices]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (create) setIsCreateModalOpen(true);
+  }, [create]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 

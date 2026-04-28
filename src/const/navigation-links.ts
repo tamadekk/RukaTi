@@ -21,8 +21,8 @@ export const guestNavigationItems: navigationItem[] = [
 ];
 
 export const authenticatedNavigationItems: navigationItem[] = [
-  { title: "Home", href: "/", icon: House },
   { title: "Services", href: "/services", icon: List },
+  { title: "My Services", href: "/my-services", icon: HandPlatter },
   { title: "Dashboard", href: "/dashboard", icon: Gauge },
 ];
 

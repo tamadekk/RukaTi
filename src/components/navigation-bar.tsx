@@ -20,6 +20,11 @@ const NavigationBar = () => {
     setIsMenuOpen(false);
   };
 
+  const handleCreateService = () => {
+    navigate({ to: "/my-services", search: { create: true } });
+    setIsMenuOpen(false);
+  };
+
   const navItems = user ? authenticatedNavigationItems : guestNavigationItems;
 
   return (
@@ -28,11 +33,13 @@ const NavigationBar = () => {
         items={navItems}
         isAuthenticated={!!user}
         onLogout={handleLogout}
+        onCreateService={handleCreateService}
       />
       <MobileNavigation
         items={navItems}
         isAuthenticated={!!user}
         onLogout={handleLogout}
+        onCreateService={handleCreateService}
         isOpen={isMenuOpen}
         onToggle={() => setIsMenuOpen(!isMenuOpen)}
         onClose={() => setIsMenuOpen(false)}

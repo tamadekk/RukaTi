@@ -7,6 +7,7 @@ export type MobileNavigationProps = {
   items: navigationItem[];
   isAuthenticated: boolean;
   onLogout: () => void;
+  onCreateService?: () => void;
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
@@ -16,6 +17,7 @@ export const MobileNavigation = ({
   items,
   isAuthenticated,
   onLogout,
+  onCreateService,
   isOpen,
   onToggle,
   onClose,
@@ -33,6 +35,7 @@ export const MobileNavigation = ({
           <AuthButtons
             isAuthenticated={isAuthenticated}
             onLogout={onLogout}
+            onCreateService={onCreateService}
             mobile
             onLoginClick={onClose}
           />
