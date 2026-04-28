@@ -8,6 +8,7 @@ import MarketFeed from "@/components/dashboard/market-feed";
 import { CreateServiceModal } from "@/components/dashboard/create-service-modal";
 import { ServiceOfferHeader } from "@/components/dashboard/service-offer-header";
 import { MobileServiceBar } from "@/components/dashboard/mobile-service-bar";
+import { RecentlyViewed } from "@/components/dashboard/recently-viewed";
 
 function ServiceOfferSection() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +39,7 @@ export function ServicesPage() {
       <DashboardLayout sidebar={<CategoriesSidebar />}>
         <div className="flex flex-col gap-6">
           {isAuthenticated && <ServiceOfferSection />}
+          <RecentlyViewed />
           <MarketFeed />
         </div>
       </DashboardLayout>

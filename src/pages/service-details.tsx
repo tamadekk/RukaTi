@@ -15,6 +15,7 @@ import { ServiceReviewForm } from "@/components/service-details/service-review-f
 import { useServicesReviewsStore } from "@/store/servicesReviewsStore";
 import { ServiceReviews } from "@/components/service-details/service-reviews";
 import { useAsyncAction } from "@/hooks/use-async-action";
+import { useRecentlyViewed } from "@/hooks/use-recently-viewed";
 import { ServiceDetailsSkeleton } from "@/components/service-details/service-details-skeleton";
 import { SimilarServices } from "@/components/service-details/similar-services";
 
@@ -33,6 +34,7 @@ export function ServiceDetailsPage() {
     useServicesReviewsStore();
 
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const { addToRecentlyViewed } = useRecentlyViewed();
   const { isLoading: isSubmitting, execute: executeSubmit } = useAsyncAction();
   const { isLoading: isDeleting, execute: executeDelete } = useAsyncAction();
 
@@ -46,6 +48,12 @@ export function ServiceDetailsPage() {
       loadReviews(serviceId);
     }
   }, [serviceId, fetchServiceDetails, loadReviews]);
+
+  useEffect(() => {
+    if (currentService?.service_id) {
+      addToRecentlyViewed(currentService.service_id);
+    }
+  }, [currentService?.service_id, addToRecentlyViewed]);
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
