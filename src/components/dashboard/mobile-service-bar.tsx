@@ -1,22 +1,11 @@
-import { useRef } from "react";
 import { Search, ChevronDown } from "lucide-react";
 import { categories } from "@/const/categories-section";
 import { useMarketStore } from "@/store/marketStore";
-import { scrollToTop } from "@/lib/utils";
+import { useServiceSearch } from "@/hooks/use-service-search";
 
 export const MobileServiceBar = () => {
-  const { selectedCategory, setSelectedCategory, searchQuery, setSearchQuery } =
-    useMarketStore();
-
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const handleSearch = (value: string) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      setSearchQuery(value);
-      scrollToTop();
-    }, 450);
-  };
+  const { selectedCategory, setSelectedCategory } = useMarketStore();
+  const { searchQuery, handleSearch } = useServiceSearch();
 
   const selectedLabel =
     categories.find((c) => c.id === selectedCategory)?.title ?? "All";
@@ -59,8 +48,8 @@ export const MobileServiceBar = () => {
         </div>
       </div>
 
-      {/* Category chips */}
-      <div className="overflow-x-auto scrollbar-hide px-4 py-2">
+      {/* Category chips — hidden on desktop where the sidebar handles this */}
+      <div className="lg:hidden overflow-x-auto scrollbar-hide px-4 py-2">
         <div className="flex gap-2 w-max">
           <button
             onClick={() => setSelectedCategory(null)}
