@@ -1,0 +1,104 @@
+import { Link } from "@tanstack/react-router";
+import { MessageCircle } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { ChatRoom } from "@/types/chat";
+
+function formatTime(iso: string): string {
+  const date = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return "now";
+  if (diffMins < 60) return `${diffMins}m`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h`;
+  return `${Math.floor(diffHours / 24)}d`;
+}
+
+type ConversationListProps = {
+  rooms: ChatRoom[];
+  activeRoomId?: string;
+};
+
+export const ConversationList = ({
+  rooms,
+  activeRoomId,
+}: ConversationListProps) => {
+  return (
+    <div className="flex flex-col h-full">
+      <div className="p-4 border-b border-black shrink-0">
+        <div className="flex items-center gap-2">
+          <MessageCircle className="w-4 h-4" />
+          <h1 className="text-sm font-black uppercase tracking-widest">
+            Messages
+          </h1>
+          {rooms.length > 0 && (
+            <span className="ml-auto text-[10px] font-bold bg-black text-white px-1.5 py-0.5">
+              {rooms.length}
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        {rooms.length === 0 ? (
+          <div className="p-6 text-center space-y-2">
+            <p className="text-xs font-bold uppercase tracking-widest text-neutral-400">
+              No conversations yet
+            </p>
+            <p className="text-[10px] font-mono text-neutral-300">
+              Contact a provider to start chatting
+            </p>
+          </div>
+        ) : (
+          rooms.map((room) => {
+            const lastMsg = room.messages[room.messages.length - 1];
+            const initial = room.provider_name.substring(0, 2).toUpperCase();
+            const isActive = room.room_id === activeRoomId;
+
+            return (
+              <Link
+                key={room.room_id}
+                to="/messages"
+                search={{ roomId: room.room_id }}
+                className={`flex items-center gap-3 px-4 py-3 border-b border-black hover:bg-neutral-50 transition-colors ${
+                  isActive ? "bg-black text-white hover:bg-black" : ""
+                }`}
+              >
+                <Avatar className="w-9 h-9 rounded-none border border-black shrink-0">
+                  <AvatarImage
+                    src={room.provider_avatar ?? undefined}
+                    className="object-cover"
+                  />
+                  <AvatarFallback
+                    className={`rounded-none text-[10px] font-bold ${isActive ? "bg-white text-black" : "bg-neutral-100"}`}
+                  >
+                    {initial}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-black uppercase tracking-tight truncate">
+                      {room.provider_name}
+                    </span>
+                    <span
+                      className={`text-[9px] font-mono shrink-0 ${isActive ? "text-neutral-300" : "text-neutral-400"}`}
+                    >
+                      {formatTime(room.last_message_at)}
+                    </span>
+                  </div>
+                  <p
+                    className={`text-[10px] font-mono truncate ${isActive ? "text-neutral-300" : "text-neutral-500"}`}
+                  >
+                    {lastMsg ? lastMsg.text : "No messages yet"}
+                  </p>
+                </div>
+              </Link>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+};

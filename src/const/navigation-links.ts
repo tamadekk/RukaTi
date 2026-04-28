@@ -23,6 +23,7 @@ export const guestNavigationItems: navigationItem[] = [
 export const authenticatedNavigationItems: navigationItem[] = [
   { title: "Services", href: "/services", icon: List },
   { title: "My Services", href: "/my-services", icon: HandPlatter },
+  { title: "Messages", href: "/messages", icon: MessageCircle },
   { title: "Dashboard", href: "/dashboard", icon: Gauge },
 ];
 

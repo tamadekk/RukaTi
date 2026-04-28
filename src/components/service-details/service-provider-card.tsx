@@ -1,8 +1,9 @@
-import { Link } from "@tanstack/react-router";
-import { Star } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Star, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { UserProfile } from "@/types/user";
+import { useChatStore } from "@/store/chatStore";
 
 type ServiceProviderCardProps = {
   provider: UserProfile;
@@ -21,6 +22,18 @@ export const ServiceProviderCard = ({ provider }: ServiceProviderCardProps) => {
   const initial = full_name?.substring(0, 2).toUpperCase() || "??";
   const displayRating = rating || "N/A";
   const avatarUrl = avatar || undefined;
+
+  const navigate = useNavigate();
+  const startConversation = useChatStore((s) => s.startConversation);
+
+  const handleContactProvider = () => {
+    const roomId = startConversation({
+      provider_id: userId,
+      provider_name: full_name || "Provider",
+      provider_avatar: avatarUrl ?? null,
+    });
+    navigate({ to: "/messages", search: { roomId } });
+  };
 
   return (
     <div className="lg:col-span-1 space-y-6">
@@ -72,6 +85,14 @@ export const ServiceProviderCard = ({ provider }: ServiceProviderCardProps) => {
             tel: {phone}
           </Button>
         )}
+
+        <Button
+          onClick={handleContactProvider}
+          className="w-full rounded-none bg-black text-white hover:bg-neutral-800 font-bold uppercase tracking-widest flex items-center gap-2"
+        >
+          <MessageCircle className="w-4 h-4" />
+          Contact Provider
+        </Button>
       </div>
     </div>
   );

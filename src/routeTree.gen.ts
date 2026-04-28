@@ -23,6 +23,7 @@ import { Route as ServicesServiceIdRouteImport } from "./routes/services/$servic
 import { Route as ProviderUserIdRouteImport } from "./routes/provider/$userId";
 import { Route as AuthenticatedOnboardingRouteImport } from "./routes/_authenticated/onboarding";
 import { Route as AuthenticatedMyServicesRouteImport } from "./routes/_authenticated/my-services";
+import { Route as AuthenticatedMessagesRouteImport } from "./routes/_authenticated/messages";
 import { Route as AuthenticatedEditProfileRouteImport } from "./routes/_authenticated/edit-profile";
 import { Route as AuthenticatedDashboardRouteImport } from "./routes/_authenticated/dashboard";
 
@@ -95,6 +96,11 @@ const AuthenticatedMyServicesRoute = AuthenticatedMyServicesRouteImport.update({
   path: "/my-services",
   getParentRoute: () => AuthenticatedRoute,
 } as any);
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: "/messages",
+  path: "/messages",
+  getParentRoute: () => AuthenticatedRoute,
+} as any);
 const AuthenticatedEditProfileRoute =
   AuthenticatedEditProfileRouteImport.update({
     id: "/edit-profile",
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   "/terms": typeof TermsRoute;
   "/dashboard": typeof AuthenticatedDashboardRoute;
   "/edit-profile": typeof AuthenticatedEditProfileRoute;
+  "/messages": typeof AuthenticatedMessagesRoute;
   "/my-services": typeof AuthenticatedMyServicesRoute;
   "/onboarding": typeof AuthenticatedOnboardingRoute;
   "/provider/$userId": typeof ProviderUserIdRoute;
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   "/terms": typeof TermsRoute;
   "/dashboard": typeof AuthenticatedDashboardRoute;
   "/edit-profile": typeof AuthenticatedEditProfileRoute;
+  "/messages": typeof AuthenticatedMessagesRoute;
   "/my-services": typeof AuthenticatedMyServicesRoute;
   "/onboarding": typeof AuthenticatedOnboardingRoute;
   "/provider/$userId": typeof ProviderUserIdRoute;
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   "/terms": typeof TermsRoute;
   "/_authenticated/dashboard": typeof AuthenticatedDashboardRoute;
   "/_authenticated/edit-profile": typeof AuthenticatedEditProfileRoute;
+  "/_authenticated/messages": typeof AuthenticatedMessagesRoute;
   "/_authenticated/my-services": typeof AuthenticatedMyServicesRoute;
   "/_authenticated/onboarding": typeof AuthenticatedOnboardingRoute;
   "/provider/$userId": typeof ProviderUserIdRoute;
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | "/terms"
     | "/dashboard"
     | "/edit-profile"
+    | "/messages"
     | "/my-services"
     | "/onboarding"
     | "/provider/$userId"
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | "/terms"
     | "/dashboard"
     | "/edit-profile"
+    | "/messages"
     | "/my-services"
     | "/onboarding"
     | "/provider/$userId"
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | "/terms"
     | "/_authenticated/dashboard"
     | "/_authenticated/edit-profile"
+    | "/_authenticated/messages"
     | "/_authenticated/my-services"
     | "/_authenticated/onboarding"
     | "/provider/$userId"
@@ -326,6 +338,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedMyServicesRouteImport;
       parentRoute: typeof AuthenticatedRoute;
     };
+    "/_authenticated/messages": {
+      id: "/_authenticated/messages";
+      path: "/messages";
+      fullPath: "/messages";
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
     "/_authenticated/edit-profile": {
       id: "/_authenticated/edit-profile";
       path: "/edit-profile";
@@ -346,6 +365,7 @@ declare module "@tanstack/react-router" {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute;
   AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute;
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute;
   AuthenticatedMyServicesRoute: typeof AuthenticatedMyServicesRoute;
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute;
 }
@@ -353,6 +373,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedMyServicesRoute: AuthenticatedMyServicesRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
 };

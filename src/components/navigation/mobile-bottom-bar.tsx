@@ -4,7 +4,7 @@ import {
   Search,
   HandPlatter,
   Plus,
-  LayoutDashboard,
+  MessageCircle,
   UserCircle,
 } from "lucide-react";
 
@@ -17,7 +17,7 @@ const leftItems = [
   { label: "My Services", href: "/my-services", icon: HandPlatter },
 ];
 const rightItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Messages", href: "/messages", icon: MessageCircle },
   { label: "Profile", href: "/edit-profile", icon: UserCircle },
 ];
 
