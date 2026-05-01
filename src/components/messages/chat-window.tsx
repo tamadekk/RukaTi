@@ -18,11 +18,23 @@ export const ChatWindow = ({
 }: ChatWindowProps) => {
   const [draft, setDraft] = useState("");
   const sendMessage = useChatStore((s) => s.sendMessage);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, [room.room_id]);
+
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [room.messages.length]);
 
   const handleSend = () => {
@@ -75,7 +87,10 @@ export const ChatWindow = ({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-neutral-50">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-4 space-y-3 bg-neutral-50"
+      >
         {room.messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 py-12">
             <div className="w-12 h-12 border-2 border-black flex items-center justify-center">
@@ -118,7 +133,6 @@ export const ChatWindow = ({
             );
           })
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}

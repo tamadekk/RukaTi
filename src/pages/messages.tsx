@@ -13,11 +13,8 @@ export function MessagesPage() {
   const activeRoom = roomId ? rooms.find((r) => r.room_id === roomId) : null;
 
   return (
-    <div className="min-h-screen bg-background font-mono">
-      <div
-        className="max-w-7xl mx-auto border-x border-black flex"
-        style={{ height: "calc(100dvh - 64px)" }}
-      >
+    <div className="fixed inset-x-0 top-16 bottom-16 md:bottom-0 bg-background font-mono z-40">
+      <div className="max-w-7xl mx-auto border-x border-black flex h-full">
         {/* Conversation list — hidden on mobile when a room is open */}
         <div
           className={`border-r border-black flex flex-col w-full md:w-72 shrink-0 ${
