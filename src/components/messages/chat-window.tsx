@@ -104,24 +104,30 @@ export const ChatWindow = ({
             </p>
           </div>
         ) : (
-          room.messages.map((msg) => {
+          room.messages.map((msg, index) => {
             const isOwn = msg.sender_id === currentUserId;
+            const nextMessage = room.messages[index + 1];
+            const isLastInGroup =
+              !nextMessage || nextMessage.sender_id !== msg.sender_id;
             return (
               <div
                 key={msg.message_id}
                 className={`flex gap-2 ${isOwn ? "flex-row-reverse" : "flex-row"}`}
               >
-                {!isOwn && (
-                  <Avatar className="w-7 h-7 rounded-none border border-black shrink-0 self-end">
-                    <AvatarImage
-                      src={room.provider_avatar ?? undefined}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="rounded-none bg-neutral-100 text-[9px] font-bold">
-                      {initial}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
+                {!isOwn &&
+                  (isLastInGroup ? (
+                    <Avatar className="w-7 h-7 rounded-none border border-black shrink-0 self-end">
+                      <AvatarImage
+                        src={room.provider_avatar ?? undefined}
+                        className="object-cover"
+                      />
+                      <AvatarFallback className="rounded-none bg-neutral-100 text-[9px] font-bold">
+                        {initial}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <div className="w-7 shrink-0" />
+                  ))}
                 <div
                   className={`max-w-[70%] px-3 py-2 text-[11px] font-mono leading-relaxed border border-black ${
                     isOwn ? "bg-black text-white" : "bg-white text-black"
