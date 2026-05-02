@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ChatAvatar } from "@/components/messages/chat-avatar";
 import type { ChatRoom } from "@/types/chat";
 
 const formatTime = (iso: string): string => {
@@ -18,11 +19,13 @@ const formatTime = (iso: string): string => {
 type ConversationListProps = {
   rooms: ChatRoom[];
   activeRoomId?: string;
+  isLoading?: boolean;
 };
 
 export const ConversationList = ({
   rooms,
   activeRoomId,
+  isLoading = false,
 }: ConversationListProps) => {
   return (
     <div className="flex flex-col h-full">
@@ -41,7 +44,20 @@ export const ConversationList = ({
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {rooms.length === 0 ? (
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-3 px-4 py-3 border-b border-black"
+            >
+              <Skeleton className="w-9 h-9 rounded-none shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-2.5 w-24 rounded-none" />
+                <Skeleton className="h-2 w-36 rounded-none" />
+              </div>
+            </div>
+          ))
+        ) : rooms.length === 0 ? (
           <div className="p-6 text-center space-y-2">
             <p className="text-xs font-bold uppercase tracking-widest text-neutral-400">
               No conversations yet
@@ -65,17 +81,12 @@ export const ConversationList = ({
                   isActive ? "bg-black text-white hover:bg-black" : ""
                 }`}
               >
-                <Avatar className="w-9 h-9 rounded-none border border-black shrink-0">
-                  <AvatarImage
-                    src={room.other_user.avatar ?? undefined}
-                    className="object-cover"
-                  />
-                  <AvatarFallback
-                    className={`rounded-none text-[10px] font-bold ${isActive ? "bg-white text-black" : "bg-neutral-100"}`}
-                  >
-                    {initial}
-                  </AvatarFallback>
-                </Avatar>
+                <ChatAvatar
+                  src={room.other_user.avatar}
+                  initial={initial}
+                  className="w-9 h-9 rounded-none border border-black shrink-0"
+                  fallbackClassName={`rounded-none text-[10px] font-bold ${isActive ? "bg-white text-black" : "bg-neutral-100"}`}
+                />
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">

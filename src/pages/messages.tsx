@@ -14,6 +14,8 @@ export function MessagesPage() {
   const { roomId } = useSearch({ from: "/_authenticated/messages" });
   const { user } = useUserSession();
   const rooms = useChatStore((s) => s.rooms);
+  const isLoadingRooms = useChatStore((s) => s.isLoadingRooms);
+  const isLoadingMessages = useChatStore((s) => s.isLoadingMessages);
   const loadRooms = useChatStore((s) => s.loadRooms);
   const loadMessages = useChatStore((s) => s.loadMessages);
   const sendMessage = useChatStore((s) => s.sendMessage);
@@ -96,7 +98,11 @@ export function MessagesPage() {
             activeRoom ? "hidden md:flex" : "flex"
           }`}
         >
-          <ConversationList rooms={rooms} activeRoomId={roomId} />
+          <ConversationList
+            rooms={rooms}
+            activeRoomId={roomId}
+            isLoading={isLoadingRooms}
+          />
         </div>
 
         {/* Chat area */}
@@ -109,6 +115,7 @@ export function MessagesPage() {
               messages={activeRoomMessages}
               currentUserId={user?.id ?? ""}
               showBackButton
+              isLoading={isLoadingMessages}
               onSend={handleSend}
             />
           ) : (

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Send } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ChatAvatar } from "@/components/messages/chat-avatar";
 import type { ChatMessage, ChatRoom } from "@/types/chat";
 
 type ChatWindowProps = {
@@ -9,6 +10,7 @@ type ChatWindowProps = {
   messages: ChatMessage[];
   currentUserId: string;
   showBackButton?: boolean;
+  isLoading?: boolean;
   onSend: (text: string) => void;
 };
 
@@ -17,6 +19,7 @@ export const ChatWindow = ({
   messages,
   currentUserId,
   showBackButton = false,
+  isLoading = false,
   onSend,
 }: ChatWindowProps) => {
   const [draft, setDraft] = useState("");
@@ -70,15 +73,12 @@ export const ChatWindow = ({
             <ArrowLeft className="w-4 h-4" />
           </Link>
         )}
-        <Avatar className="w-9 h-9 rounded-none border border-black shrink-0">
-          <AvatarImage
-            src={room.other_user.avatar ?? undefined}
-            className="object-cover"
-          />
-          <AvatarFallback className="rounded-none bg-neutral-100 text-[10px] font-bold">
-            {initial}
-          </AvatarFallback>
-        </Avatar>
+        <ChatAvatar
+          src={room.other_user.avatar}
+          initial={initial}
+          className="w-9 h-9 rounded-none border border-black shrink-0"
+          fallbackClassName="rounded-none bg-neutral-100 text-[10px] font-bold"
+        />
         <div>
           <p className="text-[11px] font-black uppercase tracking-tight">
             {otherUserName}
@@ -94,7 +94,24 @@ export const ChatWindow = ({
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto p-4 space-y-3 bg-neutral-50"
       >
-        {messages.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            {[120, 80, 140, 100, 160, 90].map((width, i) => {
+              const isOwn = i % 2 === 0;
+              return (
+                <div
+                  key={i}
+                  className={`flex gap-2 ${isOwn ? "flex-row-reverse" : "flex-row"}`}
+                >
+                  {!isOwn && (
+                    <Skeleton className="w-7 h-7 rounded-none shrink-0 self-end" />
+                  )}
+                  <Skeleton className="h-8 rounded-none" style={{ width }} />
+                </div>
+              );
+            })}
+          </div>
+        ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 py-12">
             <div className="w-12 h-12 border-2 border-black flex items-center justify-center">
               <span className="text-lg font-black">{initial}</span>
@@ -119,15 +136,12 @@ export const ChatWindow = ({
               >
                 {!isOwn &&
                   (isLastInGroup ? (
-                    <Avatar className="w-7 h-7 rounded-none border border-black shrink-0 self-end">
-                      <AvatarImage
-                        src={room.other_user.avatar ?? undefined}
-                        className="object-cover"
-                      />
-                      <AvatarFallback className="rounded-none bg-neutral-100 text-[9px] font-bold">
-                        {initial}
-                      </AvatarFallback>
-                    </Avatar>
+                    <ChatAvatar
+                      src={room.other_user.avatar}
+                      initial={initial}
+                      className="w-7 h-7 rounded-none border border-black shrink-0 self-end"
+                      fallbackClassName="rounded-none bg-neutral-100 text-[9px] font-bold"
+                    />
                   ) : (
                     <div className="w-7 shrink-0" />
                   ))}
