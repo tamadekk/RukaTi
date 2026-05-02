@@ -44,12 +44,15 @@ export const CreateServiceModal = ({
       async () => {
         const service_id = crypto.randomUUID();
         const created_at = new Date().toISOString();
-        const service_image = await uploadImage({
-          file: values.service_image[0],
-          bucket: "user_services",
-          folderPath: "service_image",
-          fileNamePrefix: user.id,
-        });
+        const imageFile = values.service_image?.[0];
+        const service_image = imageFile
+          ? await uploadImage({
+              file: imageFile,
+              bucket: "user_services",
+              folderPath: "service_image",
+              fileNamePrefix: user.id,
+            })
+          : "";
         const service: UserServices = {
           service_id,
           user_id: user.id,
@@ -60,7 +63,7 @@ export const CreateServiceModal = ({
           contact: values.contact ?? "",
           price_range: values.price_range ?? "",
           availability: values.availability ?? "",
-          service_image: service_image ?? "",
+          service_image: service_image,
           rating: 0,
           created_at,
         };
