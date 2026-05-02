@@ -15,6 +15,8 @@ export const queryKeys = {
   similarServices: (category: string, excludeId: string) =>
     ["similarServices", category, excludeId] as const,
   serviceReviews: (serviceId: string) => ["serviceReviews", serviceId] as const,
+  recentlyViewedServices: (serviceIds: string[]) =>
+    ["recentlyViewedServices", serviceIds] as const,
   chatRooms: (userId: string) => ["chatRooms", userId] as const,
   chatMessages: (roomId: string) => ["chatMessages", roomId] as const,
 };

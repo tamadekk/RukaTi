@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import supabase from "@/supabase-client";
 import { queryKeys } from "@/lib/queryKeys";
+import { STALE_TIME, GC_TIME } from "@/lib/queryClient";
 import type { UserServices, UserProfile } from "@/types/user";
 
 type MarketFilters = {
@@ -47,6 +48,8 @@ export const useMarketServices = (filters: MarketFilters) => {
 export const useServiceDetails = (serviceId: string | undefined) => {
   return useQuery({
     queryKey: queryKeys.serviceDetails(serviceId!),
+    staleTime: STALE_TIME.MEDIUM,
+    gcTime: GC_TIME.MEDIUM,
     queryFn: async () => {
       const { data: serviceData, error: serviceError } = await supabase
         .from("user_service")
@@ -76,6 +79,8 @@ export const useServiceDetails = (serviceId: string | undefined) => {
 export const useProviderDetails = (userId: string | undefined) => {
   return useQuery({
     queryKey: queryKeys.providerDetails(userId!),
+    staleTime: STALE_TIME.MEDIUM,
+    gcTime: GC_TIME.MEDIUM,
     queryFn: async () => {
       const { data: profileData, error: profileError } = await supabase
         .from("user_profile")
@@ -102,12 +107,34 @@ export const useProviderDetails = (userId: string | undefined) => {
   });
 };
 
+export const useRecentlyViewedServices = (serviceIds: string[]) => {
+  return useQuery({
+    queryKey: queryKeys.recentlyViewedServices(serviceIds),
+    staleTime: STALE_TIME.MEDIUM,
+    gcTime: GC_TIME.MEDIUM,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_service")
+        .select("*")
+        .in("service_id", serviceIds);
+      if (error) throw error;
+      const services = (data as UserServices[]) ?? [];
+      return serviceIds
+        .map((id) => services.find((service) => service.service_id === id))
+        .filter(Boolean) as UserServices[];
+    },
+    enabled: serviceIds.length > 0,
+  });
+};
+
 export const useSimilarServices = (
   category: string | undefined,
   excludeId: string | undefined,
 ) => {
   return useQuery({
     queryKey: queryKeys.similarServices(category!, excludeId!),
+    staleTime: STALE_TIME.LONG,
+    gcTime: GC_TIME.LONG,
     queryFn: async () => {
       const { data } = await supabase
         .from("user_service")

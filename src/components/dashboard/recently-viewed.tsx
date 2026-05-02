@@ -1,34 +1,14 @@
-import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Clock, Star } from "lucide-react";
 import { useRecentlyViewed } from "@/hooks/use-recently-viewed";
-import type { UserServices } from "@/types/user";
-import supabase from "@/supabase-client";
+import { useRecentlyViewedServices } from "@/hooks/useMarketQuery";
 import ServicePlaceholder from "@/assets/service-placeholder.svg";
 
 export const RecentlyViewed = () => {
   const { recentlyViewedServiceIds, clearRecentlyViewed } = useRecentlyViewed();
-  const [recentlyViewedServices, setRecentlyViewedServices] = useState<
-    UserServices[]
-  >([]);
-
-  useEffect(() => {
-    if (recentlyViewedServiceIds.length === 0) {
-      setRecentlyViewedServices([]);
-      return;
-    }
-    supabase
-      .from("user_service")
-      .select("*")
-      .in("service_id", recentlyViewedServiceIds)
-      .then(({ data }) => {
-        if (!data) return;
-        const orderedByRecency = recentlyViewedServiceIds
-          .map((id) => data.find((service) => service.service_id === id))
-          .filter(Boolean) as UserServices[];
-        setRecentlyViewedServices(orderedByRecency);
-      });
-  }, [recentlyViewedServiceIds]);
+  const { data: recentlyViewedServices = [] } = useRecentlyViewedServices(
+    recentlyViewedServiceIds,
+  );
 
   if (recentlyViewedServices.length === 0) return null;
 

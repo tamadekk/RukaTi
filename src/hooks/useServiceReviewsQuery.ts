@@ -1,11 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/supabase-client";
 import { queryKeys } from "@/lib/queryKeys";
+import { STALE_TIME, GC_TIME } from "@/lib/queryClient";
 import type { Review, UploadReview } from "@/types/user";
 
 export const useServiceReviews = (serviceId: string | undefined) => {
   return useQuery({
     queryKey: queryKeys.serviceReviews(serviceId!),
+    staleTime: STALE_TIME.MEDIUM,
+    gcTime: GC_TIME.MEDIUM,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("user_service_review")

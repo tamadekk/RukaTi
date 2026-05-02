@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "@/supabase-client";
 import { queryKeys } from "@/lib/queryKeys";
+import { STALE_TIME, GC_TIME } from "@/lib/queryClient";
 import type { UserProfile } from "@/types/user";
 
 export const fetchUserProfile = async (
@@ -20,6 +21,8 @@ export const useUserProfile = (userId: string | undefined) => {
     queryKey: queryKeys.userProfile(userId!),
     queryFn: () => fetchUserProfile(userId!),
     enabled: !!userId,
+    staleTime: STALE_TIME.MEDIUM,
+    gcTime: GC_TIME.MEDIUM,
   });
 };
 
