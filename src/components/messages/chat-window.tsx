@@ -2,22 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Send } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useChatStore } from "@/store/chatStore";
-import type { ChatRoom } from "@/types/chat";
+import type { ChatMessage, ChatRoom } from "@/types/chat";
 
 type ChatWindowProps = {
   room: ChatRoom;
+  messages: ChatMessage[];
   currentUserId: string;
   showBackButton?: boolean;
+  onSend: (text: string) => void;
 };
 
 export const ChatWindow = ({
   room,
+  messages,
   currentUserId,
   showBackButton = false,
+  onSend,
 }: ChatWindowProps) => {
   const [draft, setDraft] = useState("");
-  const sendMessage = useChatStore((s) => s.sendMessage);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -35,13 +37,13 @@ export const ChatWindow = ({
         behavior: "smooth",
       });
     }
-  }, [room.messages.length]);
+  }, [messages.length]);
 
   const handleSend = () => {
     const text = draft.trim();
     if (!text) return;
-    sendMessage(room.room_id, currentUserId, text);
     setDraft("");
+    onSend(text);
     inputRef.current?.focus();
   };
 
@@ -52,7 +54,8 @@ export const ChatWindow = ({
     }
   };
 
-  const initial = room.provider_name.substring(0, 2).toUpperCase();
+  const otherUserName = room.other_user.full_name ?? "User";
+  const initial = otherUserName.substring(0, 2).toUpperCase();
 
   return (
     <div className="flex flex-col h-full">
@@ -69,7 +72,7 @@ export const ChatWindow = ({
         )}
         <Avatar className="w-9 h-9 rounded-none border border-black shrink-0">
           <AvatarImage
-            src={room.provider_avatar ?? undefined}
+            src={room.other_user.avatar ?? undefined}
             className="object-cover"
           />
           <AvatarFallback className="rounded-none bg-neutral-100 text-[10px] font-bold">
@@ -78,7 +81,7 @@ export const ChatWindow = ({
         </Avatar>
         <div>
           <p className="text-[11px] font-black uppercase tracking-tight">
-            {room.provider_name}
+            {otherUserName}
           </p>
           <p className="text-[9px] font-mono text-neutral-400 uppercase tracking-widest">
             Service Provider
@@ -91,7 +94,7 @@ export const ChatWindow = ({
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto p-4 space-y-3 bg-neutral-50"
       >
-        {room.messages.length === 0 ? (
+        {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 py-12">
             <div className="w-12 h-12 border-2 border-black flex items-center justify-center">
               <span className="text-lg font-black">{initial}</span>
@@ -104,9 +107,9 @@ export const ChatWindow = ({
             </p>
           </div>
         ) : (
-          room.messages.map((msg, index) => {
+          messages.map((msg, index) => {
             const isOwn = msg.sender_id === currentUserId;
-            const nextMessage = room.messages[index + 1];
+            const nextMessage = messages[index + 1];
             const isLastInGroup =
               !nextMessage || nextMessage.sender_id !== msg.sender_id;
             return (
@@ -118,7 +121,7 @@ export const ChatWindow = ({
                   (isLastInGroup ? (
                     <Avatar className="w-7 h-7 rounded-none border border-black shrink-0 self-end">
                       <AvatarImage
-                        src={room.provider_avatar ?? undefined}
+                        src={room.other_user.avatar ?? undefined}
                         className="object-cover"
                       />
                       <AvatarFallback className="rounded-none bg-neutral-100 text-[9px] font-bold">

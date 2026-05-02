@@ -3,7 +3,7 @@ import { MessageCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { ChatRoom } from "@/types/chat";
 
-function formatTime(iso: string): string {
+const formatTime = (iso: string): string => {
   const date = new Date(iso);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -13,7 +13,7 @@ function formatTime(iso: string): string {
   const diffHours = Math.floor(diffMins / 60);
   if (diffHours < 24) return `${diffHours}h`;
   return `${Math.floor(diffHours / 24)}d`;
-}
+};
 
 type ConversationListProps = {
   rooms: ChatRoom[];
@@ -52,8 +52,8 @@ export const ConversationList = ({
           </div>
         ) : (
           rooms.map((room) => {
-            const lastMsg = room.messages[room.messages.length - 1];
-            const initial = room.provider_name.substring(0, 2).toUpperCase();
+            const otherUserName = room.other_user.full_name ?? "User";
+            const initial = otherUserName.substring(0, 2).toUpperCase();
             const isActive = room.room_id === activeRoomId;
 
             return (
@@ -67,7 +67,7 @@ export const ConversationList = ({
               >
                 <Avatar className="w-9 h-9 rounded-none border border-black shrink-0">
                   <AvatarImage
-                    src={room.provider_avatar ?? undefined}
+                    src={room.other_user.avatar ?? undefined}
                     className="object-cover"
                   />
                   <AvatarFallback
@@ -80,7 +80,7 @@ export const ConversationList = ({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[11px] font-black uppercase tracking-tight truncate">
-                      {room.provider_name}
+                      {otherUserName}
                     </span>
                     <span
                       className={`text-[9px] font-mono shrink-0 ${isActive ? "text-neutral-300" : "text-neutral-400"}`}
@@ -91,7 +91,9 @@ export const ConversationList = ({
                   <p
                     className={`text-[10px] font-mono truncate ${isActive ? "text-neutral-300" : "text-neutral-500"}`}
                   >
-                    {lastMsg ? lastMsg.text : "No messages yet"}
+                    {room.last_message
+                      ? room.last_message.text
+                      : "No messages yet"}
                   </p>
                 </div>
               </Link>

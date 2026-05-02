@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { UserProfile } from "@/types/user";
 import { useChatStore } from "@/store/chatStore";
+import { useUserSession } from "@/store/userSessionsStore";
 
 type ServiceProviderCardProps = {
   provider: UserProfile;
@@ -11,7 +12,7 @@ type ServiceProviderCardProps = {
 
 export const ServiceProviderCard = ({ provider }: ServiceProviderCardProps) => {
   const {
-    user_id: userId,
+    user_id: providerId,
     avatar,
     full_name,
     rating,
@@ -24,14 +25,12 @@ export const ServiceProviderCard = ({ provider }: ServiceProviderCardProps) => {
   const avatarUrl = avatar || undefined;
 
   const navigate = useNavigate();
+  const { user: currentUser } = useUserSession();
   const startConversation = useChatStore((s) => s.startConversation);
 
-  const handleContactProvider = () => {
-    const roomId = startConversation({
-      provider_id: userId,
-      provider_name: full_name || "Provider",
-      provider_avatar: avatarUrl ?? null,
-    });
+  const handleContactProvider = async () => {
+    if (!currentUser?.id) return;
+    const roomId = await startConversation(currentUser.id, providerId);
     navigate({ to: "/messages", search: { roomId } });
   };
 
@@ -42,10 +41,10 @@ export const ServiceProviderCard = ({ provider }: ServiceProviderCardProps) => {
           Service Provider
         </div>
 
-        {userId && (
+        {providerId && (
           <Link
             to="/provider/$userId"
-            params={{ userId }}
+            params={{ userId: providerId }}
             className="flex flex-col items-center text-center gap-4 hover:opacity-75 transition-opacity group"
           >
             <Avatar className="w-24 h-24 border-2 border-black rounded-none group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
