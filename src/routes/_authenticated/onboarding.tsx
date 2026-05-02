@@ -1,12 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { OnboardingForm } from "@/components/forms/onboarding-form";
-import { useUserProfileStore } from "@/store/userProfileStore";
+import { useUserProfile } from "@/hooks/useUserProfileQuery";
+import { useUserSession } from "@/store/userSessionsStore";
 import { isUserOnboarded } from "@/lib/user";
 
 const OnboardingRouteComponent: React.FC = () => {
   const navigate = useNavigate();
-  const { userProfile } = useUserProfileStore();
+  const { user } = useUserSession();
+  const { data: userProfile } = useUserProfile(user?.id);
   const isOnboarded = isUserOnboarded(userProfile);
 
   useEffect(() => {

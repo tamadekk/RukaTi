@@ -5,11 +5,13 @@ import ProfileCard from "@/components/dashboard/profile/profile-card";
 import ServicesSection from "@/components/dashboard/profile/services-section";
 import RecentActivity from "@/components/dashboard/profile/recent-activity";
 import { CreateServiceModal } from "@/components/dashboard/create-service-modal";
-import { useUserProfileStore } from "@/store/userProfileStore";
+import { useUserProfile } from "@/hooks/useUserProfileQuery";
+import { useUserSession } from "@/store/userSessionsStore";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 
 export default function ProfileDashboard() {
-  const userProfile = useUserProfileStore((state) => state.userProfile);
+  const { user } = useUserSession();
+  const { data: userProfile } = useUserProfile(user?.id);
   const userRating = userProfile?.rating || 0;
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -18,7 +20,7 @@ export default function ProfileDashboard() {
       <DashboardLayout
         sidebar={
           <>
-            <ProfileCard user={userProfile} />
+            <ProfileCard user={userProfile ?? null} />
             <QuickActions />
           </>
         }

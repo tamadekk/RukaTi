@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearch } from "@tanstack/react-router";
-import { useServiceStore } from "@/store/userServicesStore";
+import { useUserServices } from "@/hooks/useUserServicesQuery";
+import { useUserSession } from "@/store/userSessionsStore";
 import { ServicesHeader } from "@/components/dashboard/profile/my-services/header";
 import { ServicesStats } from "@/components/dashboard/profile/my-services/stats";
 import { ServicesToolbar } from "@/components/dashboard/profile/my-services/toolbar";
@@ -10,13 +11,15 @@ import { categories } from "@/const/categories-section";
 
 const MyServicesPage = () => {
   const { create } = useSearch({ from: "/_authenticated/my-services" });
-  const rawServices = useServiceStore((state) => state.userServices);
+  const { user } = useUserSession();
+  const { data: rawServices } = useUserServices(user?.id);
   const services = useMemo(() => rawServices ?? [], [rawServices]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     if (create) setIsCreateModalOpen(true);
   }, [create]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 

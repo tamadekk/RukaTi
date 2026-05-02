@@ -5,18 +5,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreateServiceForm } from "@/components/forms/create-service-form";
-import { useServiceStore } from "@/store/userServicesStore";
+import { useCreateService } from "@/hooks/useUserServicesQuery";
 import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserSession } from "@/store/userSessionsStore";
-import { useUserProfileStore } from "@/store/userProfileStore";
-import supabase from "@/supabase-client";
+import { useUserProfile } from "@/hooks/useUserProfileQuery";
 import { useAsyncAction } from "@/hooks/use-async-action";
 import { uploadImage } from "@/lib/storage";
 import { Link } from "@tanstack/react-router";
 import { ShieldAlert } from "lucide-react";
 import { isUserOnboarded } from "@/lib/user";
+import type { UserServices } from "@/types/user";
 
 interface CreateServiceModalProps {
   isOpen: boolean;
@@ -27,9 +27,9 @@ export const CreateServiceModal = ({
   isOpen,
   onClose,
 }: CreateServiceModalProps) => {
-  const { createService } = useServiceStore();
   const user = useUserSession((state) => state.user);
-  const { userProfile } = useUserProfileStore();
+  const { data: userProfile } = useUserProfile(user?.id);
+  const { mutateAsync: createService } = useCreateService();
   const { isLoading, execute } = useAsyncAction();
 
   const isOnboarded = isUserOnboarded(userProfile);
@@ -50,7 +50,7 @@ export const CreateServiceModal = ({
           folderPath: "service_image",
           fileNamePrefix: user.id,
         });
-        const service = {
+        const service: UserServices = {
           service_id,
           user_id: user.id,
           title: values.title,
@@ -64,13 +64,7 @@ export const CreateServiceModal = ({
           rating: 0,
           created_at,
         };
-
-        const { error } = await supabase.from("user_service").insert(service);
-
-        if (error) {
-          throw error;
-        }
-        createService(service);
+        await createService(service);
       },
       {
         successMessage: "Service created successfully",

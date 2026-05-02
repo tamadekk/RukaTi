@@ -4,7 +4,7 @@ import { useAsyncAction } from "@/hooks/use-async-action";
 import type { UserServices } from "@/types/user";
 import { Button } from "@/components/ui/button";
 import { EditServiceModal } from "@/components/dashboard/edit-service-modal";
-import { useServiceStore } from "@/store/userServicesStore";
+import { useDeleteService } from "@/hooks/useUserServicesQuery";
 import { Link } from "@tanstack/react-router";
 import {
   AlertDialog,
@@ -34,7 +34,7 @@ export const ServiceCard = ({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const deleteService = useServiceStore((state) => state.deleteService);
+  const { mutateAsync: deleteService } = useDeleteService();
   const { isLoading: isDeleting, execute: executeDelete } = useAsyncAction();
 
   const handleImageLoad = () => {
@@ -51,11 +51,18 @@ export const ServiceCard = ({
 
   const onConfirmDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
-    await executeDelete(() => deleteService(service.service_id), {
-      successMessage: "Service deleted",
-      errorMessage: "Failed to delete service",
-      onSuccess: () => setIsDeleteDialogOpen(false),
-    });
+    await executeDelete(
+      () =>
+        deleteService({
+          serviceId: service.service_id,
+          userId: service.user_id,
+        }),
+      {
+        successMessage: "Service deleted",
+        errorMessage: "Failed to delete service",
+        onSuccess: () => setIsDeleteDialogOpen(false),
+      },
+    );
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
@@ -68,7 +75,7 @@ export const ServiceCard = ({
 
   const CardContent = (
     <div
-      className={`border border-black bg-white transition-opacity hover:opacity-100 group hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200 
+      className={`border border-black bg-white transition-opacity hover:opacity-100 group hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200
       ${isHorizontal ? "flex flex-row h-44" : "flex flex-col h-full p-3 space-y-2 cursor-pointer"}
       `}
     >
@@ -116,7 +123,7 @@ export const ServiceCard = ({
           </div>
           {!readonly && (
             <div
-              className={`flex gap-1 
+              className={`flex gap-1
                 ${isHorizontal ? "absolute top-0 right-0 bg-white/50 backdrop-blur-sm p-1" : "relative shrink-0 z-10"}
                 `}
             >

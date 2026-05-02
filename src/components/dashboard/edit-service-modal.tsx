@@ -7,7 +7,7 @@ import {
 import { useAsyncAction } from "@/hooks/use-async-action";
 import { CreateServiceForm } from "@/components/forms/create-service-form";
 import type { UserServices } from "@/types/user";
-import { useServiceStore } from "@/store/userServicesStore";
+import { useUpdateService } from "@/hooks/useUserServicesQuery";
 import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,8 +26,7 @@ export const EditServiceModal = ({
   isOpen,
   onClose,
 }: EditServiceModalProps) => {
-  const updateService = useServiceStore((state) => state.updateService);
-  const loading = useServiceStore((state) => state.loading);
+  const { mutateAsync: updateService } = useUpdateService();
   const { isLoading, execute } = useAsyncAction();
 
   const form = useForm<ServiceFormData>({
@@ -45,7 +44,6 @@ export const EditServiceModal = ({
   });
 
   const handleSubmit = async (data: ServiceFormData) => {
-    // TODO: consolidate with create service
     const hasChanges = checkHasChanges(data, service, [
       "title",
       "description",
@@ -56,7 +54,7 @@ export const EditServiceModal = ({
       "availability",
     ]);
 
-    // TODO: terible logic going on here - stopgap, refactor ASAP
+    // TODO: consolidate with create service
     const isNewImage =
       data.service_image &&
       typeof data.service_image !== "string" &&
@@ -88,11 +86,19 @@ export const EditServiceModal = ({
       data.service_image = service.service_image;
     }
 
-    await execute(() => updateService(service.service_id, data), {
-      successMessage: "Service updated successfully",
-      errorMessage: "Failed to update service",
-      onSuccess: onClose,
-    });
+    await execute(
+      () =>
+        updateService({
+          serviceId: service.service_id,
+          userId: service.user_id,
+          updates: data,
+        }),
+      {
+        successMessage: "Service updated successfully",
+        errorMessage: "Failed to update service",
+        onSuccess: onClose,
+      },
+    );
   };
 
   return (
@@ -106,7 +112,7 @@ export const EditServiceModal = ({
         <CreateServiceForm
           form={form}
           onSubmit={handleSubmit}
-          loading={loading || isLoading}
+          loading={isLoading}
         />
       </DialogContent>
     </Dialog>

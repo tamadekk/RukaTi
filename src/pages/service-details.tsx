@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams, Link } from "@tanstack/react-router";
-import { useMarketStore } from "@/store/marketStore";
 import { useUserSession } from "@/store/userSessionsStore";
 import { toast } from "sonner";
 import type { UploadReview } from "@/types/user";
@@ -12,26 +11,37 @@ import { ServiceInfo } from "@/components/service-details/service-info";
 import { ServiceDescription } from "@/components/service-details/service-description";
 import { ServiceProviderCard } from "@/components/service-details/service-provider-card";
 import { ServiceReviewForm } from "@/components/service-details/service-review-form";
-import { useServicesReviewsStore } from "@/store/servicesReviewsStore";
 import { ServiceReviews } from "@/components/service-details/service-reviews";
 import { useAsyncAction } from "@/hooks/use-async-action";
 import { useRecentlyViewed } from "@/hooks/use-recently-viewed";
 import { ServiceDetailsSkeleton } from "@/components/service-details/service-details-skeleton";
 import { SimilarServices } from "@/components/service-details/similar-services";
+import { useServiceDetails } from "@/hooks/useMarketQuery";
+import {
+  useServiceReviews,
+  useUploadReview,
+  useUpdateReview,
+  useDeleteReview,
+} from "@/hooks/useServiceReviewsQuery";
+import { useEffect } from "react";
 
 export function ServiceDetailsPage() {
   const { serviceId } = useParams({ from: "/services/$serviceId" });
   const {
-    currentService,
-    providerProfile,
-    loading,
-    error,
-    fetchServiceDetails,
-  } = useMarketStore();
+    data: serviceData,
+    isLoading: loading,
+    isError,
+  } = useServiceDetails(serviceId);
+  const { data: reviews = [] } = useServiceReviews(serviceId);
+  const { mutateAsync: uploadReview } = useUploadReview();
+  const { mutateAsync: updateReview } = useUpdateReview();
+  const { mutateAsync: deleteReview } = useDeleteReview();
+
+  const currentService = serviceData?.service ?? null;
+  const providerProfile = serviceData?.providerProfile ?? null;
+  const error = isError ? "Failed to load service" : null;
 
   const { user } = useUserSession();
-  const { reviews, uploadReview, updateReview, deleteReview, loadReviews } =
-    useServicesReviewsStore();
 
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const { addToRecentlyViewed } = useRecentlyViewed();
@@ -41,13 +51,6 @@ export function ServiceDetailsPage() {
   const currentUserReview = user
     ? reviews.find((r) => r.user_id === user.id)
     : undefined;
-
-  useEffect(() => {
-    if (serviceId) {
-      fetchServiceDetails(serviceId);
-      loadReviews(serviceId);
-    }
-  }, [serviceId, fetchServiceDetails, loadReviews]);
 
   useEffect(() => {
     if (currentService?.service_id) {
@@ -144,9 +147,10 @@ export function ServiceDetailsPage() {
   ) => {
     await executeSubmit(
       async () => {
-        await updateReview(reviewId, {
-          review_rating: rating,
-          review_text: comment,
+        await updateReview({
+          reviewId,
+          serviceId: currentService.service_id,
+          updates: { review_rating: rating, review_text: comment },
         });
         setEditingReviewId(null);
       },
@@ -161,7 +165,10 @@ export function ServiceDetailsPage() {
     if (window.confirm("Are you sure you want to delete this review?")) {
       await executeDelete(
         async () => {
-          await deleteReview(reviewId);
+          await deleteReview({
+            reviewId,
+            serviceId: currentService.service_id,
+          });
           setEditingReviewId(null);
         },
         {

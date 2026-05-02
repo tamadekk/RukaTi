@@ -1,7 +1,6 @@
-import { useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Star } from "lucide-react";
-import { useMarketStore } from "@/store/marketStore";
+import { useSimilarServices } from "@/hooks/useMarketQuery";
 import { ServiceCardSkeleton } from "@/components/skeletons/service-skeleton";
 import ServicePlaceholder from "@/assets/service-placeholder.svg";
 
@@ -14,11 +13,10 @@ export const SimilarServices = ({
   category,
   excludeId,
 }: SimilarServicesProps) => {
-  const { similarServices, fetchSimilarServices } = useMarketStore();
-
-  useEffect(() => {
-    fetchSimilarServices(category, excludeId);
-  }, [category, excludeId, fetchSimilarServices]);
+  const { data: similarServices = [] } = useSimilarServices(
+    category,
+    excludeId,
+  );
 
   if (similarServices.length === 0) return null;
 

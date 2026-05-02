@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { useParams } from "@tanstack/react-router";
-import { useMarketStore } from "@/store/marketStore";
+import { useProviderDetails } from "@/hooks/useMarketQuery";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { ProviderHeader } from "@/components/provider-details/provider-header";
 import { ProviderServicesList } from "@/components/provider-details/provider-services-list";
@@ -8,18 +7,13 @@ import { ProviderServicesList } from "@/components/provider-details/provider-ser
 export function ProviderDetailsPage() {
   const { userId } = useParams({ from: "/provider/$userId" });
   const {
-    providerProfile,
-    providerServices,
-    loading,
-    error,
-    fetchProviderDetails,
-  } = useMarketStore();
+    data: providerData,
+    isLoading: loading,
+    isError,
+  } = useProviderDetails(userId);
 
-  useEffect(() => {
-    if (userId) {
-      fetchProviderDetails(userId);
-    }
-  }, [userId, fetchProviderDetails]);
+  const providerProfile = providerData?.profile ?? null;
+  const providerServices = providerData?.services ?? [];
 
   if (loading) {
     return (
@@ -31,11 +25,11 @@ export function ProviderDetailsPage() {
     );
   }
 
-  if (error || !providerProfile) {
+  if (isError || !providerProfile) {
     return (
       <DashboardLayout>
         <div className="flex h-full items-center justify-center font-mono text-red-500">
-          {error || "Provider not found"}
+          Provider not found
         </div>
       </DashboardLayout>
     );

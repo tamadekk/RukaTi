@@ -1,8 +1,7 @@
-import { useServiceStore } from "@/store/userServicesStore";
-
+import { useUserServices } from "@/hooks/useUserServicesQuery";
+import { useUserSession } from "@/store/userSessionsStore";
 import { ServiceCard } from "@/components/dashboard/service-card";
 import { Button } from "@/components/ui/button";
-
 import { Link } from "@tanstack/react-router";
 
 interface ServicesSectionProps {
@@ -10,7 +9,8 @@ interface ServicesSectionProps {
 }
 
 const ServicesSection = ({ onAddServiceClick }: ServicesSectionProps) => {
-  const allServices = useServiceStore((state) => state.userServices) || [];
+  const { user } = useUserSession();
+  const { data: allServices = [] } = useUserServices(user?.id);
   const displayServices = allServices.slice(0, 3);
   const hasMore = allServices.length > 3;
   const isServicesEmpty = allServices.length === 0;

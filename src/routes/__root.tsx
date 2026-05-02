@@ -4,12 +4,10 @@ import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import NotFound from "@/components/not-found";
-import { useInitializeUser } from "@/hooks/init-userProfile";
 import { useUserSession } from "@/store/userSessionsStore";
 import { MobileBottomBar } from "@/components/navigation/mobile-bottom-bar";
 
 const RootLayout = () => {
-  useInitializeUser();
   const { user } = useUserSession();
   const navigate = useNavigate();
 

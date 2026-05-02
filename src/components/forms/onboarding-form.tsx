@@ -8,7 +8,8 @@ import { User as UserIcon, Phone, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useUserProfileStore } from "@/store/userProfileStore";
+import { useUserSession } from "@/store/userSessionsStore";
+import { useUpdateUserProfile } from "@/hooks/useUserProfileQuery";
 import { uploadImage } from "@/lib/storage";
 import {
   OnboardingSchema,
@@ -16,15 +17,13 @@ import {
 } from "@/schemas/user-profile";
 import { AvatarUpload } from "@/components/forms/avatar-upload";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export function OnboardingForm() {
   const navigate = useNavigate();
-  const {
-    userProfile,
-    updateUserProfile,
-    loading: storeLoading,
-  } = useUserProfileStore();
+  const { user } = useUserSession();
+  const { mutateAsync: updateUserProfile, isPending: isUpdating } =
+    useUpdateUserProfile();
   const [isUploading, setIsUploading] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
@@ -42,7 +41,7 @@ export function OnboardingForm() {
   });
 
   const onSubmit = async (data: OnboardingFormData) => {
-    if (!userProfile?.user_id) {
+    if (!user?.id) {
       toast.error("User session not found.");
       return;
     }
@@ -55,17 +54,20 @@ export function OnboardingForm() {
         avatarUrl = await uploadImage({
           file: avatarFile,
           bucket: "user_avatars",
-          folderPath: userProfile.user_id,
-          fileNamePrefix: userProfile.user_id,
+          folderPath: user.id,
+          fileNamePrefix: user.id,
         });
       }
 
       await updateUserProfile({
-        full_name: data.full_name,
-        phone_number: data.phone_number,
-        bio: data.bio ?? null,
-        avatar: avatarUrl,
-        profile_completed: true,
+        userId: user.id,
+        updates: {
+          full_name: data.full_name,
+          phone_number: data.phone_number,
+          bio: data.bio ?? null,
+          avatar: avatarUrl,
+          profile_completed: true,
+        },
       });
 
       toast.success("Profile set up! Welcome aboard 🎉");
@@ -78,7 +80,7 @@ export function OnboardingForm() {
     }
   };
 
-  const loading = storeLoading || isUploading;
+  const loading = isUpdating || isUploading;
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,7 +95,6 @@ export function OnboardingForm() {
 
   return (
     <div className="w-full max-w-xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Header */}
       <div className="space-y-3 border-b-2 border-black pb-8">
         <div className="inline-block bg-black text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 mb-2">
           Step 1 of 1
@@ -106,9 +107,7 @@ export function OnboardingForm() {
         </p>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* Avatar Upload */}
         <div className="flex flex-col items-center gap-4">
           <label className="text-sm font-bold uppercase tracking-widest self-start">
             Profile Picture
@@ -122,7 +121,6 @@ export function OnboardingForm() {
           />
         </div>
 
-        {/* Full Name */}
         <div className="space-y-2">
           <label className="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
             <UserIcon className="h-4 w-4" />
@@ -140,7 +138,6 @@ export function OnboardingForm() {
           )}
         </div>
 
-        {/* Phone Number */}
         <div className="space-y-2">
           <label className="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
             <Phone className="h-4 w-4" />
@@ -159,7 +156,6 @@ export function OnboardingForm() {
           )}
         </div>
 
-        {/* Bio */}
         <div className="space-y-2">
           <label className="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
             <FileText className="h-4 w-4" />
@@ -180,7 +176,6 @@ export function OnboardingForm() {
           )}
         </div>
 
-        {/* Submit */}
         <div className="pt-4">
           <Button
             type="submit"

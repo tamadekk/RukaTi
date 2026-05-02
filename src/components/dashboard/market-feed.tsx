@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import { ServiceCard } from "@/components/dashboard/service-card";
 import { ServiceCardSkeleton } from "@/components/skeletons/service-skeleton";
 import { useMarketStore } from "@/store/marketStore";
+import { useMarketServices } from "@/hooks/useMarketQuery";
 import {
   Pagination,
   PaginationContent,
@@ -13,20 +13,17 @@ import { MarketPaginationItems } from "./market-pagination-items";
 import { scrollToTop } from "@/lib/utils";
 
 const MarketFeed = () => {
-  const {
-    services,
-    loading,
-    fetchAllServices,
+  const { page, pageSize, setPage, selectedCategory, searchQuery } =
+    useMarketStore();
+  const { data, isLoading: loading } = useMarketServices({
+    selectedCategory,
+    searchQuery,
     page,
     pageSize,
-    totalCount,
-    setPage,
-  } = useMarketStore();
+  });
 
-  useEffect(() => {
-    fetchAllServices();
-  }, [fetchAllServices]);
-
+  const services = data?.services ?? [];
+  const totalCount = data?.totalCount ?? 0;
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const handlePageChange = (newPage: number) => {

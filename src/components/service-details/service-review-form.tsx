@@ -2,7 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { ReviewForm } from "@/components/forms/review-form";
 import type { Review, User } from "@/types/user";
 import { Button } from "@/components/ui/button";
-import { useUserProfileStore } from "@/store/userProfileStore";
+import { useUserProfile } from "@/hooks/useUserProfileQuery";
+import { useUserSession } from "@/store/userSessionsStore";
 import { isUserOnboarded } from "@/lib/user";
 
 interface ServiceReviewFormProps {
@@ -20,8 +21,8 @@ export const ServiceReviewForm = ({
   onSubmit,
   totalReviews,
 }: ServiceReviewFormProps) => {
-  const { userProfile } = useUserProfileStore();
-
+  const { user } = useUserSession();
+  const { data: userProfile } = useUserProfile(user?.id);
   const isOnboarded = isUserOnboarded(userProfile);
 
   return (

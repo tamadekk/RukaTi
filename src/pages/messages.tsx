@@ -1,33 +1,37 @@
 import { useEffect } from "react";
 import { useSearch } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
-import { useChatStore } from "@/store/chatStore";
 import { useUserSession } from "@/store/userSessionsStore";
 import { ConversationList } from "@/components/messages/conversation-list";
 import { ChatWindow } from "@/components/messages/chat-window";
 import supabase from "@/supabase-client";
 import type { ChatMessage } from "@/types/chat";
+import {
+  useChatRooms,
+  useChatMessages,
+  useSendMessage,
+  appendMessageToCache,
+} from "@/hooks/useChatQuery";
+import { queryClient } from "@/lib/queryClient";
+import { queryKeys } from "@/lib/queryKeys";
 
 const EMPTY_MESSAGES: ChatMessage[] = [];
 
 export function MessagesPage() {
   const { roomId } = useSearch({ from: "/_authenticated/messages" });
   const { user } = useUserSession();
-  const rooms = useChatStore((s) => s.rooms);
-  const isLoadingRooms = useChatStore((s) => s.isLoadingRooms);
-  const isLoadingMessages = useChatStore((s) => s.isLoadingMessages);
-  const loadRooms = useChatStore((s) => s.loadRooms);
-  const loadMessages = useChatStore((s) => s.loadMessages);
-  const sendMessage = useChatStore((s) => s.sendMessage);
-  const appendMessage = useChatStore((s) => s.appendMessage);
-  const activeRoomMessages = useChatStore(
-    (s) => (roomId ? s.messages[roomId] : undefined) ?? EMPTY_MESSAGES,
+
+  const { data: rooms = [], isLoading: isLoadingRooms } = useChatRooms(
+    user?.id,
   );
+  const {
+    data: activeRoomMessages = EMPTY_MESSAGES,
+    isLoading: isLoadingMessages,
+  } = useChatMessages(roomId);
+  const { mutate: sendMessageMutation } = useSendMessage(user?.id);
 
   useEffect(() => {
     if (!user?.id) return;
-
-    loadRooms(user.id);
 
     const channel = supabase
       .channel(`rooms:${user.id}`)
@@ -39,7 +43,10 @@ export function MessagesPage() {
           table: "chat_rooms",
           filter: `user1_id=eq.${user.id}`,
         },
-        () => loadRooms(user.id),
+        () =>
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.chatRooms(user.id),
+          }),
       )
       .on(
         "postgres_changes",
@@ -49,19 +56,20 @@ export function MessagesPage() {
           table: "chat_rooms",
           filter: `user2_id=eq.${user.id}`,
         },
-        () => loadRooms(user.id),
+        () =>
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.chatRooms(user.id),
+          }),
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user?.id, loadRooms]);
+  }, [user?.id]);
 
   useEffect(() => {
     if (!roomId) return;
-
-    loadMessages(roomId);
 
     const channel = supabase
       .channel(`room:${roomId}`)
@@ -73,26 +81,29 @@ export function MessagesPage() {
           table: "chat_messages",
           filter: `room_id=eq.${roomId}`,
         },
-        (payload) => appendMessage(payload.new as ChatMessage),
+        (payload) => appendMessageToCache(roomId, payload.new as ChatMessage),
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [roomId, loadMessages, appendMessage]);
+  }, [roomId]);
 
   const activeRoom = roomId ? rooms.find((r) => r.room_id === roomId) : null;
 
   const handleSend = (text: string) => {
     if (!activeRoom || !user?.id) return;
-    sendMessage(activeRoom.room_id, user.id, text);
+    sendMessageMutation({
+      roomId: activeRoom.room_id,
+      senderId: user.id,
+      text,
+    });
   };
 
   return (
     <div className="fixed inset-x-0 top-16 bottom-16 md:bottom-0 bg-background font-mono z-40">
       <div className="max-w-7xl mx-auto border-x border-black flex h-full">
-        {/* Conversation list — hidden on mobile when a room is open */}
         <div
           className={`border-r border-black flex flex-col w-full md:w-72 shrink-0 ${
             activeRoom ? "hidden md:flex" : "flex"
@@ -105,7 +116,6 @@ export function MessagesPage() {
           />
         </div>
 
-        {/* Chat area */}
         <div
           className={`flex-1 flex flex-col ${activeRoom ? "flex" : "hidden md:flex"}`}
         >

@@ -3,7 +3,7 @@ import { Star, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { UserProfile } from "@/types/user";
-import { useChatStore } from "@/store/chatStore";
+import { useStartConversation } from "@/hooks/useChatQuery";
 import { useUserSession } from "@/store/userSessionsStore";
 
 type ServiceProviderCardProps = {
@@ -26,11 +26,16 @@ export const ServiceProviderCard = ({ provider }: ServiceProviderCardProps) => {
 
   const navigate = useNavigate();
   const { user: currentUser } = useUserSession();
-  const startConversation = useChatStore((s) => s.startConversation);
+  const { mutateAsync: startConversation } = useStartConversation(
+    currentUser?.id,
+  );
 
   const handleContactProvider = async () => {
     if (!currentUser?.id) return;
-    const roomId = await startConversation(currentUser.id, providerId);
+    const roomId = await startConversation({
+      currentUserId: currentUser.id,
+      otherUserId: providerId,
+    });
     navigate({ to: "/messages", search: { roomId } });
   };
 

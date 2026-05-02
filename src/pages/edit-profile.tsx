@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useUserProfileStore } from "@/store/userProfileStore";
 import { useUserSession } from "@/store/userSessionsStore";
 import { toast } from "sonner";
 import { EditProfileForm } from "@/components/forms/edit-profile-form";
 import { uploadAvatar } from "@/lib/user";
-
 import { checkHasChanges } from "@/lib/utils";
+import {
+  useUserProfile,
+  useUpdateUserProfile,
+} from "@/hooks/useUserProfileQuery";
 
 export function EditProfilePage() {
   const navigate = useNavigate();
   const { user } = useUserSession();
-  const { userProfile, loading, fetchUserProfile, updateUserProfile } =
-    useUserProfileStore();
+  const { data: userProfile, isLoading: loading } = useUserProfile(user?.id);
+  const { mutateAsync: updateUserProfile } = useUpdateUserProfile();
 
   const [formData, setFormData] = useState({
     full_name: "",
@@ -23,12 +25,6 @@ export function EditProfilePage() {
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  useEffect(() => {
-    if (user?.id) {
-      fetchUserProfile(user.id);
-    }
-  }, [user?.id, fetchUserProfile]);
 
   useEffect(() => {
     if (userProfile) {
@@ -66,7 +62,6 @@ export function EditProfilePage() {
   const hasChanges = () => {
     if (!userProfile) return false;
     if (selectedFile) return true;
-
     return checkHasChanges(formData, userProfile, [
       "full_name",
       "bio",
@@ -88,6 +83,8 @@ export function EditProfilePage() {
       return;
     }
 
+    if (!user?.id) return;
+
     try {
       let currentAvatarUrl = formData.avatar;
 
@@ -98,8 +95,8 @@ export function EditProfilePage() {
       }
 
       await updateUserProfile({
-        ...formData,
-        avatar: currentAvatarUrl,
+        userId: user.id,
+        updates: { ...formData, avatar: currentAvatarUrl },
       });
 
       setSelectedFile(null);

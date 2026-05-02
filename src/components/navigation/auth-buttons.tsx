@@ -2,7 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { LogIn, LogOut, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "./user-menu";
-import { useUserProfileStore } from "@/store/userProfileStore";
+import { useUserProfile } from "@/hooks/useUserProfileQuery";
+import { useUserSession } from "@/store/userSessionsStore";
 
 export type AuthButtonsProps = {
   isAuthenticated: boolean;
@@ -19,7 +20,8 @@ export const AuthButtons = ({
   mobile = false,
   onLoginClick,
 }: AuthButtonsProps) => {
-  const profile = useUserProfileStore((s) => s.userProfile);
+  const { user } = useUserSession();
+  const { data: profile } = useUserProfile(user?.id);
 
   if (isAuthenticated) {
     if (mobile) {
@@ -46,7 +48,7 @@ export const AuthButtons = ({
 
     return (
       <UserMenu
-        profile={profile}
+        profile={profile ?? null}
         onLogout={onLogout}
         onCreateService={onCreateService}
       />
