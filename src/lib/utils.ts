@@ -21,3 +21,13 @@ export function checkHasChanges<T extends Record<string, unknown>>(
 export function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+export const parseServiceImages = (value: unknown): string[] => {
+  if (!value || typeof value !== "string") return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter(Boolean) : [value];
+  } catch {
+    return [value];
+  }
+};

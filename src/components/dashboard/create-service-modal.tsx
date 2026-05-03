@@ -4,7 +4,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CreateServiceForm } from "@/components/forms/create-service-form";
+import {
+  CreateServiceForm,
+  type ServiceImageData,
+} from "@/components/forms/create-service-form";
 import { useCreateService } from "@/hooks/useUserServicesQuery";
 import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
 import { useForm } from "react-hook-form";
@@ -38,23 +41,26 @@ export const CreateServiceModal = ({
     resolver: zodResolver(ServiceSchema),
   });
 
-  const onSubmitHandler = async (values: ServiceFormData) => {
+  const onSubmitHandler = async (
+    values: ServiceFormData,
+    images: ServiceImageData,
+  ) => {
     if (!user?.id) return;
     await execute(
       async () => {
-        const service_id = crypto.randomUUID();
-        const created_at = new Date().toISOString();
-        const imageFile = values.service_image?.[0];
-        const service_image = imageFile
-          ? await uploadImage({
-              file: imageFile,
+        const uploadedUrls = await Promise.all(
+          images.newFiles.map((file) =>
+            uploadImage({
+              file,
               bucket: "user_services",
               folderPath: "service_image",
               fileNamePrefix: user.id,
-            })
-          : "";
+            }),
+          ),
+        );
+        const allImageUrls = [...images.existingUrls, ...uploadedUrls];
         const service: UserServices = {
-          service_id,
+          service_id: crypto.randomUUID(),
           user_id: user.id,
           title: values.title,
           description: values.description,
@@ -63,9 +69,9 @@ export const CreateServiceModal = ({
           contact: values.contact ?? "",
           price_range: values.price_range ?? "",
           availability: values.availability ?? "",
-          service_image: service_image,
+          service_image: JSON.stringify(allImageUrls),
           rating: 0,
-          created_at,
+          created_at: new Date().toISOString(),
         };
         await createService(service);
       },

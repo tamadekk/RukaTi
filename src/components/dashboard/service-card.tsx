@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
+import { parseServiceImages } from "@/lib/utils";
 import { useAsyncAction } from "@/hooks/use-async-action";
 import type { UserServices } from "@/types/user";
 import { Button } from "@/components/ui/button";
@@ -89,9 +90,8 @@ export const ServiceCard = ({
         )}
         <img
           src={
-            typeof service.service_image === "string"
-              ? service.service_image
-              : ServicePlaceholder
+            parseServiceImages(service.service_image as string)[0] ??
+            ServicePlaceholder
           }
           alt={service.title}
           className={`w-full h-full object-cover transition-all duration-700

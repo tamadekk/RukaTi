@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Clock, Star } from "lucide-react";
 import { useRecentlyViewed } from "@/hooks/use-recently-viewed";
 import { useRecentlyViewedServices } from "@/hooks/useMarketQuery";
+import { parseServiceImages } from "@/lib/utils";
 import ServicePlaceholder from "@/assets/service-placeholder.svg";
 
 export const RecentlyViewed = () => {
@@ -40,10 +41,8 @@ export const RecentlyViewed = () => {
             <div className="aspect-[3/2] overflow-hidden border-b border-black bg-gray-50">
               <img
                 src={
-                  typeof service.service_image === "string" &&
-                  service.service_image
-                    ? service.service_image
-                    : ServicePlaceholder
+                  parseServiceImages(service.service_image as string)[0] ??
+                  ServicePlaceholder
                 }
                 alt={service.title}
                 className="w-full h-full object-cover"

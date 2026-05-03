@@ -13,11 +13,20 @@ import {
 } from "@/const/services";
 import type { ServiceFormData } from "@/schemas/services";
 import { LocationAutocomplete } from "@/components/forms/location-autocomplete";
-import { ImageUpload } from "@/components/forms/image-upload";
+import {
+  MultiImageUpload,
+  type ImageItem,
+} from "@/components/forms/multi-image-upload";
+import { parseServiceImages } from "@/lib/utils";
+
+export type ServiceImageData = {
+  existingUrls: string[];
+  newFiles: File[];
+};
 
 type CreateServiceFormProps = {
   form: UseFormReturn<ServiceFormData>;
-  onSubmit: (data: ServiceFormData) => Promise<void>;
+  onSubmit: (data: ServiceFormData, images: ServiceImageData) => Promise<void>;
   loading: boolean;
 };
 
@@ -63,7 +72,12 @@ export const CreateServiceForm = ({
   });
   const [fixedPriceError, setFixedPriceError] = useState(false);
 
-  const serviceImage = watch("service_image");
+  const [imageItems, setImageItems] = useState<ImageItem[]>(() =>
+    parseServiceImages(form.getValues("service_image") as string).map(
+      (url) => ({ type: "existing" as const, url }),
+    ),
+  );
+
   const locationValue = watch("location");
 
   const availabilityValue = (type: AvailabilityType, days: string[]) => {
@@ -99,6 +113,32 @@ export const CreateServiceForm = ({
     }
   };
 
+  const handleAddImages = (files: File[]) => {
+    const previews = files.map((file) => ({
+      type: "new" as const,
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setImageItems((current) => [...current, ...previews]);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setImageItems((current) => {
+      const item = current[index];
+      if (item.type === "new") URL.revokeObjectURL(item.preview);
+      return current.filter((_, i) => i !== index);
+    });
+  };
+
+  const handleReorderImages = (fromIndex: number, toIndex: number) => {
+    setImageItems((current) => {
+      const next = [...current];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return next;
+    });
+  };
+
   const handleFormSubmit = form.handleSubmit((data) => {
     if (isFixedPrice) {
       if (!fixedPriceAmount.trim()) {
@@ -107,12 +147,16 @@ export const CreateServiceForm = ({
       }
       data.price_range = `Fixed: €${fixedPriceAmount}`;
     }
-    onSubmit(data);
+    const existingUrls = imageItems
+      .filter((item) => item.type === "existing")
+      .map((item) => (item as { type: "existing"; url: string }).url);
+    const newFiles = imageItems
+      .filter((item) => item.type === "new")
+      .map(
+        (item) => (item as { type: "new"; file: File; preview: string }).file,
+      );
+    onSubmit(data, { existingUrls, newFiles });
   });
-
-  const handleRemoveImage = () => {
-    setValue("service_image", [] as unknown as FileList);
-  };
 
   const handleFixedPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFixedPriceAmount(e.target.value);
@@ -167,15 +211,16 @@ export const CreateServiceForm = ({
       {/* Image Upload */}
       <div className="space-y-2">
         <label className="text-xs font-bold uppercase tracking-wider">
-          Service Image{" "}
+          Service Images{" "}
           <span className="text-[10px] font-normal text-muted-foreground normal-case tracking-normal">
-            (optional)
+            (optional, up to 4)
           </span>
         </label>
-        <ImageUpload
-          {...register("service_image")}
-          imageFiles={serviceImage}
-          onImageRemove={handleRemoveImage}
+        <MultiImageUpload
+          items={imageItems}
+          onAdd={handleAddImages}
+          onRemove={handleRemoveImage}
+          onReorder={handleReorderImages}
         />
       </div>
 

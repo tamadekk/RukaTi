@@ -5,14 +5,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAsyncAction } from "@/hooks/use-async-action";
-import { CreateServiceForm } from "@/components/forms/create-service-form";
+import {
+  CreateServiceForm,
+  type ServiceImageData,
+} from "@/components/forms/create-service-form";
 import type { UserServices } from "@/types/user";
 import { useUpdateService } from "@/hooks/useUserServicesQuery";
 import { ServiceSchema, type ServiceFormData } from "@/schemas/services";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { checkHasChanges } from "@/lib/utils";
+import { checkHasChanges, parseServiceImages } from "@/lib/utils";
 import { uploadImage } from "@/lib/storage";
 
 interface EditServiceModalProps {
@@ -43,8 +46,14 @@ export const EditServiceModal = ({
     },
   });
 
-  const handleSubmit = async (data: ServiceFormData) => {
-    const hasChanges = checkHasChanges(data, service, [
+  const handleSubmit = async (
+    data: ServiceFormData,
+    images: ServiceImageData,
+  ) => {
+    const originalImageUrls = parseServiceImages(
+      service.service_image as string,
+    );
+    const hasFieldChanges = checkHasChanges(data, service, [
       "title",
       "description",
       "category",
@@ -53,38 +62,28 @@ export const EditServiceModal = ({
       "price_range",
       "availability",
     ]);
+    const hasImageChanges =
+      images.newFiles.length > 0 ||
+      images.existingUrls.length !== originalImageUrls.length ||
+      images.existingUrls.some((url, i) => url !== originalImageUrls[i]);
 
-    // TODO: consolidate with create service
-    const isNewImage =
-      data.service_image &&
-      typeof data.service_image !== "string" &&
-      data.service_image.length > 0;
-
-    const isImageCleared =
-      (!data.service_image ||
-        (typeof data.service_image !== "string" &&
-          data.service_image.length === 0)) &&
-      service.service_image !== "";
-
-    if (!hasChanges && !isNewImage && !isImageCleared) {
+    if (!hasFieldChanges && !hasImageChanges) {
       toast.info("No changes detected.");
       return;
     }
 
-    if (isNewImage) {
-      const image = (data.service_image as unknown as FileList)[0];
-      const imageUrl = await uploadImage({
-        file: image,
-        bucket: "user_services",
-        folderPath: "service_image",
-        fileNamePrefix: service.service_id,
-      });
-      data.service_image = imageUrl;
-    } else if (isImageCleared) {
-      data.service_image = "";
-    } else {
-      data.service_image = service.service_image;
-    }
+    const uploadedUrls = await Promise.all(
+      images.newFiles.map((file) =>
+        uploadImage({
+          file,
+          bucket: "user_services",
+          folderPath: "service_image",
+          fileNamePrefix: service.service_id,
+        }),
+      ),
+    );
+    const allImageUrls = [...images.existingUrls, ...uploadedUrls];
+    data.service_image = JSON.stringify(allImageUrls);
 
     await execute(
       () =>
