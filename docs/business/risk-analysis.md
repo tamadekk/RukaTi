@@ -500,39 +500,23 @@ Limited development resources (solo developer) could slow feature development an
 
 ## 4. User Experience Risks
 
-### 🟡 UX1: Poor Mobile Experience
+### 🟢 UX1: Poor Mobile Experience
 
-**Risk Level:** Medium  
+**Risk Level:** Low (downgraded from Medium — May 2026)
 **Category:** User Experience  
 **Probability:** Low  
-**Impact:** High
+**Impact:** Medium
 
 **Description:**  
 Majority of users in Croatia access web via mobile. Poor mobile UX could drive users away.
 
-**Potential Issues:**
+**Status (May 2026):** Significantly mitigated. Mobile bottom bar navigation is live, messages page has a fixed viewport layout that handles keyboard appearance correctly, and forms are touch-optimised. Remaining gap: no PWA / installable app experience.
 
-- Slow mobile load times
-- Difficult navigation on small screens
-- Forms hard to fill on mobile
-- Images not optimized for mobile
+**Remaining risks:**
 
-**Mitigation Strategies:**
-
-1. **Mobile-First Design:**
-   - Responsive design with Tailwind
-   - Touch-friendly UI elements
-   - Mobile-optimized forms
-
-2. **Performance:**
-   - Optimize images for mobile
-   - Minimize JavaScript bundle size
-   - Lazy loading for content
-
-3. **Testing:**
-   - Regular mobile device testing
-   - Browser compatibility testing
-   - Performance testing on slow connections
+- No offline support
+- No push notifications on mobile
+- Performance not formally benchmarked on slow connections
 
 ---
 
@@ -629,4 +613,42 @@ Users may be hesitant to use platform due to trust concerns with unknown provide
 
 ---
 
-**Last Updated:** December 18, 2025
+---
+
+## New Risks Identified (May 2026)
+
+### 🟠 T5: No Rate Limiting
+
+**Risk Level:** High  
+**Category:** Technical / Security  
+**Probability:** Medium  
+**Impact:** High
+
+**Description:**  
+No rate limiting exists on auth actions (login, sign-up) or service mutations (create, update). A bad actor or bug could spam the DB or lock out users.
+
+**Mitigation (not yet implemented):**
+
+- Supabase Auth dashboard rate-limit settings for login/sign-up
+- PostgreSQL-level check function for service create/update mutations
+- Client-side cooldown UX after failed attempts
+
+---
+
+### 🟡 O4: Dashboard Shows Fake Metrics
+
+**Risk Level:** Medium  
+**Category:** Operational / User Experience  
+**Probability:** High (it's already happening)  
+**Impact:** Medium
+
+**Description:**  
+The provider dashboard displays hardcoded placeholder stats (e.g. "28 bookings", "125 views"). Real users see these and may make decisions based on them, or lose trust when they realise they're fake.
+
+**Mitigation:**
+
+- Replace placeholders with real queries (service view counts, inquiry counts) or hide the widget entirely until analytics is built
+
+---
+
+**Last Updated:** May 4, 2026

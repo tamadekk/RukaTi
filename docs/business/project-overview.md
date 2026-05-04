@@ -90,10 +90,10 @@ RukaTi provides a **Technical Minimalist** web platform where:
 
 ### 🔍 Service Discovery
 
-- **Category Filtering:** Browse by service categories
-- **Neighborhood Filters:** Location-based filtering (Zamet, Centar, Trsat)
-- **Search Functionality:** Find specific services quickly
+- **Category Filtering:** Browse by 9 service categories
+- **Search Functionality:** Full-text search by title — wired end-to-end
 - **Service Cards:** Visual preview with key information
+- **Neighborhood Filters:** Planned — location is currently a free-text field
 
 ### 📊 Dashboard
 
@@ -102,15 +102,17 @@ RukaTi provides a **Technical Minimalist** web platform where:
 - **Profile Management:** Edit profile information
 - **Service Overview:** Quick access to all listings
 
-### 🎨 Service Categories
+### 🎨 Service Categories (9)
 
 1. **Home Repairs** - Fix, maintain, and improve your home
 2. **Cleaning** - Professional cleaning services
 3. **Tutoring** - Educational support and learning
 4. **Pet Care** - Care for your furry friends
 5. **Landscaping** - Garden and outdoor maintenance
-6. **Event Help** - Party planning and event support
-7. **Other** - Miscellaneous services
+6. **Events** - Party planning and event support
+7. **Vehicles** - Car-related services
+8. **Beauty** - Personal care and beauty services
+9. **Other** - Miscellaneous services
 
 ---
 
@@ -136,13 +138,38 @@ RukaTi provides a **Technical Minimalist** web platform where:
 - `user_id` (UUID, Foreign Key → user_profile)
 - `title` (String)
 - `description` (Text)
-- `category` (String)
-- `location` (String)
+- `category` (Enum: home | cleaning | tutoring | pet-care | landscaping | events | vehicles | beauty | other)
+- `location` (String, free text)
 - `contact` (String)
 - `price_range` (String)
 - `availability` (String)
-- `rating` (Number)
+- `rating` (Numeric, 0–5)
 - `service_image` (String URL, nullable)
+- `created_at` (Timestamp)
+
+#### `user_service_review`
+
+- `review_id` (UUID, Primary Key)
+- `user_id` (UUID, Foreign Key → user_profile)
+- `service_id` (UUID, Foreign Key → user_service)
+- `review_rating` (Smallint)
+- `review_text` (Text, nullable)
+- `created_at` (Timestamp)
+
+#### `chat_rooms`
+
+- `room_id` (UUID, Primary Key)
+- `user1_id` (UUID, Foreign Key → user_profile)
+- `user2_id` (UUID, Foreign Key → user_profile)
+- `last_message_at` (Timestamp)
+- `created_at` (Timestamp)
+
+#### `chat_messages`
+
+- `message_id` (UUID, Primary Key)
+- `room_id` (UUID, Foreign Key → chat_rooms)
+- `sender_id` (UUID, Foreign Key → user_profile)
+- `text` (Text)
 - `created_at` (Timestamp)
 
 ---
@@ -152,17 +179,17 @@ RukaTi provides a **Technical Minimalist** web platform where:
 ### 🙋 Customer
 
 - Browse and search services
-- View service details
-- Contact service providers
-- Leave reviews (planned)
+- View service details and provider profiles
+- Message service providers (direct messaging live)
+- Leave reviews (live — gated by profile_completed)
 - Save favorite services (planned)
 
 ### 👷 Service Provider
 
 - Create and manage service listings
 - Update availability status
-- Respond to customer inquiries (planned)
-- Build reputation through reviews (planned)
+- Receive and reply to messages
+- Build reputation through reviews
 - Promote listings (planned)
 
 ---
@@ -171,32 +198,32 @@ RukaTi provides a **Technical Minimalist** web platform where:
 
 ### ✅ Completed Features
 
-- User authentication (login/register)
-- User profile management
-- Service creation (modal-based)
-- Service editing
-- Service deletion
-- Service browsing with category filters
-- Service detail pages
+- User authentication (login/register/signout, session persistence)
+- Onboarding flow (name, phone, bio, avatar — sets profile_completed flag)
+- User profile management (edit, avatar upload)
+- Service CRUD (create, edit, delete, multi-image upload UI, availability toggle)
+- Service browsing (paginated, sort by rating, 9 categories)
+- Full-text search by title
+- Service detail pages (gallery, info, reviews, similar services, provider card)
 - Provider profile pages
-- Responsive dashboard layout
+- Reviews & ratings (read, write, edit, delete — gated by profile_completed)
+- Direct messaging (realtime, rooms, message history)
+- Recently viewed services
+- Mobile-first layout with bottom navigation bar
 - Technical Minimalist UI design
 
-### 🚧 In Progress
+### 📋 Planned / Not Started
 
-- Service management refinements
-- Enhanced image upload experience
-- Form validation improvements
-
-### 📋 Planned Features (MVP Scope)
-
-- [ ] Reviews and ratings system
-- [ ] Direct messaging between users
-- [ ] Saved/favorite services list
-- [ ] Promoted listings for visibility boost
-- [ ] Advanced search and filtering
-- [ ] Notification system
-- [ ] Service analytics for providers
+- [ ] Saved/favorite services
+- [ ] Notification system (new message, new review)
+- [ ] "Contact provider" button on service/provider pages
+- [ ] Location/neighborhood filtering
+- [ ] Real dashboard analytics (currently placeholder)
+- [ ] Promoted listings
+- [ ] Advanced search (multi-criteria, sort options)
+- [ ] Provider analytics dashboard
+- [ ] Stripe payment integration
+- [ ] Premium provider features
 
 ---
 
@@ -305,4 +332,4 @@ _Project maintained by Vladyslav Raduta_
 
 ---
 
-**Last Updated:** December 18, 2025
+**Last Updated:** May 4, 2026

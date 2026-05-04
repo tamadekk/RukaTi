@@ -114,10 +114,10 @@ gantt
 
 ---
 
-## Phase 1: MVP Core Features 🚧 IN PROGRESS
+## Phase 1: MVP Core Features ✅ COMPLETED
 
 **Timeline:** December 1 - December 25, 2025  
-**Status:** 🚧 80% Complete  
+**Status:** ✅ Complete  
 **Goal:** Build core service marketplace functionality
 
 ### Milestones
@@ -152,32 +152,22 @@ gantt
 
 ---
 
-#### M1.2: Service Discovery 🚧
+#### M1.2: Service Discovery ✅
 
-**Status:** In Progress (90% complete)
+**Status:** Complete
 
 **Deliverables:**
 
 - ✅ Services marketplace page
-- ✅ Category filtering sidebar
+- ✅ Category filtering sidebar (9 categories)
 - ✅ Service cards with key information
 - ✅ Service detail pages
-- 🚧 Location/neighborhood filtering
-- 🚧 Search functionality
+- ✅ Full-text search (title ilike) — wired end-to-end
+- ❌ Location/neighborhood filtering — NOT implemented (location is free-text, no enum filter)
 
-**Success Criteria:**
+**Notes:**
 
-- Customers can browse all services
-- Category filters work correctly
-- Service cards display accurate information
-- Service detail pages show complete information
-- Filters update results in real-time
-
-**Remaining Work:**
-
-- Implement neighborhood filter dropdown
-- Add search bar with query functionality
-- Optimize query performance
+Neighborhood filtering was deprioritised. Location is stored as a free-text field with no structured neighbourhood values, so filter UI cannot be built without a DB migration first.
 
 ---
 
@@ -202,115 +192,73 @@ gantt
 
 ---
 
-#### M1.4: Mobile Responsiveness 🚧
+#### M1.4: Mobile Responsiveness ✅
 
-**Status:** In Progress (85% complete)
+**Status:** Complete
 
 **Deliverables:**
 
 - ✅ Mobile-responsive navigation
 - ✅ Responsive service cards
 - ✅ Mobile-optimized forms
-- 🚧 Mobile filter drawer
+- ✅ Mobile bottom bar navigation
 - ✅ Touch-friendly UI elements
-
-**Success Criteria:**
-
-- Platform usable on mobile devices (320px+)
-- No horizontal scrolling
-- Touch targets minimum 44x44px
-- Forms easy to fill on mobile
-- Performance acceptable on mobile networks
-
-**Remaining Work:**
-
-- Complete mobile filter drawer implementation
-- Test on various mobile devices
-- Optimize mobile performance
+- ✅ Messages page mobile layout (fixed viewport, keyboard handling)
 
 ---
 
-## Phase 2: Trust & Engagement 📋 PLANNED
+## Phase 2: Trust & Engagement 🚧 IN PROGRESS
 
 **Timeline:** December 26, 2025 - February 10, 2026  
-**Status:** 📋 Planned  
+**Status:** 🚧 50% Complete (reviews + messaging done ahead of schedule)  
 **Goal:** Build trust and increase user engagement
 
 ### Milestones
 
-#### M2.1: Reviews & Ratings System
+#### M2.1: Reviews & Ratings System ✅
 
-**Target Date:** January 15, 2026
-
-**Deliverables:**
-
-- [ ] Review submission form
-- [ ] Star rating component
-- [ ] Review display on service pages
-- [ ] Review display on provider profiles
-- [ ] Average rating calculation
-- [ ] Review moderation tools
-- [ ] Prevent duplicate reviews
-
-**Success Criteria:**
-
-- Users can submit reviews after service interaction
-- Reviews display on service and provider pages
-- Ratings update provider and service scores
-- Fake/spam reviews can be flagged and removed
-
-**Technical Requirements:**
-
-- New `reviews` table in Supabase
-- Foreign keys to users and services
-- Rating aggregation queries
-- Review validation logic
-
-**Dependencies:**
-
-- M1.1 (Service Management)
-- M1.3 (Provider Profiles)
-
----
-
-#### M2.2: Direct Messaging
-
-**Target Date:** January 30, 2026
+**Completed:** Early 2026
 
 **Deliverables:**
 
-- [ ] In-app messaging interface
-- [ ] Real-time message delivery
-- [ ] Message notifications
-- [ ] Conversation history
-- [ ] Message read status
-- [ ] Block/report users
+- ✅ Review submission form
+- ✅ Star rating component
+- ✅ Review display on service pages
+- ✅ Edit and delete own review
+- ✅ Gated by `profile_completed` flag
+- ❌ Review moderation tools — not built
+- ❌ Duplicate review prevention — not enforced in DB
 
-**Success Criteria:**
+**Live data:** 8 reviews in `user_service_review` table.
 
-- Customers can message providers directly
-- Messages delivered in real-time
-- Conversation history persists
-- Users notified of new messages
-- Privacy controls functional
-
-**Technical Requirements:**
-
-- `messages` and `conversations` tables
-- Supabase Realtime subscriptions
-- WebSocket connections for live updates
-- Notification system integration
-
-**Dependencies:**
-
-- M0.2 (Authentication)
-- M2.4 (Notifications)
+**Technical notes:** Table is `user_service_review` (not `reviews`). No reviewer_name/avatar stored — joined from user_profile at query time.
 
 ---
 
-#### M2.3: Saved Services
+#### M2.2: Direct Messaging ✅
 
-**Target Date:** February 5, 2026
+**Completed:** Early 2026 (completed before M2.4 — dependency order was not followed)
+
+**Deliverables:**
+
+- ✅ In-app messaging interface
+- ✅ Real-time message delivery (Supabase Realtime + Postgres changes)
+- ✅ Conversation history
+- ✅ Conversation list with last message time
+- ✅ Mobile-optimised chat layout
+- ❌ Message read/unread status — not implemented
+- ❌ Block/report users — not implemented
+- ❌ "Contact provider" entry point — no button on service or provider pages to start a new conversation
+
+**Live data:** 3 chat rooms, 54 messages.
+
+**Technical notes:** `chat_rooms` + `chat_messages` tables live. No `last_message` text stored on rooms — fetched via join.
+
+---
+
+#### M2.3: Saved Services 📋
+
+**Target Date:** TBD
 
 **Deliverables:**
 
@@ -340,9 +288,9 @@ gantt
 
 ---
 
-#### M2.4: Notification System
+#### M2.4: Notification System 📋
 
-**Target Date:** February 10, 2026
+**Target Date:** TBD
 
 **Deliverables:**
 

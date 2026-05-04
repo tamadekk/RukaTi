@@ -270,97 +270,144 @@ graph LR
 ```mermaid
 erDiagram
     user_profile ||--o{ user_service : creates
-    user_profile ||--o{ REVIEWS : writes
-    user_service ||--o{ REVIEWS : receives
+    user_profile ||--o{ user_service_review : writes
+    user_service ||--o{ user_service_review : receives
+    user_profile ||--o{ chat_rooms : participates_as_user1
+    user_profile ||--o{ chat_rooms : participates_as_user2
+    chat_rooms ||--o{ chat_messages : contains
 
     user_profile {
         uuid user_id PK
-        string email
-        string full_name
-        string phone_number
-        string role
-        float rating
-        string avatar
+        text email
+        text full_name
+        text phone_number
+        text role
+        smallint rating
+        text avatar
         text bio
+        boolean profile_completed
         timestamp created_at
     }
 
     user_service {
         uuid service_id PK
         uuid user_id FK
-        string title
+        text title
         text description
-        string category
-        string location
-        string contact
-        string price_range
-        string availability
-        float rating
-        string service_image
+        service_category category
+        text location
+        text contact
+        text price_range
+        text availability
+        numeric rating
+        text service_image
         timestamp created_at
     }
 
-    REVIEWS {
-        uuid id PK
+    user_service_review {
+        uuid review_id PK
+        uuid user_id FK
         uuid service_id FK
-        uuid reviewer_id FK
-        string reviewer_name
-        int rating
-        text comment
-        string reviewer_avatar
-        timestamp created_at
+        smallint review_rating
+        text review_text
+        timestamptz created_at
+    }
+
+    chat_rooms {
+        uuid room_id PK
+        uuid user1_id FK
+        uuid user2_id FK
+        timestamptz last_message_at
+        timestamptz created_at
+    }
+
+    chat_messages {
+        uuid message_id PK
+        uuid room_id FK
+        uuid sender_id FK
+        text text
+        timestamptz created_at
     }
 ```
 
-### Database Tables
+### Database Tables (verified May 2026)
 
 #### `user_profile`
 
 ```sql
 CREATE TABLE user_profile (
-  user_id UUID PRIMARY KEY REFERENCES auth.users(id),
-  email TEXT NOT NULL,
+  user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT NOT NULL UNIQUE,
   full_name TEXT,
-  phone_number TEXT NOT NULL,
+  phone_number TEXT,
   role TEXT NOT NULL DEFAULT 'customer',
-  rating NUMERIC(3,2),
+  rating SMALLINT CHECK (rating >= 0 AND rating <= 5),
   avatar TEXT,
   bio TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  profile_completed BOOLEAN NOT NULL DEFAULT false,
+  -- profile_completed gates reviews and other trust actions
+  created_at TIMESTAMP DEFAULT NOW()
 );
 ```
 
 #### `user_service`
 
 ```sql
+CREATE TYPE service_category AS ENUM (
+  'home','cleaning','tutoring','pet-care',
+  'landscaping','events','vehicles','beauty','other'
+);
+
 CREATE TABLE user_service (
-  service_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES user_profile(user_id) ON DELETE CASCADE,
+  service_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES user_profile(user_id),
   title TEXT NOT NULL,
   description TEXT NOT NULL,
-  category TEXT NOT NULL,
+  category service_category NOT NULL,
   location TEXT,
   contact TEXT,
   price_range TEXT,
   availability TEXT,
-  rating NUMERIC(3,2) DEFAULT 0,
+  rating NUMERIC CHECK (rating >= 0 AND rating <= 5),
   service_image TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT NOW()
 );
 ```
 
-#### `reviews` (Planned)
+#### `user_service_review`
 
 ```sql
-CREATE TABLE reviews (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+CREATE TABLE user_service_review (
+  review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES user_profile(user_id),
   service_id UUID REFERENCES user_service(service_id) ON DELETE CASCADE,
-  reviewer_id UUID REFERENCES user_profile(user_id) ON DELETE CASCADE,
-  reviewer_name TEXT NOT NULL,
-  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
-  comment TEXT,
-  reviewer_avatar TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  review_rating SMALLINT NOT NULL,
+  review_text TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+#### `chat_rooms`
+
+```sql
+CREATE TABLE chat_rooms (
+  room_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user1_id UUID REFERENCES user_profile(user_id) NOT NULL,
+  user2_id UUID REFERENCES user_profile(user_id) NOT NULL,
+  last_message_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+#### `chat_messages`
+
+```sql
+CREATE TABLE chat_messages (
+  message_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  room_id UUID REFERENCES chat_rooms(room_id) NOT NULL,
+  sender_id UUID REFERENCES user_profile(user_id) NOT NULL,
+  text TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
@@ -686,8 +733,7 @@ graph TD
 
 3. **Caching Strategy**
    - Browser caching for static assets
-   - Service worker for offline support (future)
-   - React Query for data caching (future)
+   - TanStack Query (React Query) for server state caching — in use
 
 4. **Bundle Optimization**
    - Tree shaking with Vite
@@ -805,4 +851,4 @@ graph TB
 
 ---
 
-**Last Updated:** December 18, 2025
+**Last Updated:** May 4, 2026
