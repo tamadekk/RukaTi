@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Search,
@@ -23,31 +22,11 @@ const rightItems = [
 
 export const MobileBottomBar = ({ onCreateService }: MobileBottomBarProps) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const [visible, setVisible] = useState(true);
-  const lastScrollY = useRef(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY < 10) {
-        setVisible(true);
-      } else if (currentY < lastScrollY.current - 8) {
-        setVisible(true);
-      } else if (currentY > lastScrollY.current + 8) {
-        setVisible(false);
-      }
-      lastScrollY.current = currentY;
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t-2 border-black transition-transform duration-300 ${
-        visible ? "translate-y-0" : "translate-y-full"
-      }`}
+      className={
+        "z-50 md:hidden bg-white border-t-2 border-black transition-transform duration-300 "
+      }
     >
       <div className="flex items-stretch h-16">
         {/* Left */}

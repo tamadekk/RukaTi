@@ -102,7 +102,11 @@ export function MessagesPage() {
   };
 
   return (
-    <div className="fixed inset-x-0 top-16 bottom-16 md:bottom-0 bg-background font-mono z-40">
+    <div
+      className={
+        "fixed inset-x-0 top-16 bottom-16 md:bottom-0 bg-background font-mono z-40"
+      }
+    >
       <div className="max-w-7xl mx-auto border-x border-black flex h-full">
         <div
           className={`border-r border-black flex flex-col w-full md:w-72 shrink-0 ${
