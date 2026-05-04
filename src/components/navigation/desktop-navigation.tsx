@@ -1,6 +1,6 @@
 import type { navigationItem } from "@/types";
 import { NavigationLinks } from "./navigation-links";
-import { AuthButtons } from "./auth-buttons";
+import { NavAuthSection } from "./nav-auth-section";
 
 export type DesktopNavigationProps = {
   items: navigationItem[];
@@ -18,7 +18,7 @@ export const DesktopNavigation = ({
   <nav className="hidden md:flex items-center gap-8">
     <NavigationLinks items={items} />
     <div className="border-l border-gray-300 h-6 mx-2" />
-    <AuthButtons
+    <NavAuthSection
       isAuthenticated={isAuthenticated}
       onLogout={onLogout}
       onCreateService={onCreateService}
