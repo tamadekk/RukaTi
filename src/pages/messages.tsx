@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useSearch } from "@tanstack/react-router";
-import { MessageCircle } from "lucide-react";
 import { useUserSession } from "@/store/userSessionsStore";
 import { ConversationList } from "@/components/messages/conversation-list";
 import { ChatWindow } from "@/components/messages/chat-window";
+import { EmptyConversationState } from "@/components/messages/empty-conversation-state";
 import supabase from "@/supabase-client";
 import type { ChatMessage } from "@/types/chat";
 import {
@@ -20,7 +20,6 @@ const EMPTY_MESSAGES: ChatMessage[] = [];
 export function MessagesPage() {
   const { roomId } = useSearch({ from: "/_authenticated/messages" });
   const { user } = useUserSession();
-
   const { data: rooms = [], isLoading: isLoadingRooms } = useChatRooms(
     user?.id,
   );
@@ -102,16 +101,10 @@ export function MessagesPage() {
   };
 
   return (
-    <div
-      className={
-        "fixed inset-x-0 top-16 bottom-16 md:bottom-0 bg-background font-mono z-40"
-      }
-    >
+    <div className="fixed inset-x-0 top-16 bottom-16 md:bottom-0 bg-background font-mono z-40">
       <div className="max-w-7xl mx-auto border-x border-black flex h-full">
         <div
-          className={`border-r border-black flex flex-col w-full md:w-72 shrink-0 ${
-            activeRoom ? "hidden md:flex" : "flex"
-          }`}
+          className={`border-r border-black flex-col w-full md:w-72 shrink-0 ${activeRoom ? "hidden md:flex" : "flex"}`}
         >
           <ConversationList
             rooms={rooms}
@@ -119,9 +112,8 @@ export function MessagesPage() {
             isLoading={isLoadingRooms}
           />
         </div>
-
         <div
-          className={`flex-1 flex flex-col ${activeRoom ? "flex" : "hidden md:flex"}`}
+          className={`flex-1 flex-col ${activeRoom ? "flex" : "hidden md:flex"}`}
         >
           {activeRoom ? (
             <ChatWindow
@@ -133,19 +125,7 @@ export function MessagesPage() {
               onSend={handleSend}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-8">
-              <div className="w-16 h-16 border-2 border-black flex items-center justify-center">
-                <MessageCircle className="w-7 h-7" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm font-black uppercase tracking-widest">
-                  Select a conversation
-                </p>
-                <p className="text-xs font-mono text-neutral-400">
-                  Choose a chat from the left or contact a provider
-                </p>
-              </div>
-            </div>
+            <EmptyConversationState />
           )}
         </div>
       </div>
